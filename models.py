@@ -5,6 +5,8 @@
 #   * Make sure each ForeignKey and OneToOneField has `on_delete` set to the desired behavior
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
 # Feel free to rename the models, but don't rename db_table values or field names.
+from django.utils import timezone
+
 from django.core.exceptions import ValidationError
 from django.db import models
 
@@ -150,6 +152,9 @@ class Film(models.Model):
     awards_and_nominations = models.CharField(max_length=255, blank=True, null=True, verbose_name="Awards and Nominations")
     poster_url = models.CharField(max_length=255, blank=True, null=True, verbose_name="Poster URL")
     backdrop_url = models.CharField(max_length=255, blank=True, null=True, verbose_name="Backdrop URL")
+    popularity = models.DecimalField(max_digits=10, decimal_places=3, blank=True, null=True, verbose_name="Popularity Score")
+    api_film_id = models.IntegerField(verbose_name="TMDb Film ID")
+    last_synced = models.DateTimeField(null=True, blank=True, verbose_name="Last Synced")
     active = models.BooleanField(default=True, verbose_name="Is Active?")
     deleted = models.BooleanField(default=False, verbose_name="Is Deleted?")
 
@@ -161,6 +166,12 @@ class Film(models.Model):
 
         app_label = 'films'
 
+    def save(self, *args, **kwargs):
+        if self.last_synced and timezone.is_naive(self.last_synced):
+            self.last_synced = timezone.make_aware(self.last_synced)
+        if not self.last_synced:
+            self.last_synced = timezone.now()
+        super().save(*args, **kwargs)
 
     def clean(self):
         if self.runtime is not None and self.runtime < 0:
@@ -227,8 +238,17 @@ class Person(models.Model):
     deathday = models.DateField(blank=True, null=True, verbose_name="Deathday")
     picture_url = models.CharField(max_length=255, blank=True, null=True, verbose_name="Picture URL")
     alias = models.CharField(max_length=255, blank=True, null=True, verbose_name="Alias")
+    api_person_id = models.IntegerField(verbose_name="TMDb Person ID")
+    last_synced = models.DateTimeField(null=True, blank=True, verbose_name="Last Synced")
     active = models.BooleanField(default=True, verbose_name="Is Active?")
     deleted = models.BooleanField(default=False, verbose_name="Is Deleted?")
+
+    def save(self, *args, **kwargs):
+        if self.last_synced and timezone.is_naive(self.last_synced):
+            self.last_synced = timezone.make_aware(self.last_synced)
+        if not self.last_synced:
+            self.last_synced = timezone.now()
+        super().save(*args, **kwargs)
 
     class Meta:
         managed = False

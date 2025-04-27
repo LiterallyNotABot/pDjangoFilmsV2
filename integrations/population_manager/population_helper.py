@@ -12,6 +12,7 @@ from  models import Film, Genre, FilmAndGenre, Person, FilmRole, FilmsAndPersons
 def insert_or_update_film(film_data):
     film, created = Film.objects.update_or_create(
         title=film_data['title'],
+        api_film_id=film_data['api_film_id'],
         release_year=film_data.get('release_year'),
         defaults={
             'runtime': film_data.get('runtime'),
@@ -22,6 +23,7 @@ def insert_or_update_film(film_data):
             'tagline': film_data.get('tagline'),
             'poster_url': film_data.get('poster_url'),
             'backdrop_url': film_data.get('backdrop_url'),
+            'popularity': film_data.get('popularity'),
             'active': True,
             'deleted': False,
         }
@@ -50,13 +52,15 @@ def insert_people_and_roles(film, cast_list, crew_list):
             detailed_person = {}
 
         person, created = Person.objects.update_or_create(
-            name=detailed_person.get('name', person_data['name']),
+            api_person_id=detailed_person.get('id', person_id),  # 👈 Corrección aquí
             defaults={
+                'name': detailed_person.get('name', person_data.get('name')),
                 'biography': detailed_person.get('biography') or '',
                 'place_of_birth': detailed_person.get('place_of_birth') or '',
                 'birthday': detailed_person.get('birthday') or None,
                 'deathday': detailed_person.get('deathday') or None,
-                'picture_url': f"https://image.tmdb.org/t/p/original{detailed_person['profile_path']}" if detailed_person.get('profile_path') else '',
+                'picture_url': f"https://image.tmdb.org/t/p/original{detailed_person['profile_path']}" if detailed_person.get(
+                    'profile_path') else '',
                 'alias': detailed_person.get('also_known_as')[0] if detailed_person.get('also_known_as') else '',
                 'active': True,
                 'deleted': False
