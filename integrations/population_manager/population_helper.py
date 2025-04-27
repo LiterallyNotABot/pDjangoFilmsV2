@@ -1,8 +1,8 @@
 import os
 import sys
 
-from integrations.tmdb_manager.language_helper import iso_639_1_to_fullname
-from integrations.tmdb_manager.tmdb_connector import get_person_details
+from integrations.population_manager.language_helper import iso_639_1_to_fullname
+from integrations.population_manager.tmdb_connector import get_person_details
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
 
