@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    # MY APPS
     'comms',
     'films',
     'integrations',
@@ -45,8 +46,10 @@ INSTALLED_APPS = [
     'store',
     'users',
 
+    # OTHER
     'rest_framework',
     'django_extensions',
+    'rest_framework_api_key',
 
 ]
 
@@ -139,6 +142,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': (
-        'rest_framework.renderers.JSONRenderer',  # Solo devuelve JSON
+        'rest_framework.renderers.JSONRenderer',
     ),
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 20,
+
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework_api_key.permissions.HasAPIKey',
+    ],
 }

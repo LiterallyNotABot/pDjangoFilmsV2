@@ -1,10 +1,10 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import FilmViewSet, GenreViewSet
+from integrations.api_manager.views import FilmViewSet, PersonViewSet
 
 router = DefaultRouter()
 router.register(r'films', FilmViewSet)
-router.register(r'genres', GenreViewSet)
+router.register(r'persons', PersonViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
