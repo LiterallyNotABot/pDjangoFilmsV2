@@ -38,7 +38,7 @@ class CrewMemberSerializer(serializers.ModelSerializer):
     role = FilmRoleSerializer()
 
     class Meta:
-        model = FilmsAndPersons
+        model = FilmAndPerson
         fields = ['person', 'role', 'character']
 
 class FilmSerializer(serializers.ModelSerializer):
