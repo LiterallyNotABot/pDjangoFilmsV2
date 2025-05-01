@@ -21,8 +21,6 @@ class Comment(models.Model):
         verbose_name = "Comment"
         verbose_name_plural = "Comments"
 
-        
-
 
 class CommentAndLikeByUser(models.Model):
     like_id = models.AutoField(primary_key=True, verbose_name="Like ID")

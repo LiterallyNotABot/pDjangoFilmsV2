@@ -1,7 +1,8 @@
+from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils import timezone
-from django.conf import settings
+User = get_user_model()
 
 class ProductCategory(models.Model):
     name = models.CharField(max_length=100, unique=True)
@@ -44,7 +45,7 @@ class ProductStockChange(models.Model):
     reason = models.CharField(max_length=255)
     timestamp = models.DateTimeField(default=timezone.now)
     triggered_by = models.ForeignKey(
-        settings.AUTH_USER_MODEL, null=True, blank=True,
+        User, null=True, blank=True,
         on_delete=models.SET_NULL, related_name='stock_changes'
     )
     active = models.BooleanField(default=True, verbose_name="Is Active?")
