@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_extensions',
     'rest_framework_api_key',
+    'channels',
 
 ]
 
@@ -81,6 +82,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'pDjangoFilmsV2.wsgi.application'
+ASGI_APPLICATION = 'pDjangoFilmsV2.asgi.application'
 
 
 # Database
