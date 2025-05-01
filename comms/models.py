@@ -71,5 +71,51 @@ class PrivateMessage(models.Model):
         verbose_name = "Private Message"
         verbose_name_plural = "Private Messages"
 
-        
 
+class ChatRoom(models.Model):
+    name = models.CharField(max_length=100)
+    key = models.CharField(max_length=64, unique=True)
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='created_rooms')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = 'ChatRooms'
+        verbose_name = 'Chat Room'
+        verbose_name_plural = 'Chat Rooms'
+
+    def __str__(self):
+        return f"{self.name} ({self.key})"
+
+class ChatRoomMembership(models.Model):
+    room = models.ForeignKey(ChatRoom, on_delete=models.CASCADE, related_name='memberships')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    joined_at = models.DateTimeField(auto_now_add=True)
+    abandoned_at = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        db_table = 'ChatRoomMemberships'
+        verbose_name = 'Chat Room Membership'
+        verbose_name_plural = 'Chat Room Memberships'
+        ordering = ['-joined_at']
+        indexes = [
+            models.Index(fields=['room', 'user']),
+        ]
+
+    def __str__(self):
+        return f"{self.user} in {self.room} @ {self.joined_at}"
+
+
+class ChatMessage(models.Model):
+    room = models.ForeignKey(ChatRoom, on_delete=models.CASCADE, related_name='messages')
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    message = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = 'ChatMessages'
+        verbose_name = 'Chat Message'
+        verbose_name_plural = 'Chat Messages'
+        ordering = ['timestamp']
+
+    def __str__(self):
+        return f"{self.user}: {self.message[:30]}"

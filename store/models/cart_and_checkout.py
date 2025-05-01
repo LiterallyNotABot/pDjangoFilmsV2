@@ -1,11 +1,11 @@
+from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils import timezone
-from django.conf import settings
 from store.models.catalog import Product
-
+User=get_user_model()
 
 class Cart(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='carts')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='carts')
     created_at = models.DateTimeField(auto_now_add=True)
     active = models.BooleanField(default=True, verbose_name="Is Active?")
     deleted = models.BooleanField(default=False, verbose_name="Is Deleted?")
