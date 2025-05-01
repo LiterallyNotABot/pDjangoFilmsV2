@@ -74,9 +74,13 @@ class PrivateMessage(models.Model):
 
 class ChatRoom(models.Model):
     name = models.CharField(max_length=100)
-    key = models.CharField(max_length=64, unique=True)
+    key = models.CharField(max_length=32, unique=True, verbose_name="Room Key")
     created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='created_rooms')
     created_at = models.DateTimeField(auto_now_add=True)
+    is_closed = models.BooleanField(default=False, verbose_name="Is Closed?")
+    closed_at = models.DateTimeField(null=True, blank=True, verbose_name="Closed At")
+    active = models.BooleanField(default=True, verbose_name="Is Active?")
+    deleted = models.BooleanField(default=False, verbose_name="Is Deleted?")
 
     class Meta:
         db_table = 'ChatRooms'
@@ -91,6 +95,8 @@ class ChatRoomMembership(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     joined_at = models.DateTimeField(auto_now_add=True)
     abandoned_at = models.DateTimeField(null=True, blank=True)
+    active = models.BooleanField(default=True, verbose_name="Is Active?")
+    deleted = models.BooleanField(default=False, verbose_name="Is Deleted?")
 
     class Meta:
         db_table = 'ChatRoomMemberships'
@@ -110,6 +116,8 @@ class ChatMessage(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     message = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
+    active = models.BooleanField(default=True, verbose_name="Is Active?")
+    deleted = models.BooleanField(default=False, verbose_name="Is Deleted?")
 
     class Meta:
         db_table = 'ChatMessages'
