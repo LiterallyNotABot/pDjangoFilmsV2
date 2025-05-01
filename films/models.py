@@ -122,7 +122,7 @@ class Person(models.Model):
 
         
 
-class FilmsAndPersons(models.Model):
+class FilmAndPerson(models.Model):
     record_id = models.AutoField(primary_key=True, verbose_name="Record ID")
     person = models.ForeignKey('Person', on_delete=models.DO_NOTHING, verbose_name="Person")
     film = models.ForeignKey(Film, on_delete=models.DO_NOTHING, verbose_name="Film")
