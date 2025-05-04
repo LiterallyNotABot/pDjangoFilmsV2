@@ -3,37 +3,38 @@
 <head>
     <title>Test Chat</title>
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const roomKey = "{{ room.key }}";
-            const username = "{{ request.user.username }}";
-            const chatSocket = new WebSocket(
-                `ws://${window.location.host}/ws/chat/${roomKey}/`
-            );
+     document.addEventListener("DOMContentLoaded", function () {
+         const roomKey = "{{ room.key }}";
+         const username = "{{ request.user.username }}";
+         const chatSocket = new WebSocket(
+             `ws://${window.location.host}/ws/chat/${roomKey}/`
+         );
 
-            // Cuando el WebSocket recibe un mensaje
-            chatSocket.onmessage = function (e) {
-                const data = JSON.parse(e.data);
-                const chatLog = document.querySelector('#chat-log');
-                // Mostrar el mensaje en el chat
-                chatLog.innerHTML += `<div><strong>${data.username}:</strong> ${data.message}</div>`;
-                chatLog.scrollTop = chatLog.scrollHeight;  // Hacer scroll hacia abajo al recibir nuevos mensajes
-            };
+         // Cuando el WebSocket recibe un mensaje
+         chatSocket.onmessage = function (e) {
+             const data = JSON.parse(e.data);
+             const chatLog = document.querySelector('#chat-log');
+             // Mostrar el mensaje en el chat
+             chatLog.innerHTML += `<div><strong>${data.username}:</strong> ${data.message}</div>`;
+             chatLog.scrollTop = chatLog.scrollHeight;  // Hacer scroll hacia abajo al recibir nuevos mensajes
+         };
 
-            // En caso de error o cierre de conexión
-            chatSocket.onclose = function () {
-                console.error('Chat socket closed unexpectedly');
-            };
+         // En caso de error o cierre de conexión
+         chatSocket.onclose = function () {
+             console.error('Chat socket closed unexpectedly');
+         };
 
-            // Cuando el usuario envía un mensaje
-            document.querySelector('#chat-message-submit').onclick = function () {
-                const input = document.querySelector('#chat-message-input');
-                const message = input.value;
-                // Enviar el mensaje a través del WebSocket
-                chatSocket.send(JSON.stringify({ 'message': message }));
-                input.value = '';  // Limpiar el campo de texto después de enviar
-            };
-        });
-    </script>
+         // Cuando el usuario envía un mensaje
+         document.querySelector('#chat-message-submit').onclick = function () {
+             const input = document.querySelector('#chat-message-input');
+             const message = input.value;
+             // Enviar el mensaje a través del WebSocket
+             chatSocket.send(JSON.stringify({ 'message': message }));
+             input.value = '';  // Limpiar el campo de texto después de enviar
+         };
+     });
+ </script>
+
 </head>
 <body>
     <h2>Chat Room: {{ room.name }}</h2>
