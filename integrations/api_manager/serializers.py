@@ -74,5 +74,5 @@ class FilmSerializer(serializers.ModelSerializer):
         return LanguageSerializer([fl.language for fl in qs if fl.language.active and not fl.language.deleted], many=True).data
 
     def get_crew(self, obj):
-        qs = FilmsAndPersons.objects.filter(film=obj, active=True, deleted=False).select_related('person', 'role')
+        qs = FilmAndPerson.objects.filter(film=obj, active=True, deleted=False).select_related('person', 'role')
         return CrewMemberSerializer(qs, many=True).data
