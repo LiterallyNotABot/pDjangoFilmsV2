@@ -81,7 +81,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'pDjangoFilmsV2.wsgi.application'
+WSGI_APPLICATION= 'pDjangoFilmsV2.wsgi.application'
 ASGI_APPLICATION = 'pDjangoFilmsV2.asgi.application'
 
 
