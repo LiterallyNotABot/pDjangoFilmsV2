@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'django_extensions',
     'rest_framework_api_key',
     'channels',
+    'drf_spectacular',
 
 ]
 
@@ -95,8 +96,8 @@ DATABASES = {
         'NAME': 'DjangoFilmsDB',
         'USER': 'postgres',
         'PASSWORD': '1234',
-       # 'HOST': 'localhost',
-        'HOST': 'db', # COMPOSE
+       'HOST': 'localhost',
+        # 'HOST': 'db', # COMPOSE
         'PORT': '5432',
     }
 }
@@ -157,6 +158,7 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework_api_key.permissions.HasAPIKey',
     ],
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
 # COMMS

@@ -6,7 +6,7 @@ from integrations.population_manager.tmdb_connector import get_person_details
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
 
-from films.models import Film, Genre, FilmAndGenre, Person, FilmRole, FilmsAndPersons, ProductionCompany, FilmAndProductionCompany, Language, FilmAndLanguage, Country, FilmAndCountry
+from films.models import Film, Genre, FilmAndGenre, Person, FilmRole, FilmAndPerson, ProductionCompany, FilmAndProductionCompany, Language, FilmAndLanguage, Country, FilmAndCountry
 
 
 def insert_or_update_film(film_data):
@@ -73,7 +73,7 @@ def insert_people_and_roles(film, cast_list, crew_list):
             defaults={'active': True, 'deleted': False}
         )
 
-        FilmsAndPersons.objects.get_or_create(
+        FilmAndPerson.objects.get_or_create(
             person=person,
             film=film,
             role=role,

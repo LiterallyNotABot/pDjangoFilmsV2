@@ -26,7 +26,8 @@ class LanguageSerializer(serializers.ModelSerializer):
 class PersonSerializer(serializers.ModelSerializer):
     class Meta:
         model = Person
-        fields = ['person_id', 'name', 'picture_url', 'alias']
+        fields = ['person_id', 'name', 'biography', 'place_of_birth', 'birthday', 'deathday', 'picture_url', 'alias', 'api_person_id']
+
 
 class FilmRoleSerializer(serializers.ModelSerializer):
     class Meta:
