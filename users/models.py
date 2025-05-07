@@ -28,7 +28,7 @@ class FilmAndUser(models.Model):
     deleted = models.BooleanField(default=False, verbose_name="Is Deleted?")
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'filmsAndUsers'
         verbose_name = "Film and User Relationship"
         verbose_name_plural = "Film and User Relationships"
@@ -44,7 +44,7 @@ class List(models.Model):
     deleted = models.BooleanField(default=False, verbose_name="Is Deleted?")
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'lists'
         verbose_name = "List"
         verbose_name_plural = "Lists"
@@ -62,7 +62,7 @@ class Watchlist(models.Model):
     deleted = models.BooleanField(default=False, verbose_name="Is Deleted?")
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'watchlists'
         verbose_name = "Watchlist"
         verbose_name_plural = "Watchlists"
@@ -77,7 +77,7 @@ class ListAndFilm(models.Model):
     deleted = models.BooleanField(default=False, verbose_name="Is Deleted?")
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'listsandfilms'
         verbose_name = "List-Film Relationship"
         verbose_name_plural = "List-Film Relationships"
@@ -92,7 +92,7 @@ class ListAndLikeByUser(models.Model):
     deleted = models.BooleanField(default=False, verbose_name="Is Deleted?")
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'listsandlikesbyusers'
         verbose_name = "List Like by User"
         verbose_name_plural = "List Likes by Users"

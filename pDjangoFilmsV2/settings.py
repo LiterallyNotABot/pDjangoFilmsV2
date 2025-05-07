@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/5.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'daphne', # debe estar antes de contrib.staticfiles
     'django.contrib.staticfiles',
 
     # MY APPS
@@ -81,7 +82,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION= 'pDjangoFilmsV2.wsgi.application'
+WSGI_APPLICATION = 'pDjangoFilmsV2.wsgi.application'
 ASGI_APPLICATION = 'pDjangoFilmsV2.asgi.application'
 
 
@@ -94,7 +95,8 @@ DATABASES = {
         'NAME': 'DjangoFilmsDB',
         'USER': 'postgres',
         'PASSWORD': '1234',
-        'HOST': 'localhost',
+       # 'HOST': 'localhost',
+        'HOST': 'db', # COMPOSE
         'PORT': '5432',
     }
 }
@@ -163,7 +165,8 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            "hosts": [('127.0.0.1', 6379)],
+            # "hosts": [('127.0.0.1', 6379)], # original
+                "hosts": [('redis', 6379)], # container
         },
     },
 }

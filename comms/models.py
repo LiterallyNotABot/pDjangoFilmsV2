@@ -16,7 +16,7 @@ class Comment(models.Model):
     deleted = models.BooleanField(default=False, verbose_name="Is Deleted?")
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'comments'
         verbose_name = "Comment"
         verbose_name_plural = "Comments"
@@ -30,7 +30,7 @@ class CommentAndLikeByUser(models.Model):
     deleted = models.BooleanField(default=False, verbose_name="Is Deleted?")
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'commentsandlikesbyuser'
         verbose_name = "Comment and Like by User"
         verbose_name_plural = "Comments and Likes by Users"
@@ -47,7 +47,7 @@ class PrivateConversation(models.Model):
     deleted = models.BooleanField(default=False, verbose_name="Is Deleted?")
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'privateconversation'
         verbose_name = "Private Conversation"
         verbose_name_plural = "Private Conversations"
@@ -66,7 +66,7 @@ class PrivateMessage(models.Model):
     deleted = models.BooleanField(default=False, verbose_name="Is Deleted?")
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'privatemessages'
         verbose_name = "Private Message"
         verbose_name_plural = "Private Messages"

@@ -15,7 +15,7 @@ class Rating(models.Model):
     deleted = models.BooleanField(default=False, verbose_name="Is Deleted?")
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'ratings'
         verbose_name = "Rating"
         verbose_name_plural = "Ratings"
@@ -36,7 +36,7 @@ class Log(models.Model):
     deleted = models.BooleanField(default=False, verbose_name="Is Deleted?")
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'logs'
         verbose_name = "Log"
         verbose_name_plural = "Logs"
@@ -49,7 +49,7 @@ class Review(models.Model):
     deleted = models.BooleanField(default=False, verbose_name="Is Deleted?")
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'reviews'
         verbose_name = "Review"
         verbose_name_plural = "Reviews"
@@ -63,7 +63,7 @@ class ReviewAndLikeByUser(models.Model):
     deleted = models.BooleanField(default=False, verbose_name="Is Deleted?")
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'reviewsandlikesbyuser'
         verbose_name = "Review and Like by User"
         verbose_name_plural = "Reviews and Likes by Users"

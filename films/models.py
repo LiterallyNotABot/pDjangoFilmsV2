@@ -23,7 +23,7 @@ class Film(models.Model):
     deleted = models.BooleanField(default=False, verbose_name="Is Deleted?")
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'films'
         verbose_name = "Film"
         verbose_name_plural = "Films"
@@ -55,7 +55,7 @@ class Genre(models.Model):
     deleted = models.BooleanField(default=False, verbose_name="Is Deleted?")
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'genres'
         verbose_name = "Genre"
         verbose_name_plural = "Genres"
@@ -70,7 +70,7 @@ class FilmAndGenre(models.Model):
     deleted = models.BooleanField(default=False)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'filmsandgenres'
         verbose_name = "Film-Genre Relationship"
         verbose_name_plural = "Film-Genre Relationships"
@@ -85,7 +85,7 @@ class FilmRole(models.Model):
     deleted = models.BooleanField(default=False, verbose_name="Is Deleted?")
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'filmsroles'
         verbose_name = "Film Role"
         verbose_name_plural = "Film Roles"
@@ -115,7 +115,7 @@ class Person(models.Model):
         super().save(*args, **kwargs)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'persons'
         verbose_name = "Person"
         verbose_name_plural = "Persons"
@@ -133,7 +133,7 @@ class FilmAndPerson(models.Model):
     deleted = models.BooleanField(default=False, verbose_name="Is Deleted?")
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'filmsandpersons'
         verbose_name = "Film and Person Record"
         verbose_name_plural = "Film and Person Records"
@@ -149,7 +149,7 @@ class ProductionCompany(models.Model):
     deleted = models.BooleanField(default=False, verbose_name="Is Deleted?")
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'productioncompanies'
         verbose_name = "Production Company"
         verbose_name_plural = "Production Companies"
@@ -164,7 +164,7 @@ class FilmAndProductionCompany(models.Model):
     deleted = models.BooleanField(default=False, verbose_name="Is Deleted?")
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'filmsandproductioncompanies'
         verbose_name = "Film and Production Company"
         verbose_name_plural = "Films and Production Companies"
@@ -178,7 +178,7 @@ class Country(models.Model):
     deleted = models.BooleanField(default=False, verbose_name="Is Deleted?")
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'countries'
         verbose_name = "Country"
         verbose_name_plural = "Countries"
@@ -193,7 +193,7 @@ class FilmAndCountry(models.Model):
     deleted = models.BooleanField(default=False, verbose_name="Is Deleted?")
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'filmsandcountries'
         verbose_name = "Film-Country Relationship"
         verbose_name_plural = "Film-Country Relationships"
@@ -209,7 +209,7 @@ class Language(models.Model):
     deleted = models.BooleanField(default=False, verbose_name="Is Deleted?")
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'languages'
         verbose_name = "Language"
         verbose_name_plural = "Languages"
@@ -225,7 +225,7 @@ class FilmAndLanguage(models.Model):
     deleted = models.BooleanField(default=False, verbose_name="Is Deleted?")
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'filmsandlanguages'
         verbose_name = "Film-Language Relationship"
         verbose_name_plural = "Film-Language Relationships"
