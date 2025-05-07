@@ -1,5 +1,3 @@
-# Dockerfile
-
 FROM python:3.11-slim
 
 ENV PYTHONDONTWRITEBYTECODE=1
@@ -15,5 +13,3 @@ RUN apt-get update \
 
 
 COPY . .
-
-# Daphne corre desde el docker-compose, no aquí

@@ -28,6 +28,7 @@ services:
     container_name: django_app
     command: >
       sh -c "python manage.py migrate &&
+             python manage.py loaddata fixtures/data_fixture.json &&
              daphne -b 0.0.0.0 -p 8000 pDjangoFilmsV2.asgi:application"
     volumes:
       - .:/code
