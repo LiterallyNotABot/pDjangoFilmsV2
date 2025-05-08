@@ -30,7 +30,7 @@
     }
   },
   {
-    "model": "chat.chatroom",
+    "model": "comms.chatroom",
     "pk": 1,
     "fields": {
       "name": "Sala de Prueba",
@@ -43,7 +43,7 @@
     }
   },
   {
-    "model": "chat.chatroommembership",
+    "model": "comms.chatroommembership",
     "pk": 1,
     "fields": {
       "room": 1,
@@ -54,7 +54,7 @@
     }
   },
   {
-    "model": "chat.chatroommembership",
+    "model": "comms.chatroommembership",
     "pk": 2,
     "fields": {
       "room": 1,
@@ -65,7 +65,7 @@
     }
   },
   {
-    "model": "chat.chatroommembership",
+    "model": "comms.chatroommembership",
     "pk": 3,
     "fields": {
       "room": 1,
