@@ -1,0 +1,78 @@
+[
+  {
+    "model": "auth.user",
+    "pk": 1,
+    "fields": {
+      "username": "user1",
+      "password": "password123",
+      "email": "user1@example.com",
+      "is_active": true
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 2,
+    "fields": {
+      "username": "user2",
+      "password": "password123",
+      "email": "user2@example.com",
+      "is_active": true
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 3,
+    "fields": {
+      "username": "user3",
+      "password": "password123",
+      "email": "user3@example.com",
+      "is_active": true
+    }
+  },
+  {
+    "model": "comms.chatroom",
+    "pk": 1,
+    "fields": {
+      "name": "Sala de Prueba",
+      "key": "room-key-12345",
+      "created_by": 1,
+      "created_at": "2025-05-07T12:00:00Z",
+      "is_closed": false,
+      "active": true,
+      "deleted": false
+    }
+  },
+  {
+    "model": "comms.chatroommembership",
+    "pk": 1,
+    "fields": {
+      "room": 1,
+      "user": 1,
+      "joined_at": "2025-05-07T12:00:00Z",
+      "active": true,
+      "deleted": false
+    }
+  },
+  {
+    "model": "comms.chatroommembership",
+    "pk": 2,
+    "fields": {
+      "room": 1,
+      "user": 2,
+      "joined_at": "2025-05-07T12:05:00Z",
+      "active": true,
+      "deleted": false
+    }
+  },
+  {
+    "model": "comms.chatroommembership",
+    "pk": 3,
+    "fields": {
+      "room": 1,
+      "user": 3,
+      "joined_at": "2025-05-07T12:10:00Z",
+      "active": true,
+      "deleted": false
+    }
+  }
+]

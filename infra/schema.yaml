@@ -1,0 +1,444 @@
+openapi: 3.0.3
+info:
+  title: ''
+  version: 0.0.0
+paths:
+  /api/films/:
+    get:
+      operationId: api_films_list
+      description: |-
+        GET /films/
+        GET /films/{id}/
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedFilmList'
+          description: ''
+  /api/films/{film_id}/:
+    get:
+      operationId: api_films_retrieve
+      description: |-
+        GET /films/
+        GET /films/{id}/
+      parameters:
+      - in: path
+        name: film_id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Film.
+        required: true
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Film'
+          description: ''
+  /api/persons/:
+    get:
+      operationId: api_persons_list
+      description: |-
+        GET /persons/
+        GET /persons/{id}/
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedPersonList'
+          description: ''
+  /api/persons/{person_id}/:
+    get:
+      operationId: api_persons_retrieve
+      description: |-
+        GET /persons/
+        GET /persons/{id}/
+      parameters:
+      - in: path
+        name: person_id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Person.
+        required: true
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Person'
+          description: ''
+  /api/schema/:
+    get:
+      operationId: api_schema_retrieve
+      description: |-
+        OpenApi3 schema for this API. Format can be selected via content negotiation.
+
+        - YAML: application/vnd.oai.openapi
+        - JSON: application/vnd.oai.openapi+json
+      parameters:
+      - in: query
+        name: format
+        schema:
+          type: string
+          enum:
+          - json
+          - yaml
+      - in: query
+        name: lang
+        schema:
+          type: string
+          enum:
+          - af
+          - ar
+          - ar-dz
+          - ast
+          - az
+          - be
+          - bg
+          - bn
+          - br
+          - bs
+          - ca
+          - ckb
+          - cs
+          - cy
+          - da
+          - de
+          - dsb
+          - el
+          - en
+          - en-au
+          - en-gb
+          - eo
+          - es
+          - es-ar
+          - es-co
+          - es-mx
+          - es-ni
+          - es-ve
+          - et
+          - eu
+          - fa
+          - fi
+          - fr
+          - fy
+          - ga
+          - gd
+          - gl
+          - he
+          - hi
+          - hr
+          - hsb
+          - hu
+          - hy
+          - ia
+          - id
+          - ig
+          - io
+          - is
+          - it
+          - ja
+          - ka
+          - kab
+          - kk
+          - km
+          - kn
+          - ko
+          - ky
+          - lb
+          - lt
+          - lv
+          - mk
+          - ml
+          - mn
+          - mr
+          - ms
+          - my
+          - nb
+          - ne
+          - nl
+          - nn
+          - os
+          - pa
+          - pl
+          - pt
+          - pt-br
+          - ro
+          - ru
+          - sk
+          - sl
+          - sq
+          - sr
+          - sr-latn
+          - sv
+          - sw
+          - ta
+          - te
+          - tg
+          - th
+          - tk
+          - tr
+          - tt
+          - udm
+          - ug
+          - uk
+          - ur
+          - uz
+          - vi
+          - zh-hans
+          - zh-hant
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/vnd.oai.openapi:
+              schema:
+                type: object
+                additionalProperties: {}
+            application/yaml:
+              schema:
+                type: object
+                additionalProperties: {}
+            application/vnd.oai.openapi+json:
+              schema:
+                type: object
+                additionalProperties: {}
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+components:
+  schemas:
+    Film:
+      type: object
+      properties:
+        film_id:
+          type: integer
+          readOnly: true
+        title:
+          type: string
+          title: Film Title
+          maxLength: 255
+        release_year:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+          nullable: true
+        runtime:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+          nullable: true
+          title: Runtime (in minutes)
+        synopsis:
+          type: string
+          nullable: true
+        budget:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+          nullable: true
+        revenue:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+          nullable: true
+        status:
+          type: string
+          nullable: true
+          title: Film Status
+          maxLength: 255
+        tagline:
+          type: string
+          nullable: true
+          maxLength: 255
+        awards_and_nominations:
+          type: string
+          nullable: true
+          maxLength: 255
+        poster_url:
+          type: string
+          nullable: true
+          maxLength: 255
+        backdrop_url:
+          type: string
+          nullable: true
+          maxLength: 255
+        popularity:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,7}(?:\.\d{0,3})?$
+          nullable: true
+          title: Popularity Score
+        api_film_id:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+          title: TMDb Film ID
+        last_synced:
+          type: string
+          format: date-time
+          nullable: true
+        genres:
+          type: string
+          readOnly: true
+        production_companies:
+          type: string
+          readOnly: true
+        countries:
+          type: string
+          readOnly: true
+        languages:
+          type: string
+          readOnly: true
+        crew:
+          type: string
+          readOnly: true
+      required:
+      - api_film_id
+      - countries
+      - crew
+      - film_id
+      - genres
+      - languages
+      - production_companies
+      - title
+    PaginatedFilmList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Film'
+    PaginatedPersonList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Person'
+    Person:
+      type: object
+      properties:
+        person_id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        biography:
+          type: string
+          nullable: true
+        place_of_birth:
+          type: string
+          nullable: true
+          maxLength: 255
+        birthday:
+          type: string
+          format: date
+          nullable: true
+        deathday:
+          type: string
+          format: date
+          nullable: true
+        picture_url:
+          type: string
+          nullable: true
+          maxLength: 255
+        alias:
+          type: string
+          nullable: true
+          maxLength: 255
+        api_person_id:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+          title: TMDb Person ID
+      required:
+      - api_person_id
+      - name
+      - person_id
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid

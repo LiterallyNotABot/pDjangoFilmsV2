@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/5.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -36,7 +36,24 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'daphne', # debe estar antes de contrib.staticfiles
     'django.contrib.staticfiles',
+
+    # MY APPS
+    'comms',
+    'films',
+    'integrations',
+    'reviews',
+    'store',
+    'users',
+
+    # OTHER
+    'rest_framework',
+    'django_extensions',
+    'rest_framework_api_key',
+    'channels',
+    'drf_spectacular',
+
 ]
 
 MIDDLEWARE = [
@@ -67,6 +84,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'pDjangoFilmsV2.wsgi.application'
+ASGI_APPLICATION = 'pDjangoFilmsV2.asgi.application'
 
 
 # Database
@@ -78,7 +96,8 @@ DATABASES = {
         'NAME': 'DjangoFilmsDB',
         'USER': 'postgres',
         'PASSWORD': '1234',
-        'HOST': 'localhost',
+       # 'HOST': 'localhost',
+        'HOST': 'db', # COMPOSE
         'PORT': '5432',
     }
 }
@@ -121,7 +140,48 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+STATICFILES_DIRS = [BASE_DIR / 'staticfiles']
+STATIC_ROOT = BASE_DIR / 'static'
+
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# INTEGRATIONS
+
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+    ),
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 20,
+
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework_api_key.permissions.HasAPIKey',
+    ],
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+# COMMS
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            # "hosts": [('127.0.0.1', 6379)], # original
+                "hosts": [('redis', 6379)], # container
+        },
+    },
+}
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+]
+# KEYS
+
+STRIPE_SECRET_KEY = "sk_test_51QuZCQPdMh0chZHFYp8nRrBRKEYncGoaNefqfKSqKprIdP6pKYa26SqW5g8zqivZwQKrBZdK4NsYL09VzOxrp7ND00u6cY2GL1"
+STRIPE_PUBLIC_KEY = "pk_test_51QuZCQPdMh0chZHFFpXhHCl8rOd0YxGljroiPsVZAvIFPTUdfvBrfPqfKm6vhM8PT8gf9lZEMnhCBXwiP5QJJLjd00oNtsMMxS"
+STRIPE_WEBHOOK_SECRET = "whsec_10229ca2e350c85ee83bb1c9440526a6c3d248d36090909ed72a79d5ecc81513"

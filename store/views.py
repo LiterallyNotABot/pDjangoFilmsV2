@@ -1,3 +1,6 @@
-from django.shortcuts import render
+from django.http import JsonResponse
+from .stripe_manager import create_checkout_session
 
-# Create your views here.
+def create_payment(request):
+    session = create_checkout_session("Fake Ticket", 1000)  # $10.00
+    return JsonResponse({'checkout_url': session.url})
