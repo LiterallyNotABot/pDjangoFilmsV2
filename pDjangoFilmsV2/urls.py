@@ -27,5 +27,6 @@ urlpatterns = [
     path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='docs'),  # Swagger UI
     path('store/', include('store.urls')),
     path('comms/', include('comms.urls')),
+    path("users/", include("users.urls")),
 ]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 

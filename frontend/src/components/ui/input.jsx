@@ -1,9 +1,11 @@
-import React from 'react';
-
-export function Input({ className = '', ...props }) {
+export function Input({ type = 'text', placeholder, value, onChange, ...props }) {
   return (
     <input
-      className={`border border-gray-300 rounded px-3 py-2 w-full ${className}`}
+      type={type}
+      placeholder={placeholder}
+      value={value}
+      onChange={onChange}
+      className="w-full p-2 border rounded"
       {...props}
     />
   );
