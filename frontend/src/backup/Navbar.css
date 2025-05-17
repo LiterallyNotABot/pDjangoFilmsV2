@@ -1,0 +1,113 @@
+@import 'tailwindcss';
+
+.navbar {
+  @apply fixed top-0 left-0 right-0 z-50 bg-gray-950 shadow-md;
+  padding: 0.5rem 0;
+}
+
+.navbar__container {
+  @apply mx-auto px-4 flex flex-wrap items-center justify-between gap-4;
+  max-width: 1280px;
+  min-height: 4rem;
+}
+
+.navbar__hamburger {
+  @apply text-gray-300 md:hidden absolute top-2 left-4 z-50 focus:outline-none;
+  width: 2rem;
+  height: 2rem;
+}
+
+.navbar__logo {
+  @apply flex items-center text-2xl font-bold select-none h-full px-4;
+  font-family: "Verdana", sans-serif;
+}
+
+.navbar__item {
+  @apply text-gray-300 px-4 select-none font-bold transition-colors duration-300 cursor-pointer flex items-center h-12;
+}
+
+.navbar__item--hoverable {
+  @apply hover:bg-gray-800 hover:text-green-500;
+}
+
+.navbar__dropdown {
+  @apply absolute right-0 mt-2 w-40 rounded shadow-md z-50;
+  background-color: #18181b;
+}
+
+.navbar__dropdownItem {
+  @apply block px-4 py-2 text-sm text-white hover:bg-zinc-700;
+}
+
+.navbar__mobileMenu {
+  @apply flex-col z-40 w-full;
+  background-color: #0f0f0f;
+  padding: 0.5rem 1rem;
+  gap: 0.5rem;
+}
+
+@media (max-width: 767px) {
+  .navbar__mobileMenu {
+    max-width: 40rem;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 10px rgb(0 0 0 / 0.4);
+  }
+
+  .navbar__searchGroup {
+    justify-content: flex-start;
+    flex-direction: row;
+    width: 100%;
+    padding: 0 1rem;
+    gap: 0.5rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .navbar__mobileMenu {
+    @apply flex flex-row items-center justify-center space-x-4 static bg-transparent;
+    padding: 0;
+  }
+
+  .navbar__searchGroup {
+    position: relative;
+    flex-direction: row;
+  }
+}
+
+.navbar__searchGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  position: relative;
+}
+
+/* ✅ Animación para el input */
+.navbar__searchInput {
+  background-color: #1f2937;
+  color: white;
+  border: none;
+  border-radius: 0.375rem;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.875rem;
+  outline: none;
+
+  max-width: 0;
+  opacity: 0;
+  transition: max-width 0.3s ease, opacity 0.2s ease;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+/* ✅ Cuando se activa la búsqueda */
+.navbar__searchGroup.search-open .navbar__searchInput {
+  max-width: 12rem;
+  opacity: 1;
+}
+
+.navbar__searchIcon {
+  color: #9ca3af;
+  cursor: pointer;
+  z-index: 10;
+}

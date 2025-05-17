@@ -1,8 +1,9 @@
-// components/ui/Button.jsx
-export function Button({ children, ...props }) {
+import "./Button.css";
+
+export function Button({ children, variant = "primary", className = "", ...props }) {
   return (
     <button
-      className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition"
+      className={`btn btn--${variant} ${className}`}
       {...props}
     >
       {children}

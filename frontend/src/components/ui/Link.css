@@ -1,0 +1,5 @@
+@import 'tailwindcss';
+
+.ui-link {
+  @apply text-gray-300 px-4 select-none font-bold transition-colors duration-300 cursor-pointer flex items-center h-12 hover:bg-gray-800 hover:text-green-500;
+}

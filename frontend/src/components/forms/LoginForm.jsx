@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { Input } from "../ui/Input";
+import Input from "../ui/Input";
 import { Button } from "../ui/Button";
 import { loginUser } from "../../services/users";
 import useUserStore from "../../store/userStore";
 
-export default function LoginForm() {
-  const [email, setEmail] = useState("");
+export default function LoginForm({ onSuccess }) {
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
   const { setUser } = useUserStore();
@@ -14,40 +14,40 @@ export default function LoginForm() {
     e.preventDefault();
     setError(null);
     try {
-      const data = await loginUser(email, password);
+      const data = await loginUser(username, password);
       setUser(data.user, data.token);
-      console.log("Login exitoso:", data);
-      // Aquí puedes redirigir, cerrar modal o limpiar formulario
+      console.log("Login successful:", data);
+      if (onSuccess) onSuccess();
     } catch (err) {
       setError(
-        err.response?.data?.detail || err.message || "Error desconocido al iniciar sesión"
+        err.response?.data?.detail || err.message || "Unknown login error"
       );
-      console.error("Error al iniciar sesión:", err);
+      console.error("Login error:", err);
     }
   };
 
   return (
     <form onSubmit={handleLogin} className="space-y-4">
-      <h2 className="text-2xl font-bold text-center">Iniciar Sesión</h2>
+      <h2 className="text-2xl font-bold text-center">Login</h2>
 
       <Input
-        type="email"
-        placeholder="Correo electrónico"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
+        type="text"
+        placeholder="Username"
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
         required
       />
 
       <Input
         type="password"
-        placeholder="Contraseña"
+        placeholder="Password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         required
       />
 
       <Button type="submit" className="w-full">
-        Entrar
+        Login
       </Button>
 
       {error && <p className="text-red-600 text-center">{error}</p>}

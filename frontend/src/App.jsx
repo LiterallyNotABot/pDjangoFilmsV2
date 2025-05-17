@@ -1,4 +1,22 @@
+import { Routes, Route } from "react-router-dom";
+import Layout from "./components/layout/layout";
+import Home from "./pages/Home";
+
+function App() {
+  return (
+    <Routes>
+      <Route path="/" element={<Layout />}>
+        <Route index element={<Home />} />
+      </Route>
+    </Routes>
+  );
+}
+
+export default App;
+
 // App.jsx
+
+/*
 import { useState } from "react";
 import Navbar from "./components/layout/navbar";
 import Modal from "./components/ui/Modal";
@@ -31,3 +49,4 @@ function App() {
 
 export default App;
 
+*/

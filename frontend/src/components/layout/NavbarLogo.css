@@ -1,0 +1,14 @@
+@import 'tailwindcss';
+
+.navbar__logo {
+  @apply flex items-center text-2xl font-bold select-none h-full px-4;
+  font-family: "Verdana", sans-serif;
+}
+
+.navbar__logo--django {
+  @apply text-green-500;
+}
+
+.navbar__logo--films {
+  @apply text-white ml-1;
+}

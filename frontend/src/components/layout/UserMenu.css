@@ -1,0 +1,23 @@
+@import "tailwindcss";
+
+.navbar__item {
+  @apply text-gray-300 px-4 select-none font-bold transition-colors duration-300 cursor-pointer flex items-center h-12;
+}
+
+.navbar__item--hoverable {
+  @apply hover:bg-gray-800 hover:text-green-500;
+}
+
+.navbar__dropdown {
+  @apply absolute right-0 mt-2 w-40 rounded shadow-md z-50;
+  background-color: #18181b;
+}
+
+.navbar__dropdownItem {
+  @apply block px-4 py-2 text-sm text-white hover:bg-zinc-700;
+}
+
+.navbar__item.text-green-500:hover {
+  background-color: #1f2937; /* gris oscuro */
+  color: #22c55e; /* verde tailwind (green-500) */
+}
