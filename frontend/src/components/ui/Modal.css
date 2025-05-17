@@ -1,18 +1,20 @@
 @import 'tailwindcss';
-/*
+
 .ui-modal-backdrop {
-  @apply fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50;
+  @apply fixed inset-0 flex items-center justify-center z-50;
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
+
 .ui-modal {
-  @apply relative bg-gray-900 text-gray-100 rounded-2xl shadow-2xl p-6 w-[90%] max-w-md;
+  @apply relative bg-black text-gray-100 ui-rounded shadow-2xl p-6 w-[90%] max-w-md border border-green-700;
   transition: all 0.3s ease-in-out;
 }
 
+
 .ui-modal-close {
-  @apply absolute top-3 right-4 text-gray-400 hover:text-red-500 text-xl font-bold;
+  @apply absolute top-3 right-4 text-gray-100 hover:text-red-500 text-xl font-bold;
   background: transparent;
   border: none;
   cursor: pointer;
 }
-*/

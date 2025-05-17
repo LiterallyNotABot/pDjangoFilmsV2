@@ -1,9 +1,9 @@
-import { Link } from "react-router-dom";
 import UserMenu from "./UserMenu";
 import SearchBox from "./SearchBox";
 import NavbarLogo from "./NavbarLogo";
 import useNavbarState from "../../hooks/useNavbarState";
 import useUserStore from "../../store/userStore";
+import Link from "../ui/Link";
 import "./Navbar.css";
 
 export default function Navbar({ onLoginClick, onRegisterClick }) {
@@ -13,7 +13,6 @@ export default function Navbar({ onLoginClick, onRegisterClick }) {
   return (
     <nav className="navbar">
       <div className="navbar__container">
-        {/* ✅ Botón hamburguesa funcional (SVG embebido) */}
         <button
           className="navbar__hamburger"
           onClick={() => setMenuOpen(!menuOpen)}
@@ -34,7 +33,6 @@ export default function Navbar({ onLoginClick, onRegisterClick }) {
           )}
         </button>
 
-        {/* Contenedor del menú principal */}
         <div className={`navbar__mobileMenu ${menuOpen ? "flex" : "hidden"}`}>
           <NavbarLogo />
 
@@ -44,17 +42,19 @@ export default function Navbar({ onLoginClick, onRegisterClick }) {
             closeMenu={() => setMenuOpen(false)}
           />
 
-          <Link to="/films" className="navbar__item navbar__item--hoverable">
+          <Link to="/films" className="ui-link ui-link--navbar">
             Films
           </Link>
-          <Link to="/lists" className="navbar__item navbar__item--hoverable">
+          <Link to="/lists" className="ui-link ui-link--navbar">
             Lists
           </Link>
-          <Link to="/members" className="navbar__item navbar__item--hoverable">
+          <Link to="/members" className="ui-link ui-link--navbar">
             Members
           </Link>
+          <Link to="/shop" className="ui-link ui-link--navbar">
+            Shop
+          </Link>
 
-          {/* Buscador (ya funcionaba, NO tocado) */}
           <SearchBox searchOpen={searchOpen} setSearchOpen={setSearchOpen} />
         </div>
       </div>

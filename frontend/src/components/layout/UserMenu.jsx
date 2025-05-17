@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import Link from "../ui/Link";
 import useUserStore from "../../store/userStore";
 import "./UserMenu.css";
+import UserDropdown from "./UserDropdown";
 
 export default function UserMenu({ onLoginClick, onRegisterClick, closeMenu }) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -10,40 +11,25 @@ export default function UserMenu({ onLoginClick, onRegisterClick, closeMenu }) {
   if (!user) {
     return (
       <>
-        <button onClick={onLoginClick} className="navbar__item navbar__item--hoverable">
-          Sign In
-        </button>
-        <button onClick={onRegisterClick} className="navbar__item navbar__item--hoverable">
-          Create Account
-        </button>
+        <button onClick={onLoginClick} className="navbar__link">Sign In</button>
+        <button onClick={onRegisterClick} className="navbar__link">Create Account</button>
       </>
     );
   }
 
+  const handleClose = () => {
+    setDropdownOpen(false);
+    closeMenu?.();
+  };
+
   return (
     <div className="relative">
-      <button
-        onClick={() => setDropdownOpen(!dropdownOpen)}
-        className="navbar__item"
-      >
+      <button onClick={() => setDropdownOpen(!dropdownOpen)} className="navbar__link">
         {user.username}
       </button>
+
       {dropdownOpen && (
-        <div className="navbar__dropdown">
-          <Link to="/profile" className="navbar__dropdownItem" onClick={() => setDropdownOpen(false)}>
-            Profile
-          </Link>
-          <button
-            className="navbar__dropdownItem w-full text-left"
-            onClick={() => {
-              logout();
-              setDropdownOpen(false);
-              closeMenu();
-            }}
-          >
-            Logout
-          </button>
-        </div>
+           <UserDropdown onClose={handleClose} />
       )}
     </div>
   );

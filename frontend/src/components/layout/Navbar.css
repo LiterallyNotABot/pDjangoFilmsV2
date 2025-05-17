@@ -1,7 +1,7 @@
 @import 'tailwindcss';
 
 .navbar {
-  @apply fixed top-0 left-0 right-0 z-50 bg-gray-950 shadow-md;
+  @apply fixed top-0 left-0 right-0 z-50 bg-black shadow-md;
   padding: 0.5rem 0;
 }
 

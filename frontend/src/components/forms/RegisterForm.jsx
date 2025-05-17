@@ -51,7 +51,7 @@ export default function RegisterForm({ onSuccess }) {
         required
       />
 
-      <Button type="submit" className="w-full">
+      <Button type="submit"  variant="primary" className="mx-auto block">
         Register
       </Button>
 

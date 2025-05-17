@@ -1,0 +1,11 @@
+@import "tailwindcss";
+
+.user-dropdown {
+  @apply absolute right-0 mt-2 w-36 rounded-sm z-50 bg-[#121212] p-0 shadow;
+  border: 0.5px solid #22c55e; /* green-500 con grosor fino */
+}
+
+
+.user-dropdown__separator {
+  @apply my-[2px] border-t border-gray-700;
+}
