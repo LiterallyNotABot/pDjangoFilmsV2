@@ -1,5 +1,5 @@
 import { Link as RouterLink } from "react-router-dom";
-import "./Link.css";
+import "./css/Link.css";
 
 export default function Link({ to, children, variant = "default", className = "", ...props }) {
   return (

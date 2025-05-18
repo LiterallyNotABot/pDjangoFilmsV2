@@ -1,0 +1,44 @@
+@import 'tailwindcss';
+
+.hero-section {
+  @apply relative h-[80vh] w-full bg-cover bg-center flex items-center justify-center;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.hero-overlay {
+  @apply absolute inset-0 bg-black/70 backdrop-blur-sm z-0;
+}
+
+.hero-content {
+  @apply relative z-10 text-center px-4;
+}
+
+.hero-title {
+  @apply text-4xl md:text-6xl font-extrabold text-white leading-tight drop-shadow mb-4;
+}
+
+.hero-subtitle {
+  @apply text-lg md:text-xl text-gray-300 drop-shadow mb-6;
+}
+
+.hero-button {
+  @apply bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-full font-bold shadow-lg transition;
+}
+
+.green {
+  @apply text-green-400;
+}
+
+.red {
+  @apply text-red-500;
+}
+
+.yellow {
+  @apply text-yellow-400;
+}
+
+.orange {
+  @apply text-orange-400;
+}

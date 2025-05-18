@@ -1,0 +1,42 @@
+@import 'tailwindcss';
+
+.film-card {
+  @apply rounded-lg overflow-hidden relative shadow-md transition-transform duration-300 ease-out;
+}
+
+.film-card:hover {
+  @apply scale-105 border-2 border-red-500;
+}
+
+.film-card .icon {
+  @apply text-white hover:text-green-400 transition;
+}
+
+.film-card .icon.eye {
+  @apply hover:text-green-500;
+}
+
+.film-card .icon.heart {
+  @apply hover:text-red-400;
+}
+
+.film-card .icon.more {
+  @apply hover:text-gray-400;
+}
+
+.film-tooltip {
+  @apply absolute -top-10 left-1/2 -translate-x-1/2 
+         bg-zinc-900 text-white text-xs px-3 py-1 rounded shadow-lg 
+         z-50 whitespace-nowrap pointer-events-none;
+}
+
+.film-tooltip::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 5px;
+  border-style: solid;
+  border-color: black transparent transparent transparent;
+}

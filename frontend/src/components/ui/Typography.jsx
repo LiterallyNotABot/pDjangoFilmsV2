@@ -1,4 +1,4 @@
-import './Typography.css';
+import './css/Typography.css';
 
 export function Title({ children }) {
   return <h1 className="ui-title">{children}</h1>;

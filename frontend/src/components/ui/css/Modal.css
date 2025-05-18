@@ -7,9 +7,11 @@
 
 
 .ui-modal {
-  @apply relative bg-black text-gray-100 ui-rounded shadow-2xl p-6 w-[90%] max-w-md border border-green-700;
-  transition: all 0.3s ease-in-out;
+  @apply relative bg-black text-gray-100 rounded-md shadow-2xl p-4 w-full max-w-xs border border-red-500;
+  max-height: 90vh; /* alto máximo visible */
+  height: auto;     /* crece según contenido */
 }
+
 
 
 .ui-modal-close {

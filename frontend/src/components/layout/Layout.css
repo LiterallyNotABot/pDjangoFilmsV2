@@ -1,7 +1,0 @@
-@import 'tailwindcss';
-
-.app-layout {
-  @apply min-h-screen w-full pt-24 px-0 
-         bg-gradient-to-b from-black via-black via-black to-red-900 
-         text-gray-100 font-sans;
-}

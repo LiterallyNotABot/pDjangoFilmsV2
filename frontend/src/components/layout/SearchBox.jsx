@@ -1,4 +1,4 @@
-import "./SearchBox.css";
+import "./css/SearchBox.css";
 
 export default function SearchBox({ searchOpen, setSearchOpen }) {
   return (

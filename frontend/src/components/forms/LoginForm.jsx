@@ -28,7 +28,7 @@ export default function LoginForm({ onSuccess }) {
 
   return (
     <form onSubmit={handleLogin} className="space-y-4">
-      <h2 className="text-2xl font-bold text-center">Login</h2>
+      <h2 className="text-2xl font-bold text-center ">Sign In</h2>
 
       <Input
         type="text"
@@ -47,7 +47,7 @@ export default function LoginForm({ onSuccess }) {
       />
 
       <Button type="submit"  variant="primary" className="mx-auto block">
-        Login
+        Sign In
       </Button>
 
       {error && <p className="text-red-600 text-center">{error}</p>}

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Link from "../ui/Link";
 import useUserStore from "../../store/userStore";
-import "./UserMenu.css";
+import "./css/UserMenu.css";
 import UserDropdown from "./UserDropdown";
 
 export default function UserMenu({ onLoginClick, onRegisterClick, closeMenu }) {

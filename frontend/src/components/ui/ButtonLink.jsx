@@ -1,6 +1,6 @@
 // components/ui/ButtonLink.jsx
 import { Link } from "react-router-dom";
-import "./ButtonLink.css";
+import "./css/ButtonLink.css";
 
 export function ButtonLink({ to, children, ...props }) {
   return (

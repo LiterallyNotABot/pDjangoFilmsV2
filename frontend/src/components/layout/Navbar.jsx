@@ -4,7 +4,7 @@ import NavbarLogo from "./NavbarLogo";
 import useNavbarState from "../../hooks/useNavbarState";
 import useUserStore from "../../store/userStore";
 import Link from "../ui/Link";
-import "./Navbar.css";
+import "./css/Navbar.css";
 
 export default function Navbar({ onLoginClick, onRegisterClick }) {
   const { menuOpen, setMenuOpen, searchOpen, setSearchOpen } = useNavbarState();
