@@ -1,0 +1,42 @@
+@import 'tailwindcss';
+
+.navbar {
+  @apply fixed top-0 left-0 right-0 z-50 bg-black shadow-md;
+  padding: 0.5rem 0;
+}
+
+.navbar__container {
+  @apply mx-auto px-4 flex flex-wrap items-center justify-between gap-4;
+  max-width: 1280px;
+  min-height: 4rem;
+}
+
+.navbar__hamburger {
+  @apply text-gray-300 md:hidden absolute top-2 left-4 z-50 focus:outline-none;
+  width: 2rem;
+  height: 2rem;
+}
+
+.navbar__mobileMenu {
+  @apply flex-col z-40 w-full;
+  background-color: #0f0f0f;
+  padding: 0.5rem 1rem;
+  gap: 0.5rem;
+}
+
+@media (max-width: 767px) {
+  .navbar__mobileMenu {
+    max-width: 40rem;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 10px rgb(0 0 0 / 0.4);
+  }
+}
+
+@media (min-width: 768px) {
+  .navbar__mobileMenu {
+    @apply flex flex-row items-center justify-center space-x-4 static bg-transparent;
+    padding: 0;
+  }
+}

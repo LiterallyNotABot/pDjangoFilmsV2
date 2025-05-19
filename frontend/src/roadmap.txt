@@ -1,0 +1,100 @@
+🗺️ Roadmap - Proyecto Letterboxd Clone (Django + React)
+Este roadmap detalla las etapas de desarrollo del proyecto pDjangoFilmsV2, desde la estructura básica hasta funciones avanzadas como Stripe, WebSockets y personalización de usuario. Se organiza por fases y prioridad.
+
+📦 Estructura base del proyecto
+Tarea	Estado
+📁 Crear proyecto React con Vite	✅
+🧱 Definir estructura de carpetas (src/features, services, pages)	✅
+🧪 Configurar TailwindCSS (opcional pero recomendado)	⬜
+🔗 Instalar React Router, Axios, Zustand/Redux	✅
+🔐 Instalar JWT decode (para auth con tokens)	⬜
+
+🧠 Fase 1: Fundamentos del Frontend
+Tarea	Estado
+📌 Crear layout general (Navbar, Footer)	⬜
+🔁 Configurar rutas principales (Home, Login, Register, Film Detail)	✅
+🧰 Crear servicios base (filmService, userService)	⬜
+🧠 Crear hooks como useFetch, useAuth, useFilms	⬜
+📃 Crear páginas: Home (listado películas), Film Detail	⬜
+
+👤 Fase 2: Autenticación
+Tarea	Estado
+🔑 Registro de usuario	⬜
+🔐 Login con JWT (guardar token)	⬜
+🙋‍♂️ Obtener datos del usuario autenticado (perfil)	⬜
+🔒 Proteger rutas privadas	⬜
+🚪 Logout y control de sesión	⬜
+
+🎬 Fase 3: Funcionalidades core
+Tarea	Estado
+📽️ Mostrar detalle de película (info, elenco, reviews)	⬜
+📝 Ver y crear reviews	⬜
+❤️ Like/Dislike reviews o películas	⬜
+📂 Mostrar películas por categoría/género	⬜
+🔍 Filtro y búsqueda de películas	⬜
+
+🛒 Fase 4: Integración con Stripe
+Tarea	Estado
+🛍️ Mostrar productos (simulados o reales)	⬜
+💳 Implementar flujo de pago con Stripe (sandbox)	⬜
+📩 Mostrar resultado del pago (éxito/error)	⬜
+🧾 Mostrar historial de compras (usuario)	⬜
+
+📨 Fase 5: Mensajería en tiempo real
+Tarea	Estado
+💬 Crear UI para mensajes (chat privado)	⬜
+🧠 Conectar con backend (Django Channels + WebSocket)	⬜
+🔔 Notificaciones de nuevos mensajes	⬜
+💡 Integrar WebSocket reconnection y control de errores	⬜
+
+🧩 Fase 6: Integraciones externas (TMDB)
+Tarea	Estado
+🔌 Conectar a la API de TMDB desde backend	✅
+📡 Mostrar contenido enriquecido: trailers, imágenes	⬜
+🧪 Crear vista de "Explorar" o "Descubrir" basada en TMDB	⬜
+
+🧑‍💼 Fase 7: Usuario avanzado
+Tarea	Estado
+🗂️ Listas personalizadas (wishlist, favoritos, etc)	⬜
+🕒 Registro de películas vistas	⬜
+📊 Estadísticas de usuario (pelis por género, más vistas, etc)	⬜
+🖼️ Perfil público y avatar	⬜
+
+🎨 Fase 8: Estética y experiencia de usuario
+Tarea	Estado
+🌙 Modo oscuro / claro	⬜
+🧭 Breadcrumbs, tooltips, transiciones suaves	⬜
+📱 Diseño responsive (mobile/tablet/desktop)	⬜
+🛎️ Sistema de notificaciones (toasts, modales)	⬜
+
+✅ Extras y mantenimiento
+Tarea	Estado
+🧪 Pruebas unitarias (React Testing Library)	⬜
+🔍 Linter + Prettier + Husky	⬜
+📊 Monitorización de errores (Sentry o similar)	⬜
+🧹 Limpieza y refactorización final	⬜
+
+🧭 Sugerencia de orden de ejecución
+Estructura básica (rutas, layout)
+
+Autenticación
+
+Pantallas clave: Home, Detalle, Reviews
+
+Stripe (store)
+
+WebSockets (comms)
+
+TMDB + Features avanzados
+
+UX/UI + estadísticas
+
+Pruebas y limpieza
+
+💬 Notas finales
+Este roadmap es iterativo. Puedes avanzar por módulos independientes.
+
+Cada fase es funcional: "build small, build often".
+
+No te abrumes. Trabaja en bloques y revisa progreso semanalmente.
+

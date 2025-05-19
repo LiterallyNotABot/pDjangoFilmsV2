@@ -1,0 +1,95 @@
+@import 'tailwindcss';
+
+.horizontal-grid {
+  @apply w-full mb-14 px-4 max-w-6xl mx-auto;
+}
+
+.horizontal-grid-title {
+  @apply text-3xl font-extrabold text-green-500 mb-6 text-center tracking-tight font-sans;
+}
+
+.horizontal-scroll-wrapper {
+  @apply relative;
+}
+
+.horizontal-scroll {
+  @apply flex gap-1 overflow-x-auto overflow-y-visible scroll-smooth px-2 py-4 relative;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.horizontal-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* Responsive grid item widths */
+.grid-item {
+  @apply relative overflow-visible;
+  min-width: 22%; /* default desktop */
+}
+
+@media (max-width: 1024px) {
+  .grid-item {
+    min-width: 28%;
+  }
+}
+
+@media (max-width: 768px) {
+  .grid-item {
+    min-width: 35%;
+  }
+}
+
+@media (max-width: 640px) {
+  .grid-item {
+    min-width: 45%;
+  }
+}
+
+@media (max-width: 480px) {
+  .grid-item {
+    min-width: 65%;
+  }
+}
+
+/* Flechas de scroll */
+.scroll-button {
+  @apply absolute top-1/2 -translate-y-1/2 bg-black/80 text-white text-2xl p-3 rounded-full shadow-xl hover:bg-red-600 transition z-30;
+}
+
+.scroll-button.left {
+  @apply -left-14;
+}
+
+.scroll-button.right {
+  @apply -right-14;
+}
+
+/* Ocultar flechas en pantallas pequeñas si se desea */
+@media (max-width: 640px) {
+  .scroll-button {
+    display: none;
+  }
+}
+
+/* Fade en extremos */
+.horizontal-scroll-wrapper::before,
+.horizontal-scroll-wrapper::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50px;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.horizontal-scroll-wrapper::before {
+  left: 0;
+  background: linear-gradient(to right, black, transparent);
+}
+
+.horizontal-scroll-wrapper::after {
+  right: 0;
+  background: linear-gradient(to left, black, transparent);
+}

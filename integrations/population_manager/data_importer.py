@@ -15,7 +15,7 @@ from population_helper import *
 sleep_time=0.1
 
 def safe_sleep(seconds=sleep_time):
-    print(f"Sleeping {seconds} seconds to respect API rate limits...")
+    # print(f"Sleeping {seconds} seconds to respect API rate limits...")
     time.sleep(seconds)
 
 def import_movies_by_query(query):

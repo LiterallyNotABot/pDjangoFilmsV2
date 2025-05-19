@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 import os
+from datetime import timedelta
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -39,7 +40,7 @@ INSTALLED_APPS = [
     'daphne', # debe estar antes de contrib.staticfiles
     'django.contrib.staticfiles',
 
-    # MY APPS
+    # My apps
     'comms',
     'films',
     'integrations',
@@ -47,18 +48,21 @@ INSTALLED_APPS = [
     'store',
     'users',
 
-    # OTHER
+    # Other
     'rest_framework',
+    'rest_framework_simplejwt',
     'django_extensions',
     'rest_framework_api_key',
     'channels',
     'drf_spectacular',
+    'corsheaders'
 
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware', # Este debe estar antes de CommonMiddleware
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -96,8 +100,10 @@ DATABASES = {
         'NAME': 'DjangoFilmsDB',
         'USER': 'postgres',
         'PASSWORD': '1234',
-       # 'HOST': 'localhost',
-        'HOST': 'db', # COMPOSE
+        # LOCAL:
+        'HOST': 'localhost',
+        # DOCKER:
+        # 'HOST': 'db',
         'PORT': '5432',
     }
 }
@@ -151,7 +157,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 # INTEGRATIONS
-
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': (
         'rest_framework.renderers.JSONRenderer',
@@ -162,11 +167,13 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework_api_key.permissions.HasAPIKey',
     ],
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
 # COMMS
-
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
@@ -180,8 +187,23 @@ CHANNEL_LAYERS = {
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
-# KEYS
 
+ # CORS AUTH
+CORS_ALLOWED_ORIGINS = [
+    "https://example.com",
+    "https://sub.example.com",
+    "http://localhost:8080",
+    "http://127.0.0.1:9000",
+    "http://localhost:5173",
+    "http://localhost:5174",
+]
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+    'AUTH_HEADER_TYPES': ('Bearer',),
+}
+
+# KEYS
 STRIPE_SECRET_KEY = "sk_test_51QuZCQPdMh0chZHFYp8nRrBRKEYncGoaNefqfKSqKprIdP6pKYa26SqW5g8zqivZwQKrBZdK4NsYL09VzOxrp7ND00u6cY2GL1"
 STRIPE_PUBLIC_KEY = "pk_test_51QuZCQPdMh0chZHFFpXhHCl8rOd0YxGljroiPsVZAvIFPTUdfvBrfPqfKm6vhM8PT8gf9lZEMnhCBXwiP5QJJLjd00oNtsMMxS"
 STRIPE_WEBHOOK_SECRET = "whsec_10229ca2e350c85ee83bb1c9440526a6c3d248d36090909ed72a79d5ecc81513"
