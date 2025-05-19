@@ -15,12 +15,12 @@ export default function FilmCard({
 }) {
   const [hovered, setHovered] = useState(false);
 
-  const sizes = {
-    sm: "w-24 h-36",
-    md: "w-36 h-52",
-    lg: "w-48 h-72",
-    xl: "w-60 h-90"
-  };
+const sizes = {
+  sm: "w-21 h-30",
+  md: "w-40 h-60", // <-- más grande
+  lg: "w-52 h-78",
+  xl: "w-64 h-96"
+};
   const posterSize = sizes[size] || sizes.md;
 
   return (

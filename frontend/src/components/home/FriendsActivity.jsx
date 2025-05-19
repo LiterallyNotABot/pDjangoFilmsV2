@@ -1,5 +1,6 @@
 import HorizontalGrid from "../ui/HorizontalGrid";
 import FilmCard from "../../features/films/FilmCard";
+import "./css/FriendsActivity.css";
 
 export default function FriendsActivity({ activities = [] }) {
   return (

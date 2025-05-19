@@ -1,0 +1,18 @@
+@import 'tailwindcss';
+
+.list-feed-section {
+  @apply px-4 max-w-6xl mx-auto mb-14;
+}
+
+
+.list-feed-grid {
+  @apply grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6;
+}
+
+.list-divider {
+  @apply border-t border-zinc-800 my-4;
+}
+
+.list-feed-title {
+  @apply text-2xl font-extrabold text-green-500 text-center tracking-tight  font-sans mb-8;
+}

@@ -1,0 +1,9 @@
+@import 'tailwindcss';
+
+.review-feed-section {
+  @apply px-4 max-w-3xl mx-auto mb-14;
+}
+
+.review-feed-title {
+  @apply text-2xl font-extrabold text-red-500 mb-6 font-sans text-center tracking-tight;
+}

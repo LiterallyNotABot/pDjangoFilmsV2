@@ -1,0 +1,45 @@
+@import 'tailwindcss';
+
+.list-card {
+  @apply  rounded-lg p-4 shadow-xl w-full max-w-sm 
+         transition hover:shadow-2xl  
+         flex flex-col items-center text-center;
+  overflow: hidden;
+}
+
+.list-posters {
+  @apply flex justify-center mb-4 relative;
+  width: calc(100% + 60px); /* espacio para solapamiento */
+  margin-left: -15px;
+  padding-bottom: 0.25rem;
+  overflow: visible;
+}
+
+.poster-wrapper {
+  margin-left: -30%;
+  position: relative;
+  transition: transform 0.2s ease;
+}
+.poster-wrapper:first-child {
+  margin-left: 0;
+}
+.poster-wrapper:hover {
+  transform: scale(1.05) translateY(-2px);
+  z-index: 10;
+}
+
+.list-title {
+  @apply text-green-400 font-bold text-sm sm:text-base leading-tight mb-1 truncate;
+}
+
+.list-meta {
+  @apply flex items-center justify-center gap-4 text-sm text-gray-400 mt-1 flex-wrap;
+}
+
+.list-meta .user {
+  @apply text-white font-medium;
+}
+
+.icon {
+  @apply inline-block align-middle;
+}

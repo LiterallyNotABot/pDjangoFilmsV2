@@ -48,9 +48,6 @@ export default function Navbar({ onLoginClick, onRegisterClick }) {
           <Link to="/lists" className="ui-link ui-link--navbar">
             Lists
           </Link>
-          <Link to="/members" className="ui-link ui-link--navbar">
-            Members
-          </Link>
           <Link to="/shop" className="ui-link ui-link--navbar">
             Shop
           </Link>

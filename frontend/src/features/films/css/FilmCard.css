@@ -1,12 +1,16 @@
 @import 'tailwindcss';
 
 .film-card {
-  @apply rounded-lg overflow-hidden relative shadow-md transition-transform duration-300 ease-out;
+  @apply rounded-lg overflow-hidden relative shadow-md transition-all duration-300 ease-out;
+  transform-origin: center;
 }
 
 .film-card:hover {
-  @apply scale-105 border-2 border-red-500;
+  @apply scale-105 border-2 border-orange-700 shadow-xl;
+  transform: translateY(-6px);
+  box-shadow: 0 8px 20px rgba(220, 38, 38, 0.5); /* red-600 glow */
 }
+
 
 .film-card .icon {
   @apply text-white hover:text-green-400 transition;

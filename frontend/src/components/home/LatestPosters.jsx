@@ -4,7 +4,7 @@ import FilmCard from "../../features/films/FilmCard";
 export default function LatestPosters({ films = [] }) {
   return (
     <HorizontalGrid
-      title="Últimos estrenos"
+      title="Last Releases"
       items={films}
       renderItem={(film) => (
         <FilmCard
