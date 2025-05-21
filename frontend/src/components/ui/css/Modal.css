@@ -7,9 +7,9 @@
 
 
 .ui-modal {
-  @apply relative bg-black text-gray-100 rounded-md shadow-2xl p-4 w-full max-w-xs border border-red-500;
-  max-height: 90vh; /* alto máximo visible */
-  height: auto;     /* crece según contenido */
+  @apply relative bg-gray-900 text-gray-100 rounded-b-sm shadow-2xl p-4 w-full max-w-xs border border-green-500;
+  max-height: 90vh; 
+  height: auto;     
 }
 
 

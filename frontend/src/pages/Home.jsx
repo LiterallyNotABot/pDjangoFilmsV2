@@ -183,36 +183,45 @@ const mockReviews = [
   ];
 
   return (
+<>
+  {!user ? (
     <>
-      {!user ? (
-        <>
-          <HeroSection
-            backdropUrl="https://image.tmdb.org/t/p/original/oXGt9e7FIwojD99Cn1p764C83eO.jpg"
-            onJoin={() => console.log("open register modal")}
-          />
-          <LatestPosters films={mockFilms} />
-          <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-10 max-w-6xl mx-auto px-4 py-12">
-            <div className="space-y-6">            
-              <ReviewFeed reviews={mockReviews} />
-            </div>
+      <HeroSection
+        backdropUrl="https://image.tmdb.org/t/p/original/oXGt9e7FIwojD99Cn1p764C83eO.jpg"
+        onJoin={() => console.log("open register modal")}
+      />
+      <LatestPosters films={mockFilms} />
+      <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-10 max-w-6xl mx-auto px-4 py-12">
+        <div className="space-y-6">
+          <ReviewFeed reviews={mockReviews} />
+        </div>
 
-            <div className="space-y-6 text-center">
-              <ListFeed lists={mockLists} />
-            </div>
-          </div>
-        </>
-      ) : (
-        <>
-          <div className="px-4 py-6">
-            <h1 className="text-3xl font-bold text-white mb-6">
-              Hola, {user.username} 👋
-            </h1>
-          </div>
-          <FriendsActivity activities={mockActivity} />
-          <ReviewFeed title="Friend Reviews" reviews={mockReviews} />
-          <ListFeed title="Friend Lists" lists={mockLists} />
-        </>
-      )}
+        <div className="space-y-6 text-center">
+          <ListFeed lists={mockLists} />
+        </div>
+      </div>
     </>
+  ) : (
+    <>
+      <div className="text-center px-4 py-8">
+        <h1 className="text-3xl font-extrabold text-white mb-6">
+          Welcome back, <span className="text-green-500">{user.username}</span>
+        </h1>
+      </div>
+
+      <LatestPosters films={mockFilms} />
+      <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-10 max-w-6xl mx-auto px-4 py-12">
+        <div className="space-y-6">
+          <ReviewFeed title="Friend Reviews" reviews={mockReviews} />
+        </div>
+
+        <div className="space-y-6 text-center">
+          <ListFeed title="Friend Lists" lists={mockLists} />
+        </div>
+      </div>
+    </>
+  )}
+</>
+
   );
 }

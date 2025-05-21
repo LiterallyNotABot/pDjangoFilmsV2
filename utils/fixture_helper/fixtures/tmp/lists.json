@@ -1,0 +1,1082 @@
+[
+    {
+        "model": "users.list",
+        "pk": 1,
+        "fields": {
+            "user": 6,
+            "list_name": "User6_List1",
+            "list_description": "Auto-generated list 1",
+            "date_of_creation": "2025-05-21T23:33:52.175001",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 2,
+        "fields": {
+            "user": 6,
+            "list_name": "User6_List2",
+            "list_description": "Auto-generated list 2",
+            "date_of_creation": "2025-05-21T23:33:52.175001",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 3,
+        "fields": {
+            "user": 6,
+            "list_name": "User6_List3",
+            "list_description": "Auto-generated list 3",
+            "date_of_creation": "2025-05-21T23:33:52.175001",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 4,
+        "fields": {
+            "user": 7,
+            "list_name": "User7_List1",
+            "list_description": "Auto-generated list 1",
+            "date_of_creation": "2025-05-21T23:33:52.175001",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 5,
+        "fields": {
+            "user": 7,
+            "list_name": "User7_List2",
+            "list_description": "Auto-generated list 2",
+            "date_of_creation": "2025-05-21T23:33:52.175001",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 6,
+        "fields": {
+            "user": 7,
+            "list_name": "User7_List3",
+            "list_description": "Auto-generated list 3",
+            "date_of_creation": "2025-05-21T23:33:52.175001",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 7,
+        "fields": {
+            "user": 8,
+            "list_name": "User8_List1",
+            "list_description": "Auto-generated list 1",
+            "date_of_creation": "2025-05-21T23:33:52.175001",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 8,
+        "fields": {
+            "user": 8,
+            "list_name": "User8_List2",
+            "list_description": "Auto-generated list 2",
+            "date_of_creation": "2025-05-21T23:33:52.175001",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 9,
+        "fields": {
+            "user": 8,
+            "list_name": "User8_List3",
+            "list_description": "Auto-generated list 3",
+            "date_of_creation": "2025-05-21T23:33:52.175001",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 10,
+        "fields": {
+            "user": 9,
+            "list_name": "User9_List1",
+            "list_description": "Auto-generated list 1",
+            "date_of_creation": "2025-05-21T23:33:52.175001",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 11,
+        "fields": {
+            "user": 9,
+            "list_name": "User9_List2",
+            "list_description": "Auto-generated list 2",
+            "date_of_creation": "2025-05-21T23:33:52.175001",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 12,
+        "fields": {
+            "user": 9,
+            "list_name": "User9_List3",
+            "list_description": "Auto-generated list 3",
+            "date_of_creation": "2025-05-21T23:33:52.175001",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 13,
+        "fields": {
+            "user": 10,
+            "list_name": "User10_List1",
+            "list_description": "Auto-generated list 1",
+            "date_of_creation": "2025-05-21T23:33:52.175001",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 14,
+        "fields": {
+            "user": 10,
+            "list_name": "User10_List2",
+            "list_description": "Auto-generated list 2",
+            "date_of_creation": "2025-05-21T23:33:52.175001",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 15,
+        "fields": {
+            "user": 10,
+            "list_name": "User10_List3",
+            "list_description": "Auto-generated list 3",
+            "date_of_creation": "2025-05-21T23:33:52.175001",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 16,
+        "fields": {
+            "user": 11,
+            "list_name": "User11_List1",
+            "list_description": "Auto-generated list 1",
+            "date_of_creation": "2025-05-21T23:33:52.175001",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 17,
+        "fields": {
+            "user": 11,
+            "list_name": "User11_List2",
+            "list_description": "Auto-generated list 2",
+            "date_of_creation": "2025-05-21T23:33:52.175001",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 18,
+        "fields": {
+            "user": 11,
+            "list_name": "User11_List3",
+            "list_description": "Auto-generated list 3",
+            "date_of_creation": "2025-05-21T23:33:52.175001",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 19,
+        "fields": {
+            "user": 12,
+            "list_name": "User12_List1",
+            "list_description": "Auto-generated list 1",
+            "date_of_creation": "2025-05-21T23:33:52.175001",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 20,
+        "fields": {
+            "user": 12,
+            "list_name": "User12_List2",
+            "list_description": "Auto-generated list 2",
+            "date_of_creation": "2025-05-21T23:33:52.175001",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 21,
+        "fields": {
+            "user": 12,
+            "list_name": "User12_List3",
+            "list_description": "Auto-generated list 3",
+            "date_of_creation": "2025-05-21T23:33:52.175001",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 22,
+        "fields": {
+            "user": 13,
+            "list_name": "User13_List1",
+            "list_description": "Auto-generated list 1",
+            "date_of_creation": "2025-05-21T23:33:52.175001",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 23,
+        "fields": {
+            "user": 13,
+            "list_name": "User13_List2",
+            "list_description": "Auto-generated list 2",
+            "date_of_creation": "2025-05-21T23:33:52.175001",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 24,
+        "fields": {
+            "user": 13,
+            "list_name": "User13_List3",
+            "list_description": "Auto-generated list 3",
+            "date_of_creation": "2025-05-21T23:33:52.175001",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 25,
+        "fields": {
+            "user": 14,
+            "list_name": "User14_List1",
+            "list_description": "Auto-generated list 1",
+            "date_of_creation": "2025-05-21T23:33:52.175001",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 26,
+        "fields": {
+            "user": 14,
+            "list_name": "User14_List2",
+            "list_description": "Auto-generated list 2",
+            "date_of_creation": "2025-05-21T23:33:52.176002",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 27,
+        "fields": {
+            "user": 14,
+            "list_name": "User14_List3",
+            "list_description": "Auto-generated list 3",
+            "date_of_creation": "2025-05-21T23:33:52.176002",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 28,
+        "fields": {
+            "user": 15,
+            "list_name": "User15_List1",
+            "list_description": "Auto-generated list 1",
+            "date_of_creation": "2025-05-21T23:33:52.176002",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 29,
+        "fields": {
+            "user": 15,
+            "list_name": "User15_List2",
+            "list_description": "Auto-generated list 2",
+            "date_of_creation": "2025-05-21T23:33:52.176002",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 30,
+        "fields": {
+            "user": 15,
+            "list_name": "User15_List3",
+            "list_description": "Auto-generated list 3",
+            "date_of_creation": "2025-05-21T23:33:52.176002",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 31,
+        "fields": {
+            "user": 16,
+            "list_name": "User16_List1",
+            "list_description": "Auto-generated list 1",
+            "date_of_creation": "2025-05-21T23:33:52.176002",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 32,
+        "fields": {
+            "user": 16,
+            "list_name": "User16_List2",
+            "list_description": "Auto-generated list 2",
+            "date_of_creation": "2025-05-21T23:33:52.176002",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 33,
+        "fields": {
+            "user": 16,
+            "list_name": "User16_List3",
+            "list_description": "Auto-generated list 3",
+            "date_of_creation": "2025-05-21T23:33:52.176002",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 34,
+        "fields": {
+            "user": 17,
+            "list_name": "User17_List1",
+            "list_description": "Auto-generated list 1",
+            "date_of_creation": "2025-05-21T23:33:52.176002",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 35,
+        "fields": {
+            "user": 17,
+            "list_name": "User17_List2",
+            "list_description": "Auto-generated list 2",
+            "date_of_creation": "2025-05-21T23:33:52.176002",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 36,
+        "fields": {
+            "user": 17,
+            "list_name": "User17_List3",
+            "list_description": "Auto-generated list 3",
+            "date_of_creation": "2025-05-21T23:33:52.176002",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 37,
+        "fields": {
+            "user": 18,
+            "list_name": "User18_List1",
+            "list_description": "Auto-generated list 1",
+            "date_of_creation": "2025-05-21T23:33:52.176002",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 38,
+        "fields": {
+            "user": 18,
+            "list_name": "User18_List2",
+            "list_description": "Auto-generated list 2",
+            "date_of_creation": "2025-05-21T23:33:52.176002",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 39,
+        "fields": {
+            "user": 18,
+            "list_name": "User18_List3",
+            "list_description": "Auto-generated list 3",
+            "date_of_creation": "2025-05-21T23:33:52.176002",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 40,
+        "fields": {
+            "user": 19,
+            "list_name": "User19_List1",
+            "list_description": "Auto-generated list 1",
+            "date_of_creation": "2025-05-21T23:33:52.176002",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 41,
+        "fields": {
+            "user": 19,
+            "list_name": "User19_List2",
+            "list_description": "Auto-generated list 2",
+            "date_of_creation": "2025-05-21T23:33:52.176002",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 42,
+        "fields": {
+            "user": 19,
+            "list_name": "User19_List3",
+            "list_description": "Auto-generated list 3",
+            "date_of_creation": "2025-05-21T23:33:52.176002",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 43,
+        "fields": {
+            "user": 20,
+            "list_name": "User20_List1",
+            "list_description": "Auto-generated list 1",
+            "date_of_creation": "2025-05-21T23:33:52.176002",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 44,
+        "fields": {
+            "user": 20,
+            "list_name": "User20_List2",
+            "list_description": "Auto-generated list 2",
+            "date_of_creation": "2025-05-21T23:33:52.176002",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 45,
+        "fields": {
+            "user": 20,
+            "list_name": "User20_List3",
+            "list_description": "Auto-generated list 3",
+            "date_of_creation": "2025-05-21T23:33:52.176002",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 46,
+        "fields": {
+            "user": 21,
+            "list_name": "User21_List1",
+            "list_description": "Auto-generated list 1",
+            "date_of_creation": "2025-05-21T23:33:52.176002",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 47,
+        "fields": {
+            "user": 21,
+            "list_name": "User21_List2",
+            "list_description": "Auto-generated list 2",
+            "date_of_creation": "2025-05-21T23:33:52.176002",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 48,
+        "fields": {
+            "user": 21,
+            "list_name": "User21_List3",
+            "list_description": "Auto-generated list 3",
+            "date_of_creation": "2025-05-21T23:33:52.176002",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 49,
+        "fields": {
+            "user": 22,
+            "list_name": "User22_List1",
+            "list_description": "Auto-generated list 1",
+            "date_of_creation": "2025-05-21T23:33:52.176002",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 50,
+        "fields": {
+            "user": 22,
+            "list_name": "User22_List2",
+            "list_description": "Auto-generated list 2",
+            "date_of_creation": "2025-05-21T23:33:52.176002",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 51,
+        "fields": {
+            "user": 22,
+            "list_name": "User22_List3",
+            "list_description": "Auto-generated list 3",
+            "date_of_creation": "2025-05-21T23:33:52.176002",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 52,
+        "fields": {
+            "user": 23,
+            "list_name": "User23_List1",
+            "list_description": "Auto-generated list 1",
+            "date_of_creation": "2025-05-21T23:33:52.176002",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 53,
+        "fields": {
+            "user": 23,
+            "list_name": "User23_List2",
+            "list_description": "Auto-generated list 2",
+            "date_of_creation": "2025-05-21T23:33:52.176002",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 54,
+        "fields": {
+            "user": 23,
+            "list_name": "User23_List3",
+            "list_description": "Auto-generated list 3",
+            "date_of_creation": "2025-05-21T23:33:52.176002",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 55,
+        "fields": {
+            "user": 24,
+            "list_name": "User24_List1",
+            "list_description": "Auto-generated list 1",
+            "date_of_creation": "2025-05-21T23:33:52.176002",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 56,
+        "fields": {
+            "user": 24,
+            "list_name": "User24_List2",
+            "list_description": "Auto-generated list 2",
+            "date_of_creation": "2025-05-21T23:33:52.176002",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 57,
+        "fields": {
+            "user": 24,
+            "list_name": "User24_List3",
+            "list_description": "Auto-generated list 3",
+            "date_of_creation": "2025-05-21T23:33:52.176002",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 58,
+        "fields": {
+            "user": 25,
+            "list_name": "User25_List1",
+            "list_description": "Auto-generated list 1",
+            "date_of_creation": "2025-05-21T23:33:52.176002",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 59,
+        "fields": {
+            "user": 25,
+            "list_name": "User25_List2",
+            "list_description": "Auto-generated list 2",
+            "date_of_creation": "2025-05-21T23:33:52.176002",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 60,
+        "fields": {
+            "user": 25,
+            "list_name": "User25_List3",
+            "list_description": "Auto-generated list 3",
+            "date_of_creation": "2025-05-21T23:33:52.176002",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 61,
+        "fields": {
+            "user": 26,
+            "list_name": "User26_List1",
+            "list_description": "Auto-generated list 1",
+            "date_of_creation": "2025-05-21T23:33:52.176002",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 62,
+        "fields": {
+            "user": 26,
+            "list_name": "User26_List2",
+            "list_description": "Auto-generated list 2",
+            "date_of_creation": "2025-05-21T23:33:52.176002",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 63,
+        "fields": {
+            "user": 26,
+            "list_name": "User26_List3",
+            "list_description": "Auto-generated list 3",
+            "date_of_creation": "2025-05-21T23:33:52.176002",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 64,
+        "fields": {
+            "user": 27,
+            "list_name": "User27_List1",
+            "list_description": "Auto-generated list 1",
+            "date_of_creation": "2025-05-21T23:33:52.176002",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 65,
+        "fields": {
+            "user": 27,
+            "list_name": "User27_List2",
+            "list_description": "Auto-generated list 2",
+            "date_of_creation": "2025-05-21T23:33:52.176002",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 66,
+        "fields": {
+            "user": 27,
+            "list_name": "User27_List3",
+            "list_description": "Auto-generated list 3",
+            "date_of_creation": "2025-05-21T23:33:52.176002",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 67,
+        "fields": {
+            "user": 28,
+            "list_name": "User28_List1",
+            "list_description": "Auto-generated list 1",
+            "date_of_creation": "2025-05-21T23:33:52.176002",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 68,
+        "fields": {
+            "user": 28,
+            "list_name": "User28_List2",
+            "list_description": "Auto-generated list 2",
+            "date_of_creation": "2025-05-21T23:33:52.176002",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 69,
+        "fields": {
+            "user": 28,
+            "list_name": "User28_List3",
+            "list_description": "Auto-generated list 3",
+            "date_of_creation": "2025-05-21T23:33:52.176002",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 70,
+        "fields": {
+            "user": 29,
+            "list_name": "User29_List1",
+            "list_description": "Auto-generated list 1",
+            "date_of_creation": "2025-05-21T23:33:52.176002",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 71,
+        "fields": {
+            "user": 29,
+            "list_name": "User29_List2",
+            "list_description": "Auto-generated list 2",
+            "date_of_creation": "2025-05-21T23:33:52.176002",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 72,
+        "fields": {
+            "user": 29,
+            "list_name": "User29_List3",
+            "list_description": "Auto-generated list 3",
+            "date_of_creation": "2025-05-21T23:33:52.176002",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 73,
+        "fields": {
+            "user": 30,
+            "list_name": "User30_List1",
+            "list_description": "Auto-generated list 1",
+            "date_of_creation": "2025-05-21T23:33:52.176002",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 74,
+        "fields": {
+            "user": 30,
+            "list_name": "User30_List2",
+            "list_description": "Auto-generated list 2",
+            "date_of_creation": "2025-05-21T23:33:52.176002",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 75,
+        "fields": {
+            "user": 30,
+            "list_name": "User30_List3",
+            "list_description": "Auto-generated list 3",
+            "date_of_creation": "2025-05-21T23:33:52.176002",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 76,
+        "fields": {
+            "user": 31,
+            "list_name": "User31_List1",
+            "list_description": "Auto-generated list 1",
+            "date_of_creation": "2025-05-21T23:33:52.176002",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 77,
+        "fields": {
+            "user": 31,
+            "list_name": "User31_List2",
+            "list_description": "Auto-generated list 2",
+            "date_of_creation": "2025-05-21T23:33:52.176002",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 78,
+        "fields": {
+            "user": 31,
+            "list_name": "User31_List3",
+            "list_description": "Auto-generated list 3",
+            "date_of_creation": "2025-05-21T23:33:52.176002",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 79,
+        "fields": {
+            "user": 32,
+            "list_name": "User32_List1",
+            "list_description": "Auto-generated list 1",
+            "date_of_creation": "2025-05-21T23:33:52.176002",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 80,
+        "fields": {
+            "user": 32,
+            "list_name": "User32_List2",
+            "list_description": "Auto-generated list 2",
+            "date_of_creation": "2025-05-21T23:33:52.176002",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 81,
+        "fields": {
+            "user": 32,
+            "list_name": "User32_List3",
+            "list_description": "Auto-generated list 3",
+            "date_of_creation": "2025-05-21T23:33:52.176002",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 82,
+        "fields": {
+            "user": 33,
+            "list_name": "User33_List1",
+            "list_description": "Auto-generated list 1",
+            "date_of_creation": "2025-05-21T23:33:52.176002",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 83,
+        "fields": {
+            "user": 33,
+            "list_name": "User33_List2",
+            "list_description": "Auto-generated list 2",
+            "date_of_creation": "2025-05-21T23:33:52.176002",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 84,
+        "fields": {
+            "user": 33,
+            "list_name": "User33_List3",
+            "list_description": "Auto-generated list 3",
+            "date_of_creation": "2025-05-21T23:33:52.176002",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 85,
+        "fields": {
+            "user": 34,
+            "list_name": "User34_List1",
+            "list_description": "Auto-generated list 1",
+            "date_of_creation": "2025-05-21T23:33:52.176002",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 86,
+        "fields": {
+            "user": 34,
+            "list_name": "User34_List2",
+            "list_description": "Auto-generated list 2",
+            "date_of_creation": "2025-05-21T23:33:52.176002",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 87,
+        "fields": {
+            "user": 34,
+            "list_name": "User34_List3",
+            "list_description": "Auto-generated list 3",
+            "date_of_creation": "2025-05-21T23:33:52.176002",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 88,
+        "fields": {
+            "user": 35,
+            "list_name": "User35_List1",
+            "list_description": "Auto-generated list 1",
+            "date_of_creation": "2025-05-21T23:33:52.176002",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 89,
+        "fields": {
+            "user": 35,
+            "list_name": "User35_List2",
+            "list_description": "Auto-generated list 2",
+            "date_of_creation": "2025-05-21T23:33:52.176002",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "users.list",
+        "pk": 90,
+        "fields": {
+            "user": 35,
+            "list_name": "User35_List3",
+            "list_description": "Auto-generated list 3",
+            "date_of_creation": "2025-05-21T23:33:52.176002",
+            "active": true,
+            "deleted": false
+        }
+    }
+]

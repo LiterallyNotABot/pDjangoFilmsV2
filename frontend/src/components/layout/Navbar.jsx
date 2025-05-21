@@ -35,7 +35,7 @@ export default function Navbar({ onLoginClick, onRegisterClick }) {
 
         <div className={`navbar__mobileMenu ${menuOpen ? "flex" : "hidden"}`}>
           <NavbarLogo />
-
+          
           <UserMenu
             onLoginClick={onLoginClick}
             onRegisterClick={onRegisterClick}

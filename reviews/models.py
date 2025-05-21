@@ -45,6 +45,7 @@ class Log(models.Model):
 class Review(models.Model):
     review_id = models.AutoField(primary_key=True, verbose_name="Review ID")
     log = models.ForeignKey(Log, on_delete=models.CASCADE, verbose_name="Log")
+    body = models.TextField(verbose_name="Review Body")
     active = models.BooleanField(default=True, verbose_name="Is Active?")
     deleted = models.BooleanField(default=False, verbose_name="Is Deleted?")
 

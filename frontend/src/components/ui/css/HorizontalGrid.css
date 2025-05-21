@@ -5,7 +5,7 @@
 }
 
 .horizontal-grid-title {
-  @apply text-3xl font-extrabold text-green-500 mb-6 text-center tracking-tight font-sans;
+  @apply text-3xl font-extrabold text-red-500 mb-6 text-center tracking-tight font-sans;
 }
 
 .horizontal-scroll-wrapper {
