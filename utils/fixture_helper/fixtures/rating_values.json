@@ -1,0 +1,92 @@
+[
+    {
+        "model": "reviews.rating",
+        "pk": 1,
+        "fields": {
+            "rating_value": "0.5",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "reviews.rating",
+        "pk": 2,
+        "fields": {
+            "rating_value": "1.0",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "reviews.rating",
+        "pk": 3,
+        "fields": {
+            "rating_value": "1.5",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "reviews.rating",
+        "pk": 4,
+        "fields": {
+            "rating_value": "2.0",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "reviews.rating",
+        "pk": 5,
+        "fields": {
+            "rating_value": "2.5",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "reviews.rating",
+        "pk": 6,
+        "fields": {
+            "rating_value": "3.0",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "reviews.rating",
+        "pk": 7,
+        "fields": {
+            "rating_value": "3.5",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "reviews.rating",
+        "pk": 8,
+        "fields": {
+            "rating_value": "4.0",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "reviews.rating",
+        "pk": 9,
+        "fields": {
+            "rating_value": "4.5",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "reviews.rating",
+        "pk": 10,
+        "fields": {
+            "rating_value": "5.0",
+            "active": true,
+            "deleted": false
+        }
+    }
+]
