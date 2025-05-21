@@ -4,19 +4,18 @@ import json
 from faker import Faker
 from django.utils.timezone import now
 from django.contrib.auth.hashers import make_password
+from pathlib import Path
+from fixtures_config import MOCK_USER_START_ID, MOCK_USER_COUNT
 
-# Configuración Django
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'pDjangoFilmsV2.settings')
 django.setup()
 
 fake = Faker()
 
-def main():
+def generate_users(start_id, count):
     users = []
-
-    for i in range(5):
-        user_id = 6 + i  # IDs del 6 al 10
-
+    for i in range(count):
+        user_id = start_id + i
         users.append({
             "model": "auth.user",
             "pk": user_id,
@@ -32,12 +31,19 @@ def main():
                 "password": make_password("password123")
             }
         })
+    return users
 
-    output_path = os.path.join(os.path.dirname(__file__), "../fixtures", "users.json")
+def save_fixture(data, filename):
+    output_path = Path(__file__).resolve().parent.parent / "fixtures" / filename
+    output_path.parent.mkdir(parents=True, exist_ok=True)
     with open(output_path, "w", encoding="utf-8") as f:
-        json.dump(users, f, indent=4, ensure_ascii=False)
+        json.dump(data, f, indent=4, ensure_ascii=False)
+    print(f"✅ {filename} generado con {len(data)} usuarios en {output_path}")
 
-    print(f"✅ Fixture generado con 5 usuarios (ID 6–10) en {output_path}")
+def main():
+    users = generate_users(MOCK_USER_START_ID, MOCK_USER_COUNT)
+    save_fixture(users, "users.json")
 
 if __name__ == "__main__":
     main()
+

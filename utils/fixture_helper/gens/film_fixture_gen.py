@@ -2,14 +2,11 @@ import os
 import django
 import json
 import unicodedata
-
-# Configuración Django
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'pDjangoFilmsV2.settings')
-django.setup()
-
 from films.models import Film
 from mock_data.film_mock import film_titles
 
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'pDjangoFilmsV2.settings')
+django.setup()
 
 def normalize_title(title):
     return unicodedata.normalize("NFKD", title.lower()).strip()
@@ -47,12 +44,11 @@ def main():
     else:
         print("\n🎉 Todos los títulos fueron encontrados.")
 
-    # Guardar JSON
     output_path = os.path.join(os.path.dirname(__file__), "../fixtures", "films.json")
     with open(output_path, "w", encoding="utf-8") as f:
         json.dump(matched, f, indent=4, ensure_ascii=False)
 
-    print(f"✅ Exportadas a {output_path}")
+    print(f"✅ Exported to {output_path}")
 
 if __name__ == "__main__":
     main()

@@ -2,28 +2,25 @@ import json
 import random
 from datetime import datetime
 from pathlib import Path
+from fixtures_config import *
 
-# === Paths ===
 BASE_DIR = Path(__file__).resolve().parent
 FIXTURE_DIR = BASE_DIR.parent / "fixtures"
 
-# === Cargar datos base ===
 with open(FIXTURE_DIR / "films.json", encoding="utf-8") as f:
     films = json.load(f)
 
 from mock_data.review_bodies_mock import REVIEW_BODIES
 
 film_ids = [film["film_id"] for film in films]
-user_ids = list(range(1, 11))  # 10 usuarios
-rating_ids = list(range(1, 11))  # 10 ratings (de 0.5 a 5.0)
+rating_ids = list(range(1, RATINGS_COUNT + 1))
 
-# === Generar Logs ===
 logs = []
 log_refs = []
 log_pk = 1
 
-for user_id in user_ids:
-    user_films = random.sample(film_ids, k=random.randint(5, 10))
+for user_id in MOCK_USER_IDS:
+    user_films = random.sample(film_ids, k=min(FILMS_PER_USER_LOG, len(film_ids)))
     for film_id in user_films:
         rating_id = random.choice(rating_ids)
         logs.append({
@@ -42,10 +39,9 @@ for user_id in user_ids:
         log_refs.append((log_pk, user_id))
         log_pk += 1
 
-# === Generar Reviews (60% de logs) ===
 reviews = []
 review_pk = 1
-reviewed_logs = random.sample(log_refs, k=int(len(log_refs) * 0.6))
+reviewed_logs = random.sample(log_refs, k=int(len(log_refs) * REVIEWS_PERCENTAGE))
 
 for log_id, _ in reviewed_logs:
     reviews.append({
@@ -60,11 +56,13 @@ for log_id, _ in reviewed_logs:
     })
     review_pk += 1
 
-# === Generar ReviewAndLikeByUser (likes de otros usuarios a logs con review) ===
 review_likes = []
 like_pk = 1
 for log_id, author_id in reviewed_logs:
-    likers = random.sample([u for u in user_ids if u != author_id], k=random.randint(0, 4))
+    likers = random.sample(
+        [u for u in MOCK_USER_IDS if u != author_id],
+        k=random.randint(0, LIKES_PER_REVIEW_MAX)
+    )
     for liker_id in likers:
         review_likes.append({
             "model": "reviews.reviewandlikebyuser",
@@ -78,12 +76,11 @@ for log_id, author_id in reviewed_logs:
         })
         like_pk += 1
 
-# === Guardar ===
 def save(data, name):
     path = FIXTURE_DIR / f"{name}.json"
     with open(path, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=4, ensure_ascii=False)
-    print(f"✅ {name}.json generado con {len(data)} registros.")
+    print(f"✅ {name}.json created with {len(data)} entries.")
 
 save(logs, "logs")
 save(reviews, "reviews")
