@@ -1,0 +1,452 @@
+[
+    {
+        "model": "reviews.review",
+        "pk": 1,
+        "fields": {
+            "log": 17,
+            "body": "An underappreciated gem. It may lack the big names or marketing push, but it delivers a powerful experience.",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "reviews.review",
+        "pk": 2,
+        "fields": {
+            "log": 49,
+            "body": "It's not for everyone, but I found it bold and unapologetically unique. It challenged my expectations and stuck with me long after.",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "reviews.review",
+        "pk": 3,
+        "fields": {
+            "log": 34,
+            "body": "While the cinematography was breathtaking, the story felt a bit disjointed. I appreciated the ambition, but it didn’t fully land for me.",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "reviews.review",
+        "pk": 4,
+        "fields": {
+            "log": 42,
+            "body": "I really wanted to like this more than I did. Beautiful visuals can’t make up for weak character development and a rushed third act.",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "reviews.review",
+        "pk": 5,
+        "fields": {
+            "log": 9,
+            "body": "It’s flawed, sure — some pacing issues and underused side characters — but the central story is compelling and well-acted.",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "reviews.review",
+        "pk": 6,
+        "fields": {
+            "log": 46,
+            "body": "I’ve seen a lot of films in this genre, but this one brought something fresh. Smart writing, a haunting atmosphere, and a memorable performance by the lead actor.",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "reviews.review",
+        "pk": 7,
+        "fields": {
+            "log": 35,
+            "body": "It's not for everyone, but I found it bold and unapologetically unique. It challenged my expectations and stuck with me long after.",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "reviews.review",
+        "pk": 8,
+        "fields": {
+            "log": 36,
+            "body": "Honestly? I was surprised by how much I connected with this film. It felt personal in a way few movies do.",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "reviews.review",
+        "pk": 9,
+        "fields": {
+            "log": 45,
+            "body": "It's not for everyone, but I found it bold and unapologetically unique. It challenged my expectations and stuck with me long after.",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "reviews.review",
+        "pk": 10,
+        "fields": {
+            "log": 22,
+            "body": "A technically impressive film with a fantastic score and strong direction. Some moments dragged, but the payoff was worth it.",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "reviews.review",
+        "pk": 11,
+        "fields": {
+            "log": 44,
+            "body": "A technically impressive film with a fantastic score and strong direction. Some moments dragged, but the payoff was worth it.",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "reviews.review",
+        "pk": 12,
+        "fields": {
+            "log": 32,
+            "body": "This film hit me harder than I expected. The characters were so well-developed, and the ending left me thinking for hours. Highly recommended.",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "reviews.review",
+        "pk": 13,
+        "fields": {
+            "log": 15,
+            "body": "This film hit me harder than I expected. The characters were so well-developed, and the ending left me thinking for hours. Highly recommended.",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "reviews.review",
+        "pk": 14,
+        "fields": {
+            "log": 58,
+            "body": "The direction was tight, the performances were stellar, and the themes were relevant and thought-provoking. A must-watch for any cinephile.",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "reviews.review",
+        "pk": 15,
+        "fields": {
+            "log": 20,
+            "body": "I really wanted to like this more than I did. Beautiful visuals can’t make up for weak character development and a rushed third act.",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "reviews.review",
+        "pk": 16,
+        "fields": {
+            "log": 23,
+            "body": "A solid effort overall. While it didn’t break new ground, it executed its concept with confidence and heart.",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "reviews.review",
+        "pk": 17,
+        "fields": {
+            "log": 50,
+            "body": "I really wanted to like this more than I did. Beautiful visuals can’t make up for weak character development and a rushed third act.",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "reviews.review",
+        "pk": 18,
+        "fields": {
+            "log": 11,
+            "body": "The plot was straightforward, but the emotional core was so strong it didn’t matter. Honest, raw, and beautifully executed.",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "reviews.review",
+        "pk": 19,
+        "fields": {
+            "log": 60,
+            "body": "The direction was tight, the performances were stellar, and the themes were relevant and thought-provoking. A must-watch for any cinephile.",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "reviews.review",
+        "pk": 20,
+        "fields": {
+            "log": 6,
+            "body": "An underappreciated gem. It may lack the big names or marketing push, but it delivers a powerful experience.",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "reviews.review",
+        "pk": 21,
+        "fields": {
+            "log": 41,
+            "body": "The direction was tight, the performances were stellar, and the themes were relevant and thought-provoking. A must-watch for any cinephile.",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "reviews.review",
+        "pk": 22,
+        "fields": {
+            "log": 37,
+            "body": "It's not for everyone, but I found it bold and unapologetically unique. It challenged my expectations and stuck with me long after.",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "reviews.review",
+        "pk": 23,
+        "fields": {
+            "log": 33,
+            "body": "I’ve seen a lot of films in this genre, but this one brought something fresh. Smart writing, a haunting atmosphere, and a memorable performance by the lead actor.",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "reviews.review",
+        "pk": 24,
+        "fields": {
+            "log": 26,
+            "body": "The film's message was clear and powerful, even if the delivery was sometimes heavy-handed. Still, it’s an important piece of cinema.",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "reviews.review",
+        "pk": 25,
+        "fields": {
+            "log": 40,
+            "body": "A solid effort overall. While it didn’t break new ground, it executed its concept with confidence and heart.",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "reviews.review",
+        "pk": 26,
+        "fields": {
+            "log": 43,
+            "body": "An underappreciated gem. It may lack the big names or marketing push, but it delivers a powerful experience.",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "reviews.review",
+        "pk": 27,
+        "fields": {
+            "log": 55,
+            "body": "Honestly? I was surprised by how much I connected with this film. It felt personal in a way few movies do.",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "reviews.review",
+        "pk": 28,
+        "fields": {
+            "log": 3,
+            "body": "A solid effort overall. While it didn’t break new ground, it executed its concept with confidence and heart.",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "reviews.review",
+        "pk": 29,
+        "fields": {
+            "log": 27,
+            "body": "A deeply emotional and visually captivating film. The performances were authentic and the pacing was perfect. Easily one of the best I've seen this year.",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "reviews.review",
+        "pk": 30,
+        "fields": {
+            "log": 53,
+            "body": "An underappreciated gem. It may lack the big names or marketing push, but it delivers a powerful experience.",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "reviews.review",
+        "pk": 31,
+        "fields": {
+            "log": 29,
+            "body": "While the cinematography was breathtaking, the story felt a bit disjointed. I appreciated the ambition, but it didn’t fully land for me.",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "reviews.review",
+        "pk": 32,
+        "fields": {
+            "log": 71,
+            "body": "The film's message was clear and powerful, even if the delivery was sometimes heavy-handed. Still, it’s an important piece of cinema.",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "reviews.review",
+        "pk": 33,
+        "fields": {
+            "log": 75,
+            "body": "This film hit me harder than I expected. The characters were so well-developed, and the ending left me thinking for hours. Highly recommended.",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "reviews.review",
+        "pk": 34,
+        "fields": {
+            "log": 68,
+            "body": "A technically impressive film with a fantastic score and strong direction. Some moments dragged, but the payoff was worth it.",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "reviews.review",
+        "pk": 35,
+        "fields": {
+            "log": 1,
+            "body": "The film's message was clear and powerful, even if the delivery was sometimes heavy-handed. Still, it’s an important piece of cinema.",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "reviews.review",
+        "pk": 36,
+        "fields": {
+            "log": 16,
+            "body": "I really wanted to like this more than I did. Beautiful visuals can’t make up for weak character development and a rushed third act.",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "reviews.review",
+        "pk": 37,
+        "fields": {
+            "log": 31,
+            "body": "It's not for everyone, but I found it bold and unapologetically unique. It challenged my expectations and stuck with me long after.",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "reviews.review",
+        "pk": 38,
+        "fields": {
+            "log": 18,
+            "body": "I’ve seen a lot of films in this genre, but this one brought something fresh. Smart writing, a haunting atmosphere, and a memorable performance by the lead actor.",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "reviews.review",
+        "pk": 39,
+        "fields": {
+            "log": 7,
+            "body": "It’s flawed, sure — some pacing issues and underused side characters — but the central story is compelling and well-acted.",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "reviews.review",
+        "pk": 40,
+        "fields": {
+            "log": 64,
+            "body": "A solid effort overall. While it didn’t break new ground, it executed its concept with confidence and heart.",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "reviews.review",
+        "pk": 41,
+        "fields": {
+            "log": 51,
+            "body": "A solid effort overall. While it didn’t break new ground, it executed its concept with confidence and heart.",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "reviews.review",
+        "pk": 42,
+        "fields": {
+            "log": 72,
+            "body": "The direction was tight, the performances were stellar, and the themes were relevant and thought-provoking. A must-watch for any cinephile.",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "reviews.review",
+        "pk": 43,
+        "fields": {
+            "log": 62,
+            "body": "An underappreciated gem. It may lack the big names or marketing push, but it delivers a powerful experience.",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "reviews.review",
+        "pk": 44,
+        "fields": {
+            "log": 21,
+            "body": "The direction was tight, the performances were stellar, and the themes were relevant and thought-provoking. A must-watch for any cinephile.",
+            "active": true,
+            "deleted": false
+        }
+    },
+    {
+        "model": "reviews.review",
+        "pk": 45,
+        "fields": {
+            "log": 69,
+            "body": "The plot was straightforward, but the emotional core was so strong it didn’t matter. Honest, raw, and beautifully executed.",
+            "active": true,
+            "deleted": false
+        }
+    }
+]
