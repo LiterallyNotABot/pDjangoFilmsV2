@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom"; // 👈 Agregado
 import "./css/FilmCard.css";
 
 export default function FilmCard({
@@ -8,27 +9,36 @@ export default function FilmCard({
   year,
   posterUrl,
   size = "md",
-  user = null, // { username, liked, watched, rating, reviewed }
+  user = null,
   showUserTag = false,
   showUserActions = true,
   onOpenModal
 }) {
   const [hovered, setHovered] = useState(false);
+  const navigate = useNavigate(); // 👈 para redireccionar
 
-const sizes = {
-  sm: "w-21 h-30",
-  md: "w-40 h-60", // <-- más grande
-  lg: "w-52 h-78",
-  xl: "w-64 h-96"
-};
+  const sizes = {
+    sm: "w-21 h-30",
+    md: "w-40 h-60",
+    lg: "w-52 h-78",
+    xl: "w-64 h-96"
+  };
   const posterSize = sizes[size] || sizes.md;
+
+  const handleClick = () => {
+    if (onOpenModal) {
+      onOpenModal(id);
+    } else {
+      navigate(`/films/${id}`);
+    }
+  };
 
   return (
     <div
       className={`film-card ${posterSize} relative cursor-pointer group`}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      onClick={() => onOpenModal?.(id)}
+      onClick={handleClick}
     >
       <img
         src={posterUrl}
@@ -36,7 +46,6 @@ const sizes = {
         className="h-full w-full object-cover rounded-md shadow-md transition-transform duration-200 group-hover:scale-105"
       />
 
-      {/* Overlay de acciones */}
       {showUserActions && user && (
         <div className="absolute bottom-0 left-0 right-0 flex justify-around items-center p-1 bg-black/60 text-white rounded-b-md text-lg">
           {user.watched && <span className="icon eye">👁️</span>}
@@ -45,14 +54,12 @@ const sizes = {
         </div>
       )}
 
-      {/* Etiqueta de usuario */}
       {showUserTag && user?.username && (
         <div className="text-xs text-green-400 mt-1 text-center truncate">
           {user.username}
         </div>
       )}
 
-      {/* Rating / review / like debajo */}
       {(user?.rating || user?.reviewed || user?.liked) && (
         <div className="text-sm text-gray-300 flex items-center justify-center gap-1 mt-1">
           {user.rating && (
@@ -66,7 +73,6 @@ const sizes = {
         </div>
       )}
 
-      {/* Tooltip al pasar el mouse */}
       {hovered && (
         <div className="film-tooltip">
           {title} ({year})
@@ -75,21 +81,3 @@ const sizes = {
     </div>
   );
 }
-
-FilmCard.propTypes = {
-  id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-  title: PropTypes.string.isRequired,
-  year: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-  posterUrl: PropTypes.string.isRequired,
-  size: PropTypes.oneOf(["sm", "md", "lg", "xl"]),
-  user: PropTypes.shape({
-    username: PropTypes.string,
-    liked: PropTypes.bool,
-    watched: PropTypes.bool,
-    rating: PropTypes.number,
-    reviewed: PropTypes.bool
-  }),
-  showUserTag: PropTypes.bool,
-  showUserActions: PropTypes.bool,
-  onOpenModal: PropTypes.func
-};

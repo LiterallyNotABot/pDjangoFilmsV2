@@ -1,7 +1,6 @@
-import useUserStore from "../store/userStore";
-import HeroSection from "../components/home/HeroSection";
+import useUserStore from "../store/user/userStore";
+import HeroSection from "../components/layout/HeroSection";
 import LatestPosters from "../components/home/LatestPosters";
-import FriendsActivity from "../components/home/FriendsActivity";
 import ReviewFeed from "../features/reviews/ReviewFeed";
 import ListFeed from "../features/users/ListFeed";
 

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Input from "../ui/Input";
 import { Button } from "../ui/Button";
-import { registerUser } from "../../services/users";
+import { registerUser } from "../../services/users/users";
 
 export default function RegisterForm({ onSuccess }) {
   const [username, setUsername] = useState("");

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Link from "../ui/Link";
-import useUserStore from "../../store/userStore";
+import useUserStore from "../../store/user/userStore";
 import "./css/UserMenu.css";
 import UserDropdown from "./UserDropdown";
 

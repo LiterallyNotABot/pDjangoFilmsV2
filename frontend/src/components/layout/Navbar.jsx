@@ -2,7 +2,7 @@ import UserMenu from "./UserMenu";
 import SearchBox from "./SearchBox";
 import NavbarLogo from "./NavbarLogo";
 import useNavbarState from "../../hooks/useNavbarState";
-import useUserStore from "../../store/userStore";
+import useUserStore from "../../store/user/userStore";
 import Link from "../ui/Link";
 import "./css/Navbar.css";
 
