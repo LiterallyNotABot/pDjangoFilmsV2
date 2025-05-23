@@ -22,11 +22,12 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include('integrations.api_manager.urls')),  # Incluyendo las rutas de API
-    path('api/schema/', SpectacularAPIView.as_view(), name='schema'),  # Genera el esquema de la API
-    path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='docs'),  # Swagger UI
+    path('api/', include('integrations.api_manager.urls')),
+    path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
+    path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='docs'),
     path('store/', include('store.urls')),
     path('comms/', include('comms.urls')),
     path("users/", include("users.urls")),
+    path("films/", include("films.urls")),
 ]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 

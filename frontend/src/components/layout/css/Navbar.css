@@ -1,9 +1,10 @@
 @import 'tailwindcss';
 
 .navbar {
-  @apply fixed top-0 left-0 right-0 z-50 bg-black shadow-md;
+  @apply fixed top-0 left-0 right-0 z-50 bg-black shadow-md h-20;
   padding: 0.5rem 0;
 }
+
 
 .navbar__container {
   @apply mx-auto px-4 flex flex-wrap items-center justify-between gap-4;
