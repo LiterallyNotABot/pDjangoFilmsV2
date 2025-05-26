@@ -56,6 +56,8 @@ class FilmSerializer(serializers.ModelSerializer):
             'genres', 'production_companies', 'countries', 'languages', 'crew'
         ]
 
+
+
     def get_genres(self, obj):
         qs = FilmAndGenre.objects.filter(film=obj, active=True, deleted=False).select_related('genre')
         return GenreSerializer([fg.genre for fg in qs if fg.genre.active and not fg.genre.deleted], many=True).data

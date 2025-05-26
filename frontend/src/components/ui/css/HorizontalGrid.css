@@ -24,9 +24,11 @@
 
 /* Responsive grid item widths */
 .grid-item {
-  @apply relative overflow-visible;
-  min-width: 22%; /* default desktop */
+  @apply relative overflow-visible flex flex-col items-center;
+  min-width: 22%;
+  min-height: 17rem; /* ← o ajusta según tamaño de FilmCard + username + íconos */
 }
+
 
 @media (max-width: 1024px) {
   .grid-item {

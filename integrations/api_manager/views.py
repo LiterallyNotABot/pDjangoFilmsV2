@@ -1,8 +1,7 @@
 from rest_framework import viewsets
 from rest_framework_api_key.permissions import HasAPIKey
 from films.models import Film, Person
-from films.serializers import FilmSerializer, PersonSerializer
-
+from films.serializers.serializers import FilmSerializer, PersonSerializer
 
 class FilmViewSet(viewsets.ReadOnlyModelViewSet):
     """
