@@ -1,15 +1,15 @@
 @import 'tailwindcss';
 
 .list-card {
-  @apply  rounded-lg p-4 shadow-xl w-full max-w-sm 
-         transition hover:shadow-2xl  
-         flex flex-col items-center text-center;
+  @apply rounded-lg p-4 shadow-xl w-full max-w-sm 
+          transition hover:shadow-2xl  
+          flex flex-col items-center text-center;
   overflow: hidden;
 }
 
 .list-posters {
   @apply flex justify-center mb-4 relative;
-  width: calc(100% + 60px); /* espacio para solapamiento */
+  width: calc(100% + 60px);
   margin-left: -15px;
   padding-bottom: 0.25rem;
   overflow: visible;
@@ -38,8 +38,4 @@
 
 .list-meta .user {
   @apply text-white font-medium;
-}
-
-.icon {
-  @apply inline-block align-middle;
 }

@@ -8,7 +8,10 @@ export default function HorizontalGrid({ title, items = [], renderItem }) {
   const scroll = (direction) => {
     if (containerRef.current) {
       const scrollAmount = containerRef.current.offsetWidth;
-      containerRef.current.scrollBy({ left: direction === "left" ? -scrollAmount : scrollAmount, behavior: "smooth" });
+      containerRef.current.scrollBy({
+        left: direction === "left" ? -scrollAmount : scrollAmount,
+        behavior: "smooth"
+      });
     }
   };
 
@@ -17,12 +20,21 @@ export default function HorizontalGrid({ title, items = [], renderItem }) {
       {title && <h2 className="horizontal-grid-title">{title}</h2>}
 
       <div className="horizontal-scroll-wrapper">
-        {/* Flechas */}
         <button onClick={() => scroll("left")} className="scroll-button left">←</button>
 
         <div ref={containerRef} className="horizontal-scroll">
           {items.slice(0, 10).map((item, index) => (
-            <div key={index} className="grid-item">
+            <div
+              key={index}
+              className="grid-item"
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                minHeight: "18rem", 
+                paddingBottom: "0.5rem"
+              }}
+            >
               {renderItem(item)}
             </div>
           ))}

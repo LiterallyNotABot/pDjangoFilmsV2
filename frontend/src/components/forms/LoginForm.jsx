@@ -1,8 +1,8 @@
 import { useState } from "react";
 import Input from "../ui/Input";
 import { Button } from "../ui/Button";
-import { loginUser } from "../../services/users";
-import useUserStore from "../../store/userStore";
+import { loginUser } from "../../services/users/users";
+import useUserStore from "../../store/user/userStore";
 
 export default function LoginForm({ onSuccess }) {
   const [username, setUsername] = useState("");

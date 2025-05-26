@@ -1,5 +1,5 @@
 import Link from "../ui/Link";
-import useUserStore from "../../store/userStore";
+import useUserStore from "../../store/user/userStore";
 import "./css/UserDropdown.css";
 
 export default function UserDropdown({ onClose }) {

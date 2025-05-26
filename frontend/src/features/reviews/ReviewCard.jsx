@@ -1,34 +1,36 @@
 import PropTypes from "prop-types";
-import { FaHeart, FaRegCommentDots } from "react-icons/fa";
+import { Heart as LucideHeart } from "lucide-react";
 import { PiStarFill } from "react-icons/pi";
 import FilmCard from "../films/FilmCard";
 
 export default function ReviewCard({ review }) {
+  const film = review.film || {};
+
   return (
     <div className="flex gap-4 border-b border-zinc-800 pb-6">
       {/* Poster */}
-        <FilmCard
-        id={review.id || 0}
-        title={review.filmTitle}
-        posterUrl={review.posterUrl}
+      <FilmCard
+        id={film.id || 0}
+        title={film.title || ""}
+        posterUrl={film.posterUrl || ""}
         size="sm"
         showUserActions={false}
-        />
-
+      />
 
       {/* Content */}
       <div className="flex-1">
         {/* Header */}
         <div className="flex items-center gap-2 flex-wrap">
           <h3 className="text-white font-bold text-base sm:text-lg">
-            {review.filmTitle}
+            {film.title}
           </h3>
           <span className="text-sm text-zinc-400">{review.date}</span>
           {review.rating && (
-            <div className="flex items-center text-green-400 text-sm ml-2">
+            <div className="flex items-center text-red-500 text-sm ml-2">
               {Array.from({ length: Math.floor(review.rating) }, (_, i) => (
                 <PiStarFill key={i} />
               ))}
+              {review.rating % 1 !== 0 && <span className="ml-1">½</span>}
             </div>
           )}
         </div>
@@ -40,16 +42,18 @@ export default function ReviewCard({ review }) {
 
         {/* Text */}
         <p className="text-sm text-gray-300 leading-snug line-clamp-3">
-          {review.text}
+          {review.body}
         </p>
 
         {/* Meta */}
         <div className="flex items-center gap-4 mt-2 text-xs text-zinc-500">
           <span className="flex items-center gap-1">
-            <FaHeart className="text-pink-500" /> {review.likes}
-          </span>
-          <span className="flex items-center gap-1">
-            <FaRegCommentDots /> {review.comments || 0}
+            <LucideHeart
+              size={14}
+              strokeWidth={1.5}
+              className="text-green-500"
+            />
+            {review.likes || 0}
           </span>
         </div>
       </div>
@@ -59,13 +63,15 @@ export default function ReviewCard({ review }) {
 
 ReviewCard.propTypes = {
   review: PropTypes.shape({
-    filmTitle: PropTypes.string.isRequired,
-    posterUrl: PropTypes.string.isRequired,
+    film: PropTypes.shape({
+      id: PropTypes.number,
+      title: PropTypes.string,
+      posterUrl: PropTypes.string,
+    }),
     author: PropTypes.string.isRequired,
     date: PropTypes.string,
     rating: PropTypes.number,
-    text: PropTypes.string,
+    body: PropTypes.string,
     likes: PropTypes.number,
-    comments: PropTypes.number,
   }).isRequired,
 };

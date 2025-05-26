@@ -1,7 +1,5 @@
 from rest_framework import serializers
-
 from films.models import *
-
 
 class GenreSerializer(serializers.ModelSerializer):
     class Meta:
@@ -57,6 +55,8 @@ class FilmSerializer(serializers.ModelSerializer):
             'backdrop_url', 'popularity', 'api_film_id', 'last_synced',
             'genres', 'production_companies', 'countries', 'languages', 'crew'
         ]
+
+
 
     def get_genres(self, obj):
         qs = FilmAndGenre.objects.filter(film=obj, active=True, deleted=False).select_related('genre')
