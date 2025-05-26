@@ -1,7 +1,6 @@
 from rest_framework import serializers
 from films.models import *
 
-
 class GenreSerializer(serializers.ModelSerializer):
     class Meta:
         model = Genre
