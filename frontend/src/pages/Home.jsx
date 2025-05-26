@@ -4,10 +4,21 @@ import HeroSection from "../components/layout/HeroSection";
 import LatestPosters from "../components/home/LatestPosters";
 import ReviewFeed from "../features/reviews/ReviewFeed";
 import ListFeed from "../features/users/ListFeed";
+
 import {
   getLatestFilms,
   getFriendsActivityFilms,
-} from "../services/films/films"; // 👈 nuevo import
+} from "../services/films/films";
+
+import {
+  getPopularReviews,
+  getFriendsReviews,
+} from "../services/reviews/reviews";
+
+import {
+  getPopularLists,
+  getFriendsLists,
+} from "../services/users/lists";
 
 export default function Home() {
   const { user } = useUserStore();
@@ -19,14 +30,26 @@ export default function Home() {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        // Films
         const filmsData = user
           ? await getFriendsActivityFilms(12)
           : await getLatestFilms(12);
         setFilms(filmsData);
 
-        // TODO: añadir lógica para reviews y lists más adelante
+        // Reviews
+        const reviewsData = user
+          ? await getFriendsReviews(6)
+          : await getPopularReviews(6);
+        setReviews(reviewsData);
+
+        // Lists
+        const listsData = user
+          ? await getFriendsLists(6)
+          : await getPopularLists(6);
+        setLists(listsData);
+
       } catch (error) {
-        console.error("Error fetching films:", error);
+        console.error("Error fetching home data:", error);
       }
     };
 

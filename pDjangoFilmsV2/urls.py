@@ -29,5 +29,6 @@ urlpatterns = [
     path('comms/', include('comms.urls')),
     path("users/", include("users.urls")),
     path("films/", include("films.urls")),
+    path("reviews/", include("reviews.urls")),
 ]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 

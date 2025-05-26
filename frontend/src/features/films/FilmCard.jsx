@@ -1,10 +1,11 @@
 import PropTypes from "prop-types";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Eye, Heart, MoreHorizontal, PenLine } from "lucide-react";
+import { Eye, Heart, MoreHorizontal } from "lucide-react";
 import useUserStore from "../../store/user/userStore";
+import FilmActivityFooter from "../users/FilmActivityFooter";
 import "./css/FilmCard.css";
-import StarRating from "../../components/ui/StarRating";
+import placeholderImg from "../../assets/no_img_placeholder.png"; // 👈 Importa el placeholder
 
 export default function FilmCard({
   id,
@@ -48,22 +49,15 @@ export default function FilmCard({
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
       >
-        {/* Clic en la imagen */}
+        {/* Imagen clickable */}
         <div className="cursor-pointer" onClick={handleClick}>
-          {posterUrl ? (
-            <img
-              src={posterUrl}
-              alt={title}
-              className="h-full w-full object-cover rounded-md shadow-md transition-transform duration-200 group-hover:scale-105"
-            />
-          ) : (
-            <div className="h-full w-full bg-zinc-800 rounded-md flex items-center justify-center text-white text-sm">
-              No image
-            </div>
-          )}
+          <img
+            src={posterUrl || placeholderImg} // 👈 Usa el placeholder si no hay imagen
+            alt={title}
+            className="h-full w-full object-cover rounded-md shadow-md transition-transform duration-200 group-hover:scale-105"
+          />
         </div>
 
-        {/* Hover icons (sólo si logeado) */}
         {currentUser && hovered && showUserActions && (
           <div className="absolute bottom-0 left-0 right-0 flex justify-around items-center p-1 bg-black/60 text-white rounded-b-md text-lg z-10">
             <Eye size={16} strokeWidth={1.5} className="icon eye" />
@@ -72,7 +66,6 @@ export default function FilmCard({
           </div>
         )}
 
-        {/* Tooltip */}
         {hovered && (
           <div className="film-tooltip">
             {title} ({year})
@@ -80,39 +73,18 @@ export default function FilmCard({
         )}
       </div>
 
-      {/* Username del amigo (si aplica) */}
       {showUserTag && user?.username && (
         <div className="text-xs text-green-400 mt-1 text-center truncate max-w-full">
           {user.username}
         </div>
       )}
 
-      {/* Iconos de actividad del amigo */}
-      {showUserTag && (user?.rating || user?.liked || user?.reviewed) && (
-        <div className="flex items-center justify-center gap-2 text-sm mt-1">
-          {user.rating && (
-            <span className="text-red-500 text-base font-semibold leading-none">
-              {"★".repeat(Math.floor(user.rating))}
-              {user.rating % 1 !== 0 && "½"}
-            </span>
-          )}
-          {user.liked && (
-            <Heart
-              size={18}
-              strokeWidth={1.5}
-              className="text-green-500"
-              title="Liked"
-            />
-          )}
-          {user.reviewed && (
-            <PenLine
-              size={18}
-              strokeWidth={1.5}
-              className="text-zinc-400"
-              title="Reviewed"
-            />
-          )}
-        </div>
+      {showUserTag && user && (
+        <FilmActivityFooter
+          rating={user.rating}
+          liked={user.liked}
+          reviewed={user.reviewed}
+        />
       )}
     </div>
   );

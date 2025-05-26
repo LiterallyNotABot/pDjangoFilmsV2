@@ -1,4 +1,6 @@
+import PropTypes from "prop-types";
 import FilmCard from "../films/FilmCard";
+import { Heart } from "lucide-react";
 import "./css/ListCard.css";
 
 export default function ListCard({ list }) {
@@ -23,14 +25,30 @@ export default function ListCard({ list }) {
           ))}
         </div>
 
-        <h3 className="list-title">{list.title}</h3>
+        <h3 className="list-title truncate">{list.name}</h3>
 
         <div className="list-meta">
           <span className="user">@{list.user}</span>
-          <span className="likes">❤️ {list.likes}</span>
-          <span className="comments">💬 {list.comments || 0}</span>
+          <span className="flex items-center gap-1 text-red-500">
+            <Heart size={14} strokeWidth={1.5} /> {list.likes}
+          </span>
         </div>
       </div>
     </div>
   );
 }
+
+ListCard.propTypes = {
+  list: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    user: PropTypes.string.isRequired,
+    films: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.number.isRequired,
+        title: PropTypes.string.isRequired,
+        posterUrl: PropTypes.string,
+      })
+    ).isRequired,
+    likes: PropTypes.number,
+  }).isRequired,
+};
