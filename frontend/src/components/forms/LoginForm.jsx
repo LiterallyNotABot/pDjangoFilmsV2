@@ -13,22 +13,26 @@ export default function LoginForm({ onSuccess }) {
   const handleLogin = async (e) => {
     e.preventDefault();
     setError(null);
+
     try {
       const data = await loginUser(username, password);
       setUser(data.user, data.token);
-      console.log("Login successful:", data);
       if (onSuccess) onSuccess();
     } catch (err) {
-      setError(
-        err.response?.data?.detail || err.message || "Unknown login error"
-      );
+      if (err.custom === "session_expired") {
+        setError("Your session has expired. Please log in again.");
+      } else {
+        setError(
+          err?.error || err?.detail || err?.message || "Invalid credentials"
+        );
+      }
       console.error("Login error:", err);
     }
   };
 
   return (
     <form onSubmit={handleLogin} className="space-y-4">
-      <h2 className="text-2xl font-bold text-center ">Sign In</h2>
+      <h2 className="text-2xl font-bold text-center">Sign In</h2>
 
       <Input
         type="text"
@@ -46,7 +50,7 @@ export default function LoginForm({ onSuccess }) {
         required
       />
 
-      <Button type="submit"  variant="primary" className="mx-auto block">
+      <Button type="submit" variant="primary" className="mx-auto block">
         Sign In
       </Button>
 
