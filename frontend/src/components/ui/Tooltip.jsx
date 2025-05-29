@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 
-export default function Tooltip({ children, content, position = 'top' }) {
+export default function Tooltip({ children, content, position = 'top', bgColor = 'bg-gray-800' }) {
   const [visible, setVisible] = useState(false);
   const ref = useRef(null);
   const tooltipRef = useRef(null);
@@ -104,13 +104,13 @@ export default function Tooltip({ children, content, position = 'top' }) {
               `}
             </style>
             <div
-              className="bg-gray-800 text-white text-sm px-3 py-1 rounded shadow-lg relative"
+              className={`${bgColor} text-white text-sm px-3 py-1 rounded shadow-lg relative`}
               style={{
                 animation: 'fadeInScale 150ms ease-out forwards',
               }}
             >
               {content}
-              <div className="absolute left-1/2 top-full -translate-x-1/2 w-2 h-2 bg-gray-800 rotate-45" />
+              <div className={`absolute left-1/2 top-full -translate-x-1/2 w-2 h-2 ${bgColor} rotate-45`} />
             </div>
           </div>,
           document.body
