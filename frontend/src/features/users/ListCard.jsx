@@ -18,6 +18,7 @@ export default function ListCard({ list }) {
                 id={film.id}
                 title={film.title}
                 posterUrl={film.posterUrl}
+                year={film.year}
                 size="sm"
                 showUserActions={false}
               />

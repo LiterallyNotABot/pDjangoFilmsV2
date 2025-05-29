@@ -15,7 +15,6 @@ from population_helper import *
 sleep_time=0.1
 
 def safe_sleep(seconds=sleep_time):
-    # print(f"Sleeping {seconds} seconds to respect API rate limits...")
     time.sleep(seconds)
 
 def import_movies_by_query(query):
@@ -44,7 +43,6 @@ def import_movies_by_query(query):
 
             print(f"Full details for movie ID {movie_id}: {full_details}")
 
-            # No más validaciones de año, solo parseamos el año directamente
             release_year = None
             if full_details.get('release_date'):
                 try:
@@ -77,7 +75,6 @@ def import_movies_by_query(query):
             insert_countries(film, full_details.get('production_countries', []))
             insert_languages(film, full_details.get('spoken_languages', []), original_language_code=full_details.get('original_language'))
 
-# Funciones "seguras" que no tiran excepciones si hay error
 def get_movie_details_safe(movie_id):
     try:
         return get_movie_details(movie_id)

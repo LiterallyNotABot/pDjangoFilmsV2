@@ -4,8 +4,9 @@ import { useNavigate } from "react-router-dom";
 import { Eye, Heart, MoreHorizontal } from "lucide-react";
 import useUserStore from "../../store/user/userStore";
 import FilmActivityFooter from "../users/FilmActivityFooter";
+import Tooltip from "../../components/ui/Tooltip";
 import "./css/FilmCard.css";
-import placeholderImg from "../../assets/no_img_placeholder.png"; // 👈 Importa el placeholder
+import placeholderImg from "../../assets/no_img_placeholder.png";
 
 export default function FilmCard({
   id,
@@ -45,30 +46,35 @@ export default function FilmCard({
   return (
     <div className="film-card-wrapper flex flex-col items-center overflow-visible">
       <div
-        className={`film-card ${posterSize} relative group`}
+        className={`film-card ${posterSize} relative group z-10`}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
       >
-        {/* Imagen clickable */}
-        <div className="cursor-pointer" onClick={handleClick}>
-          <img
-            src={posterUrl || placeholderImg} // 👈 Usa el placeholder si no hay imagen
-            alt={title}
-            className="h-full w-full object-cover rounded-md shadow-md transition-transform duration-200 group-hover:scale-105"
-          />
-        </div>
-
-        {currentUser && hovered && showUserActions && (
-          <div className="absolute bottom-0 left-0 right-0 flex justify-around items-center p-1 bg-black/60 text-white rounded-b-md text-lg z-10">
-            <Eye size={16} strokeWidth={1.5} className="icon eye" />
-            <Heart size={16} strokeWidth={1.5} className="icon heart" />
-            <MoreHorizontal size={16} strokeWidth={1.5} className="icon more" />
+        {(size === "sm" || size === "md") ? (
+          <Tooltip content={`${title} (${year})`}>
+            <div className="cursor-pointer w-full h-full" onClick={handleClick}>
+              <img
+                src={posterUrl || placeholderImg}
+                alt={title}
+                className="h-full w-full object-cover rounded-md shadow-md transition-transform duration-200 group-hover:scale-105"
+              />
+            </div>
+          </Tooltip>
+        ) : (
+          <div className="cursor-pointer w-full h-full" onClick={handleClick}>
+            <img
+              src={posterUrl || placeholderImg}
+              alt={title}
+              className="h-full w-full object-cover rounded-md shadow-md transition-transform duration-200 group-hover:scale-105"
+            />
           </div>
         )}
 
-        {hovered && (
-          <div className="film-tooltip">
-            {title} ({year})
+        {currentUser && hovered && showUserActions && (
+          <div className="absolute bottom-0 left-0 right-0 flex justify-around items-center p-1 bg-black/60 text-white rounded-b-md text-lg z-20">
+            <Eye size={16} strokeWidth={1.5} className="icon eye" />
+            <Heart size={16} strokeWidth={1.5} className="icon heart" />
+            <MoreHorizontal size={16} strokeWidth={1.5} className="icon more" />
           </div>
         )}
       </div>

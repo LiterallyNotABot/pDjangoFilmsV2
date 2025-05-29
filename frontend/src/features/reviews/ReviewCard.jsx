@@ -13,6 +13,7 @@ export default function ReviewCard({ review }) {
         id={film.id || 0}
         title={film.title || ""}
         posterUrl={film.posterUrl || ""}
+        year={review.film.year}
         size="sm"
         showUserActions={false}
       />

@@ -45,8 +45,8 @@ class FriendsActivityFilmsView(APIView):
             seen_ids.add(film.film_id)
 
             result.append({
-                "film_id": film.film_id,  # usado internamente por el serializer
-                "id": film.film_id,  # necesario para React
+                "film_id": film.film_id,
+                "id": film.film_id,
                 "title": film.title,
                 "year": film.release_year,
                 "posterUrl": film.poster_url,
