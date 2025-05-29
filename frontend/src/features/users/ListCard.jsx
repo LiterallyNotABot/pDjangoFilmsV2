@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import FilmCard from "../films/FilmCard";
-import { Heart } from "lucide-react";
+import HeartIcon from "../../components/ui/icons/HeartIcon";
 import "./css/ListCard.css";
 
 export default function ListCard({ list }) {
@@ -30,8 +30,8 @@ export default function ListCard({ list }) {
 
         <div className="list-meta">
           <span className="user">@{list.user}</span>
-          <span className="flex items-center gap-1 text-red-500">
-            <Heart size={14} strokeWidth={1.5} /> {list.likes}
+          <span className="flex items-center gap-1 text-green-500">
+            <HeartIcon active size="sm" /> {list.likes}
           </span>
         </div>
       </div>

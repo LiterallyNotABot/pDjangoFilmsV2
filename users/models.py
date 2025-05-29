@@ -1,3 +1,4 @@
+from cloudinary.models import CloudinaryField
 from django.db import models
 from django.contrib.auth import get_user_model
 
@@ -96,3 +97,30 @@ class ListAndLikeByUser(models.Model):
         db_table = 'listsandlikesbyusers'
         verbose_name = "List Like by User"
         verbose_name_plural = "List Likes by Users"
+
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
+    avatar = CloudinaryField('avatar', blank=True, null=True)
+    location = models.CharField(max_length=100, blank=True)
+    website = models.URLField(blank=True)
+    given_name = models.CharField(max_length=100, blank=True)
+    bio = models.TextField(blank=True)
+
+    def __str__(self):
+        return self.user.username
+
+
+class FavoriteFilm(models.Model):
+    profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name="favorite_entries")
+    film = models.ForeignKey(Film, on_delete=models.CASCADE)
+    rank = models.PositiveSmallIntegerField()
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=["profile", "rank"], name="unique_favorite_rank"),
+            models.UniqueConstraint(fields=["profile", "film"], name="unique_favorite_film"),
+        ]
+        ordering = ["rank"]
+
+    def __str__(self):
+        return f"{self.profile.user.username} - #{self.rank} - {self.film}"

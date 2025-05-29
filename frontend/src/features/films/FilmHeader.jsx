@@ -8,7 +8,7 @@ export default function FilmHeader({ film }) {
 
   return (
     <div className="text-white space-y-4 sm:space-y-5">
-      <h1 className="text-3xl sm:text-4xl font-extrabold leading-tight tracking-wide text-green-500 drop-shadow-md">
+      <h1 className="text-3xl sm:text-4xl font-extrabold leading-tight tracking-wide text-green-600 drop-shadow-md">
         {film.title}
       </h1>
 

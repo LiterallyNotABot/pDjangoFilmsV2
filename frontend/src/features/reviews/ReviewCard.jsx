@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
-import { Heart as LucideHeart } from "lucide-react";
-import { PiStarFill } from "react-icons/pi";
 import FilmCard from "../films/FilmCard";
+import HeartIcon from "../../components/ui/icons/HeartIcon";
+import StarIcon from "../../components/ui/icons/StarIcon";
 
 export default function ReviewCard({ review }) {
   const film = review.film || {};
@@ -29,7 +29,7 @@ export default function ReviewCard({ review }) {
           {review.rating && (
             <div className="flex items-center text-red-500 text-sm ml-2">
               {Array.from({ length: Math.floor(review.rating) }, (_, i) => (
-                <PiStarFill key={i} />
+                <StarIcon key={i} filled size="sm" />
               ))}
               {review.rating % 1 !== 0 && <span className="ml-1">½</span>}
             </div>
@@ -49,11 +49,7 @@ export default function ReviewCard({ review }) {
         {/* Meta */}
         <div className="flex items-center gap-4 mt-2 text-xs text-zinc-500">
           <span className="flex items-center gap-1">
-            <LucideHeart
-              size={14}
-              strokeWidth={1.5}
-              className="text-green-500"
-            />
+            <HeartIcon active size="sm" />
             {review.likes || 0}
           </span>
         </div>

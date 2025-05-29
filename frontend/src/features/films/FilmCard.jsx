@@ -1,10 +1,12 @@
 import PropTypes from "prop-types";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Eye, Heart, MoreHorizontal } from "lucide-react";
 import useUserStore from "../../store/user/userStore";
 import FilmActivityFooter from "../users/FilmActivityFooter";
 import Tooltip from "../../components/ui/Tooltip";
+import EyeIcon from "@/components/ui/icons/EyeIcon";
+import HeartIcon from "@/components/ui/icons/HeartIcon";
+import PencilIcon from "@/components/ui/icons/PencilIcon";
 import "./css/FilmCard.css";
 import placeholderImg from "../../assets/no_img_placeholder.png";
 
@@ -46,35 +48,35 @@ export default function FilmCard({
   return (
     <div className="film-card-wrapper flex flex-col items-center overflow-visible">
       <div
-        className={`film-card ${posterSize} relative group z-10`}
+        className={`film-card ${posterSize} group z-10`}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
       >
         {(size === "sm" || size === "md") ? (
           <Tooltip content={`${title} (${year})`}>
-            <div className="cursor-pointer w-full h-full" onClick={handleClick}>
+            <div className="poster-click-area" onClick={handleClick}>
               <img
                 src={posterUrl || placeholderImg}
                 alt={title}
-                className="h-full w-full object-cover rounded-md shadow-md transition-transform duration-200 group-hover:scale-105"
+                className="film-poster-img"
               />
             </div>
           </Tooltip>
         ) : (
-          <div className="cursor-pointer w-full h-full" onClick={handleClick}>
+          <div className="poster-click-area" onClick={handleClick}>
             <img
               src={posterUrl || placeholderImg}
               alt={title}
-              className="h-full w-full object-cover rounded-md shadow-md transition-transform duration-200 group-hover:scale-105"
+              className="film-poster-img"
             />
           </div>
         )}
 
         {currentUser && hovered && showUserActions && (
-          <div className="absolute bottom-0 left-0 right-0 flex justify-around items-center p-1 bg-black/60 text-white rounded-b-md text-lg z-20">
-            <Eye size={16} strokeWidth={1.5} className="icon eye" />
-            <Heart size={16} strokeWidth={1.5} className="icon heart" />
-            <MoreHorizontal size={16} strokeWidth={1.5} className="icon more" />
+          <div className="film-card-icons">
+            <EyeIcon size="md" className="hover:text-red-400" />
+            <HeartIcon size="md" className="hover:text-green-400" />
+            <PencilIcon size="md" className="hover:text-red-300" />
           </div>
         )}
       </div>

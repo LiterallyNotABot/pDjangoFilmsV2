@@ -11,20 +11,18 @@
   box-shadow: 0 8px 20px rgba(220, 38, 38, 0.5); /* red-600 glow */
 }
 
-.film-card .icon {
-  @apply text-white hover:text-green-400 transition;
+.film-poster-img {
+  @apply h-full w-full object-cover rounded-md shadow-md transition-transform duration-200 group-hover:scale-105;
 }
 
-.film-card .icon.eye {
-  @apply hover:text-green-500;
+.poster-click-area {
+  @apply cursor-pointer w-full h-full;
 }
 
-.film-card .icon.heart {
-  @apply hover:text-red-400;
-}
-
-.film-card .icon.more {
-  @apply hover:text-gray-400;
+.film-card-icons {
+  @apply absolute bottom-0 left-0 right-0 flex justify-around items-center 
+         p-2 bg-black/70 text-white rounded-b-md text-2xl z-20 
+         shadow-[0_16px_32px_rgba(0,0,0,0.85)];
 }
 
 .film-tooltip {

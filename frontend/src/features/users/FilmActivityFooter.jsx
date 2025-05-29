@@ -1,32 +1,23 @@
-// src/features/films/FilmActivityFooter.jsx
 import PropTypes from "prop-types";
-import { Heart, PenLine } from "lucide-react";
+import HeartIcon from "../../components/ui/icons/HeartIcon";
+import PencilIcon from "../../components/ui/icons/PencilIcon";
+import StarIcon from "../../components/ui/icons/StarIcon";
 
 export default function FilmActivityFooter({ rating, liked, reviewed }) {
   return (
     <div className="flex items-center justify-center gap-2 text-sm mt-1">
       {rating && (
-        <span className="text-red-500 text-base font-semibold leading-none">
-          {"★".repeat(Math.floor(rating))}
-          {rating % 1 !== 0 && "½"}
+        <span className="flex items-center gap-[1px] text-red-500 leading-none">
+          {Array.from({ length: Math.floor(rating) }, (_, i) => (
+            <StarIcon key={i} size="sm" filled />
+          ))}
+          {rating % 1 !== 0 && <span className="ml-[1px]">½</span>}
         </span>
       )}
       {liked && (
-        <Heart
-          size={18}
-          strokeWidth={1.5}
-          className="text-green-500"
-          title="Liked"
-        />
+        <HeartIcon active size="sm" title="Liked" color="text-green-500" />
       )}
-      {reviewed && (
-        <PenLine
-          size={18}
-          strokeWidth={1.5}
-          className="text-zinc-400"
-          title="Reviewed"
-        />
-      )}
+      {reviewed && <PencilIcon active size="sm" title="Reviewed" />}
     </div>
   );
 }
