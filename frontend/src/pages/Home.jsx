@@ -4,21 +4,15 @@ import HeroSection from "../components/layout/HeroSection";
 import LatestPosters from "../components/home/LatestPosters";
 import ReviewFeed from "../features/reviews/ReviewFeed";
 import ListFeed from "../features/users/ListFeed";
-
-import {
-  getLatestFilms,
-  getFriendsActivityFilms,
-} from "../services/films/films";
+import { getLatestFilms } from "../services/films/films";
+import { getFriendsActivityFilms } from "../services/activity/activity";
 
 import {
   getPopularReviews,
   getFriendsReviews,
 } from "../services/reviews/reviews";
 
-import {
-  getPopularLists,
-  getFriendsLists,
-} from "../services/users/lists";
+import { getPopularLists, getFriendsLists } from "../services/users/lists";
 
 export default function Home() {
   const { user } = useUserStore();
@@ -47,7 +41,6 @@ export default function Home() {
           ? await getFriendsLists(6)
           : await getPopularLists(6);
         setLists(listsData);
-
       } catch (error) {
         console.error("Error fetching home data:", error);
       }

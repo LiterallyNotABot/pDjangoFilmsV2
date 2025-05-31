@@ -11,15 +11,20 @@ export default function CastTab({ film }) {
   return (
     <div className="flex flex-wrap gap-2">
       {visibleCast.map((member, i) => (
-        <div key={i} className="inline-flex">
-          <Tooltip
-            content={member.character || "No role"}
-            position="top"
-            bgColor="bg-red-700"
-          >
-            <Badge label={member.person.name} />
-          </Tooltip>
-        </div>
+        <Tooltip
+          key={i}
+          content={member.character || "No role"}
+          position="top"
+          bgColor="bg-red-700"
+          className="inline-block"
+        >
+          <Badge
+            label={member.person.name}
+            type="person"
+            id={member.person.person_id}
+            to={`/person/${member.person.person_id}?role=Actor`}
+          />
+        </Tooltip>
       ))}
 
       {cast.length > 20 && !showAll && (
@@ -29,6 +34,7 @@ export default function CastTab({ film }) {
           color="bg-zinc-800"
           hoverColor="hover:underline"
           textColor="text-white"
+          type="noop"
         />
       )}
     </div>

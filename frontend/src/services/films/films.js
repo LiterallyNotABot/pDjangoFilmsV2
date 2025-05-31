@@ -16,6 +16,12 @@ export const getLatestFilms = async (limit = 10) => {
 };
 
 export const getFriendsActivityFilms = async (limit = 10) => {
-  const res = await axios.get(`/films/friends-activity/?limit=${limit}`);
+  const res = await axios.get(`friends-activity/?limit=${limit}`);
   return res.data;
 };
+
+export const fetchFilmsByFilter = async (filters) => {
+  const res = await axios.get("/films/", { params: filters });
+  return res.data;
+};
+

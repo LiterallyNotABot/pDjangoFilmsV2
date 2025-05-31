@@ -1,7 +1,8 @@
 from rest_framework import generics
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from films.models import Film
+from films.models import Film, FilmAndPerson
 from films.serializers.serializers import FilmSerializer
 from rest_framework.permissions import AllowAny
 from rest_framework import status
@@ -31,3 +32,36 @@ class LatestFilmsView(APIView):
         serializer = MiniFilmSerializer(films, many=True)
         return Response(serializer.data)
 
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def get_films_by_person_and_role(request):
+    person_id = request.query_params.get("person_id")
+    role = request.query_params.get("role")
+    page_size = int(request.query_params.get("page_size", 20))
+
+    film_ids = (
+        FilmAndPerson.objects
+        .filter(
+            person_id=person_id,
+            role__name=role,
+            active=True,
+            deleted=False,
+            film__active=True,
+            film__deleted=False
+        )
+        .values_list("film_id", flat=True)
+        .distinct()
+    )
+
+    films = (
+        Film.objects
+        .filter(film_id__in=film_ids)
+        .order_by("-popularity")
+    )
+
+    paginator = PageNumberPagination()
+    paginator.page_size = page_size
+    page = paginator.paginate_queryset(films, request)
+    serializer = MiniFilmSerializer(page, many=True)
+    return paginator.get_paginated_response(serializer.data)

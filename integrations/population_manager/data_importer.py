@@ -39,7 +39,7 @@ def import_movies_by_query(query):
 
             if not full_details or not credits:
                 print(f"Skipping movie ID {movie_id} due to missing data.")
-                continue  # No procesar si no tenemos detalles o créditos
+                continue
 
             print(f"Full details for movie ID {movie_id}: {full_details}")
 

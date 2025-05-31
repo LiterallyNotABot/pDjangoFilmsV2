@@ -1,7 +1,7 @@
 from django.urls import path
 from .views.auth_view import LoginView, RegisterView, CurrentUserView
-from .views.friends_lists_feed import FriendsListsView
-from .views.popular_lists_view import PopularListsView
+from .views.friends_lists_views import FriendsListsView
+from .views.popular_lists_views import PopularListsView
 
 urlpatterns = [
     path('login/', LoginView.as_view(), name='login'),

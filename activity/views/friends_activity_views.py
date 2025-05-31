@@ -4,7 +4,7 @@ from rest_framework.permissions import IsAuthenticated
 from films.models import Film
 from reviews.models import Log, Review
 from users.models import Follower
-from films.serializers.friends_activity_serializer import FriendsActivityFilmSerializer
+from activity.serializers.friends_activity_serializer import FriendsActivityFilmSerializer
 from films.serializers.mini_film_serializer import MiniFilmSerializer
 from django.db.models import Q
 
