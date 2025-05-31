@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 import FilmCard from "./FilmCard";
 import useFilmFilters from "../../hooks/useFilmFilters";
 import { getFilmsByPerson } from "../../services/films/persons";
 
-export default function FilmGrid() {
+export default function FilmGrid({ personId }) {
   const filters = useFilmFilters({ page: 1 });
 
   const [films, setFilms] = useState([]);
@@ -21,7 +22,7 @@ export default function FilmGrid() {
       setLoading(true);
       try {
         const res = await getFilmsByPerson(
-          filters.personId,
+          personId,                     // 👈 ahora viene por props
           filters.role,
           currentPage,
           filters.genre,
@@ -39,7 +40,14 @@ export default function FilmGrid() {
     }
 
     fetchFilms();
-  }, [filters.personId, filters.role, filters.genre, filters.language, filters.sort, currentPage]);
+  }, [
+    personId,
+    filters.role,
+    filters.genre,
+    filters.language,
+    filters.sort,
+    currentPage,
+  ]);
 
   if (loading) return <p className="text-gray-400">Loading...</p>;
   if (!films?.length) return <p className="text-gray-400">No films found.</p>;
@@ -48,7 +56,13 @@ export default function FilmGrid() {
     <div className="space-y-6">
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
         {films.map((film) => (
-          <FilmCard key={film.film_id} film={film} />
+          <FilmCard
+            key={film.id}
+            id={film.id}
+            title={film.title}
+            year={film.year}
+            posterUrl={film.posterUrl}
+          />
         ))}
       </div>
 
@@ -78,3 +92,7 @@ export default function FilmGrid() {
     </div>
   );
 }
+
+FilmGrid.propTypes = {
+  personId: PropTypes.string.isRequired,
+};

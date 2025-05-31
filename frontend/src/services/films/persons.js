@@ -5,10 +5,25 @@ export const getPersonById = async (id) => {
   return res.data;
 };
 
-export const getFilmsByPerson = async (personId, role = "Actor") => {
-  const res = await axios.get("/films/by-person/", {
-    params: { person_id: personId, role },
-  });
+export const getFilmsByPerson = async (
+  personId,
+  role = "Actor",
+  page = 1,
+  genre = null,
+  language = null,
+  sort = null
+) => {
+  const params = {
+    person_id: personId,
+    role,
+    page,
+  };
+
+  if (genre) params.genre = genre;
+  if (language) params.language = language;
+  if (sort) params.sort = sort;
+
+  const res = await axios.get("/films/by-person/", { params });
   return res.data;
 };
 

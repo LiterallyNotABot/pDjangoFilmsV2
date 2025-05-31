@@ -6,10 +6,12 @@ export default function RoleFilterDropdown() {
   const [searchParams, setSearchParams] = useSearchParams();
   const currentRole = searchParams.get("role") || "Actor";
 
-  const handleSelect = (role) => {
-    searchParams.set("role", role);
-    setSearchParams(searchParams);
-  };
+const handleSelect = (role) => {
+  const newParams = new URLSearchParams(searchParams);
+  newParams.set("role", role);
+  setSearchParams(newParams);
+};
+
 
   return (
     <div className="relative group text-sm cursor-pointer text-gray-300">

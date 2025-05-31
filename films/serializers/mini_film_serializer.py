@@ -3,6 +3,7 @@ from films.models import Film
 
 class MiniFilmSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(source="film_id")
+    title = serializers.CharField()
     year = serializers.IntegerField(source="release_year")
     posterUrl = serializers.CharField(source="poster_url")
     backdropUrl = serializers.CharField(source="backdrop_url")
