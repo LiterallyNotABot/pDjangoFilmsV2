@@ -10,7 +10,7 @@ export default function HorizontalGrid({ title, items = [], renderItem }) {
       const scrollAmount = containerRef.current.offsetWidth;
       containerRef.current.scrollBy({
         left: direction === "left" ? -scrollAmount : scrollAmount,
-        behavior: "smooth"
+        behavior: "smooth",
       });
     }
   };
@@ -20,7 +20,9 @@ export default function HorizontalGrid({ title, items = [], renderItem }) {
       {title && <h2 className="horizontal-grid-title">{title}</h2>}
 
       <div className="horizontal-scroll-wrapper">
-        <button onClick={() => scroll("left")} className="scroll-button left">←</button>
+        <button onClick={() => scroll("left")} className="scroll-button left">
+          ←
+        </button>
 
         <div ref={containerRef} className="horizontal-scroll">
           {items.slice(0, 10).map((item, index) => (
@@ -31,8 +33,8 @@ export default function HorizontalGrid({ title, items = [], renderItem }) {
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
-                minHeight: "18rem", 
-                paddingBottom: "0.5rem"
+                minHeight: "18rem",
+                paddingBottom: "0.5rem",
               }}
             >
               {renderItem(item)}
@@ -40,7 +42,9 @@ export default function HorizontalGrid({ title, items = [], renderItem }) {
           ))}
         </div>
 
-        <button onClick={() => scroll("right")} className="scroll-button right">→</button>
+        <button onClick={() => scroll("right")} className="scroll-button right">
+          →
+        </button>
       </div>
     </section>
   );
@@ -49,5 +53,5 @@ export default function HorizontalGrid({ title, items = [], renderItem }) {
 HorizontalGrid.propTypes = {
   title: PropTypes.string,
   items: PropTypes.array.isRequired,
-  renderItem: PropTypes.func.isRequired
+  renderItem: PropTypes.func.isRequired,
 };

@@ -8,7 +8,6 @@ class OnlyReactAccessMiddleware:
         path = request.path
         method = request.method
         origin = request.headers.get("Origin")
-        print(f"[MIDDLEWARE] Path: {path}, Method: {method}, Origin: {origin}")
 
         # Allow OPTIONS
         if method == "OPTIONS":

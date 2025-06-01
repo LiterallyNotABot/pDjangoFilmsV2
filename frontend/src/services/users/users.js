@@ -1,11 +1,9 @@
 import api from "../axios";
+import { handleApiError } from "../errorHelper";
 
 export const loginUser = async (username, password) => {
   try {
-    const res = await api.post("/auth/jwt/create/", {
-      username,
-      password,
-    });
+    const res = await api.post("/auth/jwt/create/", { username, password });
 
     const access = res.data.access;
     const refresh = res.data.refresh;
@@ -24,19 +22,15 @@ export const loginUser = async (username, password) => {
       token: access,
     };
   } catch (err) {
-    throw err?.response?.data || err;
+    throw handleApiError(err);
   }
 };
 
 export const registerUser = async (username, email, password) => {
   try {
-    const res = await api.post("/users/register/", {
-      username,
-      email,
-      password,
-    });
+    const res = await api.post("/users/register/", { username, email, password });
     return res.data;
   } catch (err) {
-    throw err?.response?.data || err;
+    throw handleApiError(err);
   }
 };

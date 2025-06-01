@@ -14,42 +14,61 @@ import LoginForm from "@/components/forms/LoginForm";
 export default function FilmDetails() {
   const { id } = useParams();
   const [film, setFilm] = useState(null);
-  const [showLoginModal, setShowLoginModal] = useState(false);
   const [friendActivity, setFriendActivity] = useState([]);
+  const [showLoginModal, setShowLoginModal] = useState(false);
 
   useEffect(() => {
-    getFilmById(id).then(setFilm).catch(console.error);
+    const fetchFilm = async () => {
+      try {
+        const data = await getFilmById(id);
+        setFilm(data);
+      } catch (error) {
+        console.error("Error loading film:", error);
+      }
+    };
+
+    fetchFilm();
   }, [id]);
 
   useEffect(() => {
-    if (film) {
-      setFriendActivity([
-        {
-          username: "hannahwebb",
-          avatar: "/assets/profpic_placeholder.png",
-          watched: true,
-          watchlist: false,
-          rating: 4.5,
-        },
-        {
-          username: "juanito",
-          avatar: "/assets/profpic_placeholder.png",
-          watched: false,
-          watchlist: true,
-          rating: 0,
-        },
-      ]);
-    }
+    if (!film) return;
+
+    // Mock data: replace with getFriendActivityByFilm(film.film_id) when ready
+    setFriendActivity([
+      {
+        username: "hannahwebb",
+        avatar: "/assets/profpic_placeholder.png",
+        watched: true,
+        watchlist: false,
+        rating: 4.5,
+      },
+      {
+        username: "juanito",
+        avatar: "/assets/profpic_placeholder.png",
+        watched: false,
+        watchlist: true,
+        rating: 0,
+      },
+    ]);
   }, [film]);
 
-  if (!film) return <p className="text-center text-green-500">Loading...</p>;
+  useEffect(() => {
+    document.body.style.overflow = showLoginModal ? "hidden" : "auto";
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [showLoginModal]);
+
+  if (!film) {
+    return <p className="text-center text-green-500">Loading...</p>;
+  }
 
   return (
     <>
       <Backdrop imageUrl={film.backdrop_url} size="medium" />
 
       <div className="max-w-6xl mx-auto px-4 py-12 space-y-8 md:space-y-0 md:grid md:grid-cols-[1fr_3fr_1fr] md:gap-10">
-        {/* Poster */}
+        {/* Poster column */}
         <div className="md:sticky md:top-24 md:self-start order-1 md:order-none">
           <FilmCard
             id={film.film_id}
@@ -62,16 +81,19 @@ export default function FilmDetails() {
           />
         </div>
 
-        {/* Main Content */}
+        {/* Main content column */}
         <div className="space-y-6 order-3 md:order-none">
           <FilmHeader film={film} />
           <FilmTabs film={film} />
           {friendActivity.length > 0 && (
-            <FriendActivityBar filmId={film.film_id} friendsData={friendActivity} />
+            <FriendActivityBar
+              filmId={film.film_id}
+              friendsData={friendActivity}
+            />
           )}
         </div>
 
-        {/* User Interactions + Stats */}
+        {/* Sidebar actions column */}
         <div className="md:sticky md:top-24 md:self-start order-2 md:order-none space-y-6">
           <FilmUserActions
             filmId={film.film_id}
@@ -81,6 +103,7 @@ export default function FilmDetails() {
         </div>
       </div>
 
+      {/* Login modal */}
       <Modal isOpen={showLoginModal} onClose={() => setShowLoginModal(false)}>
         <LoginForm onSuccess={() => setShowLoginModal(false)} />
       </Modal>

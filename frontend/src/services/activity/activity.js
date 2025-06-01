@@ -1,6 +1,10 @@
-import axios from "../axios";
-
+import api from "../axios";
+import { handleApiError } from "../errorHelper";
 export const getFriendsActivityFilms = async (limit = 10) => {
-  const res = await axios.get("/activity/friends/", { params: { limit } });
-  return res.data;
+  try {
+    const res = await api.get("/activity/friends/", { params: { limit } });
+    return res.data;
+  } catch (err) {
+    throw handleApiError(err);
+  }
 };

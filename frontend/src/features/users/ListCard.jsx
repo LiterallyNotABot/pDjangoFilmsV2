@@ -2,15 +2,16 @@ import PropTypes from "prop-types";
 import FilmCard from "../films/FilmCard";
 import HeartIcon from "../../components/ui/icons/HeartIcon";
 import "./css/ListCard.css";
+import { memo } from "react";
 
-export default function ListCard({ list }) {
+function ListCard({ list }) {
   return (
     <div className="poster-container overflow-visible">
       <div className="list-card">
         <div className="list-posters">
           {list.films.slice(0, 5).map((film, idx) => (
             <div
-              key={idx}
+              key={film.id}
               className="poster-wrapper"
               style={{ zIndex: 5 - idx }}
             >
@@ -48,8 +49,11 @@ ListCard.propTypes = {
         id: PropTypes.number.isRequired,
         title: PropTypes.string.isRequired,
         posterUrl: PropTypes.string,
+        year: PropTypes.number,
       })
     ).isRequired,
     likes: PropTypes.number,
   }).isRequired,
 };
+
+export default memo(ListCard);

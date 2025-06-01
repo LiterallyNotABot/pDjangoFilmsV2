@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "baseUrl": "src",
+    "paths": {
+      "*": ["*"]
+    },
+    "module": "esnext",
+    "target": "es6",
+    "jsx": "react-jsx", // ← más compatible con proyectos Vite/React modernos
+    "moduleResolution": "node" // ← garantiza resolución correcta de rutas absolutas
+  },
+  "include": ["src"],
+  "exclude": ["node_modules"]
+}

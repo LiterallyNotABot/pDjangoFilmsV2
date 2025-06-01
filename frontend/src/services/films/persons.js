@@ -1,8 +1,12 @@
-import axios from "../axios";
-
+import api from "../axios";
+import { handleApiError } from "../errorHelper";
 export const getPersonById = async (id) => {
-  const res = await axios.get(`/persons/${id}/`);
-  return res.data;
+  try {
+    const res = await api.get(`/persons/${id}/`);
+    return res.data;
+  } catch (err) {
+    throw handleApiError(err);
+  }
 };
 
 export const getFilmsByPerson = async (
@@ -14,23 +18,29 @@ export const getFilmsByPerson = async (
   sort = null,
   pageSize = 20
 ) => {
-  const params = {
-    person_id: personId,
-    role,
-    page,         
-    page_size: pageSize
-  };
+  try {
+    const params = {
+      person_id: personId,
+      role,
+      page,
+      page_size: pageSize,
+    };
+    if (genre) params.genre = genre;
+    if (language) params.language = language;
+    if (sort) params.sort = sort;
 
-  if (genre) params.genre = genre;
-  if (language) params.language = language;
-  if (sort) params.sort = sort;
-
-  const res = await axios.get("/films/by-person/", { params });
-  return res.data;
+    const res = await api.get("/films/by-person/", { params });
+    return res.data;
+  } catch (err) {
+    throw handleApiError(err);
+  }
 };
 
-
 export const getPersonRoles = async (personId) => {
-  const res = await axios.get(`/persons/${personId}/roles/`);
-  return res.data;
+  try {
+    const res = await api.get(`/persons/${personId}/roles/`);
+    return res.data;
+  } catch (err) {
+    throw handleApiError(err);
+  }
 };

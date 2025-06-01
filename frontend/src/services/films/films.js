@@ -1,27 +1,38 @@
-import axios from "../axios";
+import api from "../axios";
+import { handleApiError } from "../errorHelper";
 
 export const getFilmById = async (id) => {
-  const res = await axios.get(`/films/${id}/`);
-  return res.data;
+  try {
+    const res = await api.get(`/films/${id}/`);
+    return res.data;
+  } catch (err) {
+    throw handleApiError(err);
+  }
 };
 
 export const getAllFilms = async () => {
-  const res = await axios.get("/films/");
-  return res.data;
+  try {
+    const res = await api.get("/films/");
+    return res.data;
+  } catch (err) {
+    throw handleApiError(err);
+  }
 };
 
 export const getLatestFilms = async (limit = 10) => {
-  const res = await axios.get(`/films/latest/?limit=${limit}`);
-  return res.data;
-};
-
-export const getFriendsActivityFilms = async (limit = 10) => {
-  const res = await axios.get(`friends-activity/?limit=${limit}`);
-  return res.data;
+  try {
+    const res = await api.get(`/films/latest/?limit=${limit}`);
+    return res.data;
+  } catch (err) {
+    throw handleApiError(err);
+  }
 };
 
 export const fetchFilmsByFilter = async (filters) => {
-  const res = await axios.get("/films/", { params: filters });
-  return res.data;
+  try {
+    const res = await api.get("/films/", { params: filters });
+    return res.data;
+  } catch (err) {
+    throw handleApiError(err);
+  }
 };
-

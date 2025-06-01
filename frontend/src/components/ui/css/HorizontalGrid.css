@@ -1,4 +1,4 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 
 .horizontal-grid {
   @apply w-full mb-14 px-4 max-w-6xl mx-auto;
@@ -22,13 +22,11 @@
   display: none;
 }
 
-/* Responsive grid item widths */
 .grid-item {
   @apply relative overflow-visible flex flex-col items-center;
   min-width: 22%;
-  min-height: 17rem; /* ← o ajusta según tamaño de FilmCard + username + íconos */
+  min-height: 17rem;
 }
-
 
 @media (max-width: 1024px) {
   .grid-item {
@@ -54,44 +52,37 @@
   }
 }
 
-/* Flechas de scroll */
+/* FLECHAS - SIEMPRE VISIBLES */
 .scroll-button {
-  @apply absolute top-1/2 -translate-y-1/2 bg-black/80 text-white text-2xl p-3 rounded-full shadow-xl hover:bg-red-600 transition z-30;
+  @apply absolute top-1/2 -translate-y-1/2 bg-black/80 text-white text-2xl p-3 rounded-full shadow-xl hover:bg-red-600 transition z-40;
 }
 
 .scroll-button.left {
-  @apply -left-14;
+  @apply -left-6;
 }
 
 .scroll-button.right {
-  @apply -right-14;
+  @apply -right-6;
 }
 
-/* Ocultar flechas en pantallas pequeñas si se desea */
-@media (max-width: 640px) {
-  .scroll-button {
-    display: none;
-  }
-}
-
-/* Fade en extremos */
+/* FADE EFECTO EN AMBOS LADOS */
 .horizontal-scroll-wrapper::before,
 .horizontal-scroll-wrapper::after {
   content: "";
   position: absolute;
   top: 0;
   bottom: 0;
-  width: 50px;
-  z-index: 10;
+  width: 48px;
+  z-index: 30;
   pointer-events: none;
 }
 
 .horizontal-scroll-wrapper::before {
   left: 0;
-  background: linear-gradient(to right, black, transparent);
+  background: linear-gradient(to right, black 60%, transparent);
 }
 
 .horizontal-scroll-wrapper::after {
   right: 0;
-  background: linear-gradient(to left, black, transparent);
+  background: linear-gradient(to left, black 60%, transparent);
 }
