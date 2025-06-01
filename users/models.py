@@ -1,10 +1,12 @@
 from cloudinary.models import CloudinaryField
 from django.db import models
 from django.contrib.auth import get_user_model
+
 from films.models import Film
 from reviews.models import Rating
 
 User = get_user_model()
+
 
 class Follower(models.Model):
     record_id = models.AutoField(primary_key=True, verbose_name="Follower ID")
@@ -14,12 +16,6 @@ class Follower(models.Model):
     date_followed = models.DateTimeField(verbose_name="Date Followed")
     active = models.BooleanField(default=True, verbose_name="Is Active?")
     deleted = models.BooleanField(default=False, verbose_name="Is Deleted?")
-
-    class Meta:
-        indexes = [
-            models.Index(fields=["followed_user", "active", "deleted"]),
-            models.Index(fields=["follower_user", "followed_user"]),
-        ]
 
 
 class FilmAndUser(models.Model):
@@ -37,10 +33,6 @@ class FilmAndUser(models.Model):
         db_table = 'filmsAndUsers'
         verbose_name = "Film and User Relationship"
         verbose_name_plural = "Film and User Relationships"
-        indexes = [
-            models.Index(fields=["user", "film"]),
-            models.Index(fields=["film", "active", "deleted"]),
-        ]
 
 
 class List(models.Model):
@@ -57,9 +49,6 @@ class List(models.Model):
         db_table = 'lists'
         verbose_name = "List"
         verbose_name_plural = "Lists"
-        indexes = [
-            models.Index(fields=["user", "active", "deleted"]),
-        ]
 
     def __str__(self):
         return self.list_name
@@ -78,10 +67,6 @@ class Watchlist(models.Model):
         db_table = 'watchlists'
         verbose_name = "Watchlist"
         verbose_name_plural = "Watchlists"
-        indexes = [
-            models.Index(fields=["user", "film"]),
-            models.Index(fields=["user", "active", "deleted"]),
-        ]
 
 
 class ListAndFilm(models.Model):
@@ -98,9 +83,6 @@ class ListAndFilm(models.Model):
         verbose_name = "List-Film Relationship"
         verbose_name_plural = "List-Film Relationships"
         unique_together = (('list', 'film', 'sort_order'),)
-        indexes = [
-            models.Index(fields=["list", "film"]),
-        ]
 
 
 class ListAndLikeByUser(models.Model):
@@ -115,11 +97,6 @@ class ListAndLikeByUser(models.Model):
         db_table = 'listsandlikesbyusers'
         verbose_name = "List Like by User"
         verbose_name_plural = "List Likes by Users"
-        indexes = [
-            models.Index(fields=["list", "active", "deleted"]),
-            models.Index(fields=["user", "list"]),
-        ]
-
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
