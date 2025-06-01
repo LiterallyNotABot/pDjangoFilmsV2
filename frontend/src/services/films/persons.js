@@ -11,12 +11,14 @@ export const getFilmsByPerson = async (
   page = 1,
   genre = null,
   language = null,
-  sort = null
+  sort = null,
+  pageSize = 20
 ) => {
   const params = {
     person_id: personId,
     role,
-    page,
+    page,         
+    page_size: pageSize
   };
 
   if (genre) params.genre = genre;
@@ -26,6 +28,7 @@ export const getFilmsByPerson = async (
   const res = await axios.get("/films/by-person/", { params });
   return res.data;
 };
+
 
 export const getPersonRoles = async (personId) => {
   const res = await axios.get(`/persons/${personId}/roles/`);

@@ -1,4 +1,3 @@
-// components/ui/ButtonLink.jsx
 import { Link } from "react-router-dom";
 import "./css/ButtonLink.css";
 

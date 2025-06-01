@@ -69,12 +69,14 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware', # ANTES DEL COMMONMIDDLEWARE
     'utils.middlewares.react_access.OnlyReactAccessMiddleware',
+  # 'utils.middlewares.timing_middleware.TimingMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
 
 ROOT_URLCONF = 'pDjangoFilmsV2.urls'
 
@@ -226,6 +228,42 @@ CLOUDINARY_STORAGE = {
 }
 
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+'''
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,  # Asegúrate de que otros loggers sigan funcionando
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {name} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',  # Usa formato legible
+        },
+    },
+    'loggers': {
+        # Logger general para todo
+        'django': {
+            'handlers': ['console'],
+            'level': 'INFO',
+        },
+        # Logger específico para tu middleware
+        'utils.middlewares.timing_middleware': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'WARNING',  # O ajusta si quieres ver más cosas globalmente
+    },
+}
+'''
 
 # KEYS
 STRIPE_SECRET_KEY = "sk_test_51QuZCQPdMh0chZHFYp8nRrBRKEYncGoaNefqfKSqKprIdP6pKYa26SqW5g8zqivZwQKrBZdK4NsYL09VzOxrp7ND00u6cY2GL1"
