@@ -1,38 +1,13 @@
-import api from "../axios";
-import { handleApiError } from "../errorHelper";
+import { fetchData } from "../requestHandler";
 
-export const getFilmById = async (id) => {
-  try {
-    const res = await api.get(`/films/${id}/`);
-    return res.data;
-  } catch (err) {
-    throw handleApiError(err);
-  }
-};
+export const getFilmById = (id, signal) =>
+  fetchData(`/films/${id}/`, { signal });
 
-export const getAllFilms = async () => {
-  try {
-    const res = await api.get("/films/");
-    return res.data;
-  } catch (err) {
-    throw handleApiError(err);
-  }
-};
+export const getAllFilms = (signal) =>
+  fetchData("/films/", { signal });
 
-export const getLatestFilms = async (limit = 10) => {
-  try {
-    const res = await api.get(`/films/latest/?limit=${limit}`);
-    return res.data;
-  } catch (err) {
-    throw handleApiError(err);
-  }
-};
+export const getLatestFilms = (limit = 10, signal) =>
+  fetchData("/films/latest/", { params: { limit }, signal });
 
-export const fetchFilmsByFilter = async (filters) => {
-  try {
-    const res = await api.get("/films/", { params: filters });
-    return res.data;
-  } catch (err) {
-    throw handleApiError(err);
-  }
-};
+export const fetchFilmsByFilter = (filters, signal) =>
+  fetchData("/films/", { params: filters, signal });

@@ -2,25 +2,26 @@ import axios from "axios";
 import { config } from "../config";
 import useUserStore from "../store/user/userStore";
 
-// Utility function for token retrieval
+// Utility function to retrieve token
 function getStoredAccessToken() {
   return useUserStore.getState().token || localStorage.getItem("access_token");
 }
 
-// Create Axios instance
+// Axios instance
 const api = axios.create({
   baseURL: config.BASE_URL,
   withCredentials: true,
 });
 
-// --- Cancel duplicate requests by URL --- //
+// --- Cancel duplicate requests --- //
 const controllerMap = new Map();
 
 api.interceptors.request.use((request) => {
-  const urlKey =
-    request.url + (request.method === "get" ? JSON.stringify(request.params || {}) : "");
+  const method = request.method?.toLowerCase();
+  const paramsKey = method === "get" ? JSON.stringify(request.params || {}) : "";
+  const urlKey = `${method || "get"}:${request.url}:${paramsKey}`;
 
-  // Abort previous request to same URL (optionally with params for GET)
+  // Abort previous matching request
   if (controllerMap.has(urlKey)) {
     controllerMap.get(urlKey).abort();
   }
@@ -29,10 +30,10 @@ api.interceptors.request.use((request) => {
   request.signal = controller.signal;
   controllerMap.set(urlKey, controller);
 
-  // Attach custom header
+  // Custom headers
   request.headers["X-Internal-Access"] = "DjangoFilmsFrontend";
 
-  // Attach token
+  // Auth header
   const token = getStoredAccessToken();
   if (token) {
     request.headers.Authorization = `Bearer ${token}`;
@@ -41,14 +42,13 @@ api.interceptors.request.use((request) => {
   return request;
 });
 
-// --- Response Interceptor: Token refresh and cleanup --- //
+// --- Handle responses and token refresh --- //
 api.interceptors.response.use(
   (response) => {
-    const urlKey =
-      response.config.url +
-      (response.config.method === "get"
-        ? JSON.stringify(response.config.params || {})
-        : "");
+    const method = response.config.method?.toLowerCase();
+    const paramsKey =
+      method === "get" ? JSON.stringify(response.config.params || {}) : "";
+    const urlKey = `${method}:${response.config.url}:${paramsKey}`;
 
     controllerMap.delete(urlKey);
     return response;
@@ -56,23 +56,18 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    const urlKey =
-      originalRequest?.url +
-      (originalRequest?.method === "get"
-        ? JSON.stringify(originalRequest?.params || {})
-        : "");
-
+    const method = originalRequest?.method?.toLowerCase();
+    const paramsKey =
+      method === "get" ? JSON.stringify(originalRequest?.params || {}) : "";
+    const urlKey = `${method}:${originalRequest?.url}:${paramsKey}`;
     controllerMap.delete(urlKey);
 
     const isAuthRoute =
       originalRequest?.url?.includes("/auth/jwt/create/") ||
       originalRequest?.url?.includes("/users/register/");
 
-    if (isAuthRoute) {
-      return Promise.reject(error);
-    }
+    if (isAuthRoute) return Promise.reject(error);
 
-    // Handle expired token (401)
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
@@ -87,7 +82,6 @@ api.interceptors.response.use(
         const newAccessToken = res.data.access;
         localStorage.setItem("access_token", newAccessToken);
 
-        // Rehydrate store
         const user = JSON.parse(localStorage.getItem("user"));
         useUserStore.getState().setUser(user, newAccessToken);
 

@@ -1,8 +1,9 @@
+// src/pages/PersonDetails.jsx
+
 import { useEffect, useState } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import { getPersonById, getPersonRoles } from "../services/films/persons";
 import PersonsInfo from "../features/films/persons/PersonsInfo";
-import PersonToolbar from "../features/films/persons/PersonToolbar";
 import FilmGrid from "../features/films/FilmGrid";
 
 export default function PersonDetails() {
@@ -11,7 +12,6 @@ export default function PersonDetails() {
   const [person, setPerson] = useState(null);
   const [roles, setRoles] = useState([]);
 
-  // Fetch person and roles in parallel
   useEffect(() => {
     Promise.all([getPersonById(id), getPersonRoles(id)])
       .then(([personData, rolesData]) => {
@@ -23,7 +23,6 @@ export default function PersonDetails() {
       });
   }, [id]);
 
-  // Ensure role param exists
   useEffect(() => {
     if (!searchParams.get("role")) {
       const newParams = new URLSearchParams(searchParams);
@@ -36,27 +35,51 @@ export default function PersonDetails() {
     return <p className="text-center text-green-500">Loading...</p>;
   }
 
+  const genreFilter = {
+    key: "genre",
+    options: [
+      { label: "All Genres", value: "" },
+      { label: "Action", value: "Action" },
+      { label: "Drama", value: "Drama" },
+      { label: "Comedy", value: "Comedy" },
+      { label: "Horror", value: "Horror" },
+      // …otros géneros
+    ],
+  };
+
+  const sortOptions = [
+    { label: "Popularity", value: "popularity" },
+    { label: "Newest First", value: "-year" },
+    { label: "Earliest First", value: "year" },
+    { label: "Highest Rated", value: "-user_rating" },
+    { label: "Lowest Rated", value: "user_rating" },
+    { label: "Shortest", value: "length" },
+    { label: "Longest", value: "-length" },
+  ];
+
   return (
     <div className="max-w-6xl mx-auto px-4 space-y-8">
-      {/* Centered title */}
-      <div className="flex justify-center">
-        <div className="w-full max-w-[960px]">
-          <h1 className="text-3xl font-bold text-white text-center">
-            {person.name}
-          </h1>
-        </div>
+      {/* Título y separator */}
+      <div className="text-center">
+        <h1 className="text-3xl font-bold text-white">{person.name}</h1>
       </div>
 
-      {/* Bio first on mobile, grid first on desktop */}
+      {/* Layout principal */}
       <div className="flex flex-col-reverse lg:grid lg:grid-cols-[2fr_1fr] lg:gap-10 lg:space-y-0 space-y-8">
-        {/* Film grid and toolbar */}
+        {/* Film grid y filtros */}
         <div className="space-y-4">
-          <PersonToolbar roles={roles} />
-          <FilmGrid personId={id} cardSize="md" />
+          <FilmGrid
+            personId={id}
+            cardSize="md"
+            showRoleDropdown
+            roles={roles}
+            filters={[genreFilter]}
+            sortOptions={sortOptions}
+          />
         </div>
 
         {/* Sidebar bio */}
-        <aside>
+        <aside className="space-y-4">
           <PersonsInfo person={person} />
         </aside>
       </div>

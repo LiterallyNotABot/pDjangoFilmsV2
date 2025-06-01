@@ -4,18 +4,24 @@ import "./css/ReviewFeed.css";
 import { memo, useMemo } from "react";
 
 function ReviewFeed({ title = "Popular Reviews", reviews }) {
-  const content = useMemo(() => (
-    reviews.map((review) => (
-      <ReviewCard key={review.id || `${review.user}-${review.film}`} review={review} />
-    ))
-  ), [reviews]);
+  const content = useMemo(
+    () =>
+      reviews.map((review) => (
+        <ReviewCard
+          key={
+            review.review_id ||
+            `${review.user?.username || "anon"}-${review.film?.id || "noFilm"}`
+          }
+          review={review}
+        />
+      )),
+    [reviews]
+  );
 
   return (
     <section className="review-feed-section">
       <h2 className="review-feed-title">{title}</h2>
-      <div className="space-y-6">
-        {content}
-      </div>
+      <div className="space-y-6">{content}</div>
     </section>
   );
 }

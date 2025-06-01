@@ -1,13 +1,11 @@
 import api from "../axios";
-import { handleApiError } from "../errorHelper";
+import { handleApiError } from "../exceptionHelper";
 
 export const loginUser = async (username, password) => {
   try {
     const res = await api.post("/auth/jwt/create/", { username, password });
 
-    const access = res.data.access;
-    const refresh = res.data.refresh;
-
+    const { access, refresh } = res.data;
     localStorage.setItem("access_token", access);
     localStorage.setItem("refresh_token", refresh);
 
@@ -28,7 +26,11 @@ export const loginUser = async (username, password) => {
 
 export const registerUser = async (username, email, password) => {
   try {
-    const res = await api.post("/users/register/", { username, email, password });
+    const res = await api.post("/users/register/", {
+      username,
+      email,
+      password,
+    });
     return res.data;
   } catch (err) {
     throw handleApiError(err);
