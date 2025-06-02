@@ -1,8 +1,10 @@
-// src/pages/PersonDetails.jsx
-
 import { useEffect, useState } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
-import { getPersonById, getPersonRoles } from "../services/films/persons";
+import {
+  getPersonById,
+  getPersonRoles,
+  getAvailableGenresByPerson,
+} from "../services/films/persons";
 import PersonsInfo from "../features/films/persons/PersonsInfo";
 import FilmGrid from "../features/films/FilmGrid";
 
@@ -11,6 +13,9 @@ export default function PersonDetails() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [person, setPerson] = useState(null);
   const [roles, setRoles] = useState([]);
+  const [genreOptions, setGenreOptions] = useState([]);
+
+  const role = searchParams.get("role") || "Actor";
 
   useEffect(() => {
     Promise.all([getPersonById(id), getPersonRoles(id)])
@@ -31,54 +36,70 @@ export default function PersonDetails() {
     }
   }, [searchParams, setSearchParams]);
 
+  useEffect(() => {
+    if (!id || !role) return;
+
+    const controller = new AbortController();
+
+    getAvailableGenresByPerson(id, role, controller.signal)
+      .then((genres) => {
+        if (!Array.isArray(genres)) return;
+
+        const formatted = [
+          { label: "All Genres", value: "" },
+          ...genres.map((g) => ({
+            label: g.name,
+            value: String(g.id),
+          })),
+        ];
+        setGenreOptions(formatted);
+      })
+      .catch(() => {
+        setGenreOptions([{ label: "All Genres", value: "" }]);
+      });
+
+    return () => controller.abort();
+  }, [id, role]);
+
   if (!person) {
     return <p className="text-center text-green-500">Loading...</p>;
   }
 
-  const genreFilter = {
-    key: "genre",
-    options: [
-      { label: "All Genres", value: "" },
-      { label: "Action", value: "Action" },
-      { label: "Drama", value: "Drama" },
-      { label: "Comedy", value: "Comedy" },
-      { label: "Horror", value: "Horror" },
-      // …otros géneros
-    ],
-  };
+  const filters = [
+    {
+      key: "genre",
+      options: genreOptions,
+    },
+  ];
 
   const sortOptions = [
     { label: "Popularity", value: "popularity" },
-    { label: "Newest First", value: "-year" },
-    { label: "Earliest First", value: "year" },
-    { label: "Highest Rated", value: "-user_rating" },
-    { label: "Lowest Rated", value: "user_rating" },
-    { label: "Shortest", value: "length" },
-    { label: "Longest", value: "-length" },
+    { label: "Newest First", value: "releaseDate_desc" },
+    { label: "Oldest First", value: "releaseDate_asc" },
+    { label: "Highest Rated", value: "userRating_desc" },
+    { label: "Lowest Rated", value: "userRating_asc" },
+    { label: "Shortest", value: "filmLength_asc" },
+    { label: "Longest", value: "filmLength_desc" },
   ];
 
   return (
     <div className="max-w-6xl mx-auto px-4 space-y-8">
-      {/* Título y separator */}
       <div className="text-center">
         <h1 className="text-3xl font-bold text-white">{person.name}</h1>
       </div>
 
-      {/* Layout principal */}
       <div className="flex flex-col-reverse lg:grid lg:grid-cols-[2fr_1fr] lg:gap-10 lg:space-y-0 space-y-8">
-        {/* Film grid y filtros */}
         <div className="space-y-4">
           <FilmGrid
             personId={id}
             cardSize="md"
             showRoleDropdown
             roles={roles}
-            filters={[genreFilter]}
+            filters={filters}
             sortOptions={sortOptions}
           />
         </div>
 
-        {/* Sidebar bio */}
         <aside className="space-y-4">
           <PersonsInfo person={person} />
         </aside>

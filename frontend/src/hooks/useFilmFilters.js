@@ -1,16 +1,16 @@
 import { useSearchParams, useParams } from "react-router-dom";
-import { useMemo } from "react";
 
 export default function useFilmFilters(defaults = {}) {
   const [searchParams] = useSearchParams();
-  const { id: personId } = useParams(); // clave desde el path
+  const { id: personId } = useParams();
 
-  return useMemo(() => ({
-    personId, // del path
-    role: searchParams.get("role") || defaults.role || "Actor",
-    genre: searchParams.get("genre") || defaults.genre || null,
-    language: searchParams.get("language") || defaults.language || null,
-    sort: searchParams.get("sort") || defaults.sort || null,
-    page: searchParams.get("page") || defaults.page || 1,
-  }), [searchParams, personId, defaults]);
+  const query = Object.fromEntries(searchParams.entries());
+
+  return {
+    personId,
+    role: query.role || defaults.role || "Actor",
+    genre: query.genre || defaults.genre || null,
+    language: query.language || defaults.language || null,
+    sort: query.sort || defaults.sort || null,
+  };
 }

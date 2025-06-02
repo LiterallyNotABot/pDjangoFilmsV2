@@ -1,7 +1,6 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
 import PropTypes from "prop-types";
 import FilmCard from "./FilmCard";
-import useFilmFilters from "../../hooks/useFilmFilters";
 import { getFilmsByPerson } from "../../services/films/persons";
 import { Button } from "@/components/ui/Button";
 import FilterSortBar from "./grid_adds/FilterSortBar";
@@ -31,7 +30,18 @@ export default function FilmGrid({
   roles = [],
 }) {
   const [searchParams, setSearchParams] = useSearchParams();
-  const searchFilters = useFilmFilters({ page: 1 });
+
+  // ✅ Transform searchParams into plain object to ensure reactivity
+  const searchFilters = useMemo(() => {
+    const query = Object.fromEntries(searchParams.entries());
+
+    return {
+      role: query.role || "Actor",
+      genre: query.genre || null,
+      language: query.language || null,
+      sort: query.sort || null,
+    };
+  }, [searchParams]);
 
   const [films, setFilms] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -40,48 +50,56 @@ export default function FilmGrid({
 
   const pageSize = useMemo(() => pageSizes[cardSize], [cardSize]);
 
-  const fetchFilms = useCallback(async () => {
-    setLoading(true);
-    try {
-      const res = await getFilmsByPerson(
-        personId,
-        searchFilters.role,
-        currentPage,
-        searchFilters.genre,
-        searchFilters.language,
-        searchFilters.sort,
-        pageSize
-      );
+  const fetchFilms = useCallback(
+    async (signal = null) => {
+      setLoading(true);
+      try {
+        const res = await getFilmsByPerson(
+          personId,
+          searchFilters.role,
+          currentPage,
+          searchFilters.genre,
+          searchFilters.language,
+          searchFilters.sort,
+          pageSize,
+          signal
+        );
 
-      if (!res || !res.results) throw new Error("Invalid film data received.");
+        if (!res || typeof res !== "object" || !Array.isArray(res.results)) {
+          throw new Error("Invalid film data received.");
+        }
 
-      setFilms(res.results);
-      setTotalPages(Math.ceil(res.count / pageSize));
-    } catch (err) {
-      console.error("Error loading films", err);
-      setFilms([]);
-    } finally {
-      setLoading(false);
-    }
-  }, [
-    personId,
-    searchFilters.role,
-    searchFilters.genre,
-    searchFilters.language,
-    searchFilters.sort,
-    currentPage,
-    pageSize,
-  ]);
+        setFilms(res.results);
+        setTotalPages(Math.ceil((res.count || 0) / pageSize));
+      } catch (err) {
+        if (err?.code === "ERR_CANCELED") return;
+        setFilms([]);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [
+      personId,
+      searchFilters.role,
+      searchFilters.genre,
+      searchFilters.language,
+      searchFilters.sort,
+      currentPage,
+      pageSize,
+    ]
+  );
 
   useEffect(() => {
-    fetchFilms();
+    const controller = new AbortController();
+    fetchFilms(controller.signal);
+    return () => controller.abort();
   }, [fetchFilms]);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [currentPage]);
 
-  const currentRole = searchParams.get("role") || "Actor";
+  const currentRole = searchFilters.role;
 
   const roleOptions = Array.isArray(roles)
     ? roles.map((r) =>
@@ -95,6 +113,7 @@ export default function FilmGrid({
     const newParams = new URLSearchParams(searchParams.toString());
     newParams.set("role", role);
     setSearchParams(newParams);
+    setCurrentPage(1);
   };
 
   return (

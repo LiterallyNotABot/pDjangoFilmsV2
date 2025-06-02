@@ -3,7 +3,7 @@ import { fetchData } from "../requestHandler";
 export const getPersonById = (id, signal) =>
   fetchData(`/persons/${id}/`, { signal });
 
-export const getFilmsByPerson = (
+export const getFilmsByPerson = async (
   personId,
   role = "Actor",
   page = 1,
@@ -23,8 +23,13 @@ export const getFilmsByPerson = (
     ...(sort && { sort }),
   };
 
-  return fetchData("/films/by-person/", { params, signal });
+  return await fetchData("/films/by-person/", { params, signal });
 };
 
 export const getPersonRoles = (personId, signal) =>
   fetchData(`/persons/${personId}/roles/`, { signal });
+
+export const getAvailableGenresByPerson = (personId, role, signal = null) => {
+  const params = { role };
+  return fetchData(`/persons/${personId}/available-genres/`, { params, signal });
+};
