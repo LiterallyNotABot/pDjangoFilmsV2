@@ -2,6 +2,7 @@ import { AiFillHeart } from "react-icons/ai";
 import PropTypes from "prop-types";
 import clsx from "clsx";
 
+// Tamaños comunes reutilizables
 const sizeMap = {
   xs: 12,
   sm: 14,
@@ -16,24 +17,27 @@ export default function HeartIcon({
   className = "",
   onClick,
   color,
+  interactive = true,
 }) {
   const px = sizeMap[size] || sizeMap.md;
 
-const resolvedClass = clsx(
-  "cursor-pointer transition",
-  color
-    ? color // manual override
-    : active
-      ? "text-green-500"
-      : "text-zinc-400 hover:text-green-500",
-  className
-);
-
+  const resolvedClass = clsx(
+    "transition",
+    interactive && "cursor-pointer",
+    color
+      ? color // override manual
+      : active
+        ? "text-green-500"
+        : interactive
+          ? "text-zinc-400 hover:text-green-500"
+          : "text-zinc-400",
+    className
+  );
 
   return (
     <AiFillHeart
       size={px}
-      onClick={onClick}
+      onClick={interactive ? onClick : undefined}
       className={resolvedClass}
     />
   );
@@ -44,5 +48,6 @@ HeartIcon.propTypes = {
   size: PropTypes.oneOf(["xs", "sm", "md", "lg", "xl"]),
   className: PropTypes.string,
   onClick: PropTypes.func,
-  color: PropTypes.string, // 👈 opcional
+  color: PropTypes.string,
+  interactive: PropTypes.bool,
 };

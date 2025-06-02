@@ -1,27 +1,16 @@
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import useUserStore from "../../store/user/userStore";
 import FilmActivityFooter from "../users/FilmActivityFooter";
 import Tooltip from "../../components/ui/Tooltip";
 import EyeIcon from "@/components/ui/icons/EyeIcon";
 import HeartIcon from "@/components/ui/icons/HeartIcon";
 import PencilIcon from "@/components/ui/icons/PencilIcon";
+import LogModal from "@/features/reviews/LogModal";
+import { getSizedPosterUrl } from "@/utils/imageUtils";
 import "./css/FilmCard.css";
-import placeholderImg from "../../assets/no_img_placeholder.png";
 import { memo } from "react";
-
-const getSizedPosterUrl = (url, size = "md") => {
-  const sizeMap = {
-    sm: "w92",
-    md: "w185",
-    lg: "w342",
-    xl: "w500",
-  };
-  const base = "https://image.tmdb.org/t/p/";
-  const path = url?.split("/").pop();
-  return `${base}${sizeMap[size]}/${path}`;
-};
 
 function FilmCard({
   id,
@@ -36,6 +25,7 @@ function FilmCard({
 }) {
   const navigate = useNavigate();
   const { user: currentUser } = useUserStore();
+  const [showLogModal, setShowLogModal] = useState(false);
 
   const sizes = {
     sm: "w-21 h-30",
@@ -54,10 +44,7 @@ function FilmCard({
     }
   };
 
-  const imgSrc = useMemo(
-    () => (posterUrl ? getSizedPosterUrl(posterUrl, size) : placeholderImg),
-    [posterUrl, size]
-  );
+  const imgSrc = useMemo(() => getSizedPosterUrl(posterUrl, size), [posterUrl, size]);
 
   return (
     <div className="film-card-wrapper flex flex-col items-center overflow-visible">
@@ -78,7 +65,11 @@ function FilmCard({
           <div className="film-card-icons opacity-0 group-hover:opacity-100 transition">
             <EyeIcon size="md" className="hover:text-red-400" />
             <HeartIcon size="md" className="hover:text-green-400" />
-            <PencilIcon size="md" className="hover:text-red-300" />
+            <PencilIcon
+              size="md"
+              className="hover:text-red-300"
+              onClick={() => setShowLogModal(true)}
+            />
           </div>
         )}
       </div>
@@ -96,6 +87,16 @@ function FilmCard({
           reviewed={user.reviewed}
         />
       )}
+
+      <LogModal
+        isOpen={showLogModal}
+        onClose={() => setShowLogModal(false)}
+        film={{ id, title, year, posterUrl: getSizedPosterUrl(posterUrl, "md") }}
+        onSave={(data) => {
+          console.log("📘 FilmCard log saved:", data);
+          setShowLogModal(false);
+        }}
+      />
     </div>
   );
 }

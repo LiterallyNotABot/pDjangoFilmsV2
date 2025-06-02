@@ -10,17 +10,28 @@ const sizeMap = {
   xl: 24,
 };
 
-export default function PlusIcon({ active = false, size = "md", className = "", onClick }) {
+export default function PlusIcon({
+  active = false,
+  size = "md",
+  className = "",
+  onClick,
+  interactive = true,
+}) {
   const px = sizeMap[size] || sizeMap.md;
 
   return (
     <PlusCircle
       size={px}
       strokeWidth={1.5}
-      onClick={onClick}
+      onClick={interactive ? onClick : undefined}
       className={clsx(
-        "cursor-pointer transition",
-        active ? "text-yellow-400" : "text-zinc-400 hover:text-yellow-400",
+        "transition",
+        interactive && "cursor-pointer",
+        active
+          ? "text-yellow-400"
+          : interactive
+          ? "text-zinc-400 hover:text-yellow-400"
+          : "text-zinc-400",
         className
       )}
     />
@@ -32,4 +43,5 @@ PlusIcon.propTypes = {
   size: PropTypes.oneOf(["xs", "sm", "md", "lg", "xl"]),
   className: PropTypes.string,
   onClick: PropTypes.func,
+  interactive: PropTypes.bool,
 };

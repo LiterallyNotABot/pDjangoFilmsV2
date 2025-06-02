@@ -10,17 +10,28 @@ const sizeMap = {
   xl: 24,
 };
 
-export default function EyeIcon({ active = false, size = "md", className = "", onClick }) {
+export default function EyeIcon({
+  active = false,
+  size = "md",
+  className = "",
+  onClick,
+  interactive = true,
+}) {
   const px = sizeMap[size] || sizeMap.md;
 
   return (
     <Eye
       size={px}
       strokeWidth={1.5}
-      onClick={onClick}
+      onClick={interactive ? onClick : undefined}
       className={clsx(
-        "cursor-pointer transition",
-        active ? "text-green-500" : "text-zinc-400 hover:text-red-500",
+        "transition",
+        interactive && "cursor-pointer",
+        active
+          ? "text-green-500"
+          : interactive
+          ? "text-zinc-400 hover:text-red-500"
+          : "text-zinc-400",
         className
       )}
     />
@@ -32,4 +43,5 @@ EyeIcon.propTypes = {
   size: PropTypes.oneOf(["xs", "sm", "md", "lg", "xl"]),
   className: PropTypes.string,
   onClick: PropTypes.func,
+  interactive: PropTypes.bool,
 };

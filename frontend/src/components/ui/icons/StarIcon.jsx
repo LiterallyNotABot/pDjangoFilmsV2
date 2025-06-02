@@ -23,21 +23,15 @@ export default function StarIcon({
       className={clsx("relative inline-block", className)}
       style={{ width: px, height: px }}
     >
-      {/* Fondo siempre presente (estrella vacía) */}
       <PiStarThin size={px} className="text-zinc-500 absolute top-0 left-0" />
-
-      {/* Parte rellena: completa o media */}
-      {filled || half ? (
+      {(filled || half) && (
         <span
           className="absolute top-0 left-0 overflow-hidden pointer-events-none"
-          style={{
-            width: half ? px / 2 : px,
-            height: px,
-          }}
+          style={{ width: half ? px / 2 : px, height: px }}
         >
           <PiStarFill size={px} className="text-red-500" />
         </span>
-      ) : null}
+      )}
     </span>
   );
 }

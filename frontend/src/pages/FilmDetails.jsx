@@ -97,6 +97,12 @@ export default function FilmDetails() {
         <div className="md:sticky md:top-24 md:self-start order-2 md:order-none space-y-6">
           <FilmUserActions
             filmId={film.film_id}
+            filmData={{
+              id: film.film_id,
+              title: film.title,
+              year: film.release_year,
+              posterUrl: film.poster_url,
+            }}
             onTriggerLogin={() => setShowLoginModal(true)}
           />
           <FilmRatingStats filmId={film.film_id} />

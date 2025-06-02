@@ -1,22 +1,27 @@
 import { useState } from "react";
-import useUserStore from "../../store/user/userStore";
+import useUserStore from "@/store/user/userStore";
+import useFilmUserActivity from "@/hooks/useFilmUserActivity";
 import EyeIcon from "@/components/ui/icons/EyeIcon";
 import HeartIcon from "@/components/ui/icons/HeartIcon";
 import PlusIcon from "@/components/ui/icons/PlusIcon";
 import PencilIcon from "@/components/ui/icons/PencilIcon";
 import ListIcon from "@/components/ui/icons/ListIcon";
-import StarIcon from "@/components/ui/icons/StarIcon";
+import StarRating from "@/components/ui/StarRating";
 import { Button } from "@/components/ui/Button";
+import LogModal from "@/features/reviews/LogModal"; // el señor modal
 
-export default function FilmUserActions({ filmId, onTriggerLogin }) {
+export default function FilmUserActions({ filmId, onTriggerLogin, filmData }) {
   const { user } = useUserStore();
+  const {
+    liked,
+    watched,
+    watchlisted,
+    rating,
+    updateField,
+    loading,
+  } = useFilmUserActivity(filmId);
 
-  const [rating, setRating] = useState(0);
-  const [hover, setHover] = useState(null);
-
-  const [watched, setWatched] = useState(false);
-  const [liked, setLiked] = useState(false);
-  const [watchlisted, setWatchlisted] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
   if (!user) {
     return (
@@ -30,80 +35,85 @@ export default function FilmUserActions({ filmId, onTriggerLogin }) {
   }
 
   return (
-    <div className="bg-zinc-900 rounded-lg overflow-hidden text-sm text-white shadow">
-      {/* Top row of icon buttons */}
-      <div className="flex justify-around border-b border-zinc-700 p-4">
-        <div className="flex flex-col items-center text-zinc-300 group">
-          <EyeIcon
-            size="xl"
+    <>
+      <div className="bg-zinc-900 rounded-lg overflow-hidden text-sm text-white shadow">
+        {/* Top row of icon buttons */}
+        <div className="flex justify-around border-b border-zinc-700 p-4">
+          <IconAction
+            label="Watch"
             active={watched}
-            onClick={() => setWatched((prev) => !prev)}
+            Icon={EyeIcon}
+            onClick={() => updateField("watched", !watched)}
           />
-          <span className="text-xs mt-1 text-zinc-300">Watch</span>
-        </div>
-
-        <div className="flex flex-col items-center text-zinc-300 group">
-          <HeartIcon
-            size="xl"
+          <IconAction
+            label="Like"
             active={liked}
-            onClick={() => setLiked((prev) => !prev)}
+            Icon={HeartIcon}
+            onClick={() => updateField("liked", !liked)}
           />
-          <span className="text-xs mt-1 text-zinc-300">Like</span>
-        </div>
-
-        <div className="flex flex-col items-center text-zinc-300 group">
-          <PlusIcon
-            size="xl"
+          <IconAction
+            label="Watchlist"
             active={watchlisted}
-            onClick={() => setWatchlisted((prev) => !prev)}
+            Icon={PlusIcon}
+            onClick={() => updateField("watchlisted", !watchlisted)}
           />
-          <span className="text-xs mt-1 text-zinc-300">Watchlist</span>
+        </div>
+
+        {/* Star rating */}
+        <div className="text-center border-b border-zinc-700 p-5">
+          <p className="mb-2 text-gray-400 text-base">Rate</p>
+          <StarRating
+            value={rating}
+            onChange={(val) => updateField("rating", val)}
+            size="xl"
+            interactive
+          />
+        </div>
+
+        {/* Additional actions */}
+        <div className="divide-y divide-zinc-700">
+          <ActionItem
+            icon={<PencilIcon size="lg" />}
+            text="Review or log..."
+            onClick={() => setShowModal(true)}
+          />
+          <ActionItem
+            icon={<ListIcon size="lg" />}
+            text="Add to lists..."
+            onClick={() => console.log("abrir listas (próximo modal)")}
+          />
         </div>
       </div>
 
-      {/* Star rating with 0.5 steps */}
-      <div className="text-center border-b border-zinc-700 p-5">
-        <p className="mb-2 text-gray-400 text-base">Rate</p>
-        <div className="flex justify-center gap-[2px]">
-          {[1, 2, 3, 4, 5].map((value) => {
-            const current = hover ?? rating;
-            return (
-              <button
-                key={value}
-                onClick={() => setRating(value)}
-                onMouseEnter={() => setHover(value - 0.5)}
-                onMouseMove={(e) => {
-                  const { left, width } =
-                    e.currentTarget.getBoundingClientRect();
-                  const isLeft = e.clientX - left < width / 2;
-                  setHover(isLeft ? value - 0.5 : value);
-                }}
-                onMouseLeave={() => setHover(null)}
-                className="cursor-pointer"
-              >
-                <StarIcon
-                  filled={value <= current}
-                  half={value - 0.5 === current}
-                  size="xl"
-                />
-              </button>
-            );
-          })}
-        </div>
-      </div>
+      {/* Señor Modal */}
+      <LogModal
+        isOpen={showModal}
+        onClose={() => setShowModal(false)}
+        film={filmData}
+        onSave={(data) => {
+          console.log("📝 Log saved:", data);
+          setShowModal(false);
+        }}
+      />
+    </>
+  );
+}
 
-      {/* Additional actions */}
-      <div className="divide-y divide-zinc-700">
-        <ActionItem icon={<PencilIcon size="lg" />} text="Review or log..." />
-        <ActionItem icon={<ListIcon size="lg" />} text="Add to lists..." />
-      </div>
+function IconAction({ Icon, label, active, onClick }) {
+  return (
+    <div className="flex flex-col items-center text-zinc-300 group">
+      <Icon size="xl" active={active} onClick={onClick} />
+      <span className="text-xs mt-1 text-zinc-300">{label}</span>
     </div>
   );
 }
 
-function ActionItem({ icon, text }) {
+function ActionItem({ icon, text, onClick }) {
   return (
-    <button className="w-full flex items-center gap-3 px-4 py-4 hover:bg-zinc-800 group transition text-left">
+    <button
+      onClick={onClick}
+      className="w-full flex items-center gap-3 px-4 py-4 hover:bg-zinc-800 group transition text-left"
+    >
       {icon}
       <span className="text-[15px] text-zinc-300 group-hover:text-green-400 transition">
         {text}
