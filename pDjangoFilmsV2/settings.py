@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     # MY APPS
     'activity',
     'comms',
+    'core',
     'films',
     'integrations',
     'reviews',
@@ -68,8 +69,8 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware', # ANTES DEL COMMONMIDDLEWARE
-    'utils.middlewares.react_access.OnlyReactAccessMiddleware',
-  # 'utils.middlewares.timing_middleware.TimingMiddleware', # TESTING
+    'core.middlewares.react_access.OnlyReactAccessMiddleware',
+  # 'core.middlewares.timing_middleware.TimingMiddleware', # TESTING
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',

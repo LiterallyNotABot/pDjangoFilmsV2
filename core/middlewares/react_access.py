@@ -14,7 +14,7 @@ class OnlyReactAccessMiddleware:
             response = HttpResponse()
         else:
             # Protected internal routes
-            protected_paths = ["/films/", "/persons/", "/users/", "/reviews/", ]
+            protected_paths = ["/films/", "/persons/", "/users/", "/reviews/", "/activity/", ]
             if any(path.startswith(p) for p in protected_paths):
                 if request.headers.get("X-Internal-Access") != "DjangoFilmsFrontend":
                     return HttpResponseForbidden("Access denied")

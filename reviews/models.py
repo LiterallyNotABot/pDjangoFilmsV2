@@ -1,6 +1,8 @@
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.utils import timezone
+
 from films.models import Film
 User = get_user_model()
 
@@ -41,11 +43,11 @@ class Log(models.Model):
         verbose_name = "Log"
         verbose_name_plural = "Logs"
 
-
 class Review(models.Model):
     review_id = models.AutoField(primary_key=True, verbose_name="Review ID")
-    log = models.ForeignKey(Log, on_delete=models.CASCADE, verbose_name="Log")
+    log = models.ForeignKey("reviews.Log", on_delete=models.CASCADE, verbose_name="Log")
     body = models.TextField(verbose_name="Review Body")
+    entry_date = models.DateTimeField(default=timezone.now, verbose_name="Created at")
     active = models.BooleanField(default=True, verbose_name="Is Active?")
     deleted = models.BooleanField(default=False, verbose_name="Is Deleted?")
 

@@ -1,4 +1,3 @@
-# views/person_views.py
 from django.db.models import Count
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes

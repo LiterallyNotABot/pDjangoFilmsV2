@@ -1,22 +1,22 @@
 @import 'tailwindcss';
 
 .film-card {
-  @apply rounded-lg overflow-hidden relative shadow-md transition-all duration-300 ease-out;
+  @apply relative overflow-hidden rounded-lg shadow-md transition-all duration-300 ease-out;
   transform-origin: center;
 }
 
 .film-card:hover {
-  @apply scale-105 border-2 border-orange-700 shadow-xl;
+  @apply scale-105 border-2 border-orange-700;
   transform: translateY(-6px);
-  box-shadow: 0 8px 20px rgba(220, 38, 38, 0.5); /* red-600 glow */
-}
-
-.film-poster-img {
-  @apply h-full w-full object-cover rounded-md shadow-md transition-transform duration-200 group-hover:scale-105;
+  box-shadow: 0 8px 20px rgba(220, 38, 38, 0.5); /* red glow */
 }
 
 .poster-click-area {
-  @apply cursor-pointer w-full h-full;
+  @apply w-full h-full cursor-pointer flex items-center justify-center bg-zinc-900;
+}
+
+.film-poster-img {
+  @apply w-full h-full object-cover rounded-md transition-transform duration-200 group-hover:scale-105;
 }
 
 .film-card-icons {

@@ -2,7 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from users.models import List, Follower
-from users.serializers.lists_feed_serializer import PopularListSerializer
+from users.serializers.lists_feed_serializer import ListFeedSerializer
 
 class FriendsListsView(APIView):
     permission_classes = [IsAuthenticated]
@@ -26,5 +26,6 @@ class FriendsListsView(APIView):
             .order_by("-date_of_creation")[:limit]
         )
 
-        serializer = PopularListSerializer(lists, many=True)
+        serializer = ListFeedSerializer(lists, many=True)
         return Response(serializer.data)
+

@@ -6,21 +6,34 @@ export const getSizedPosterUrl = (url, size = "md") => {
     lg: "w342",
     xl: "w500",
   };
-  if (!url) return getPlaceholderImage("poster");
 
-  const base = "https://image.tmdb.org/t/p/";
-  const path = url?.split("/").pop();
-  return `${base}${sizeMap[size] || sizeMap.md}/${path}`;
+  if (!url || typeof url !== "string") return null;
+
+  // Si ya es una URL completa, la devolvemos tal cual
+  if (url.startsWith("http")) return url;
+
+  // Si es una ruta relativa válida de TMDB
+  if (url.trim().startsWith("/")) {
+    const base = "https://image.tmdb.org/t/p/";
+    const path = url.split("/").pop();
+    return `${base}${sizeMap[size] || sizeMap.md}/${path}`;
+  }
+
+  return null;
 };
 
+
+// Devuelve backdrop optimizado (o placeholder local)
 export const getOptimizedBackdropUrl = (url) => {
-  if (!url) return "/assets/no_img_placeholder.png";
+  if (!url || typeof url !== "string") {
+    return "/assets/backdrop_placeholder.png";
+  }
   return url.includes("/original/")
     ? url.replace("/original/", "/w1280/")
     : url;
 };
 
-// Placeholder para posters u otros tipos
+// Placeholder directo para tipos comunes
 export const getPlaceholderImage = (type = "poster") => {
   switch (type) {
     case "avatar":
@@ -33,7 +46,7 @@ export const getPlaceholderImage = (type = "poster") => {
   }
 };
 
-// Clase de Tailwind según aspect ratio, si usás ratios variables
+// Clase de Tailwind según aspect ratio
 export const getImageAspectClass = (ratio = "2:3") => {
   const map = {
     "1:1": "aspect-square",
@@ -44,7 +57,7 @@ export const getImageAspectClass = (ratio = "2:3") => {
   return map[ratio] || "aspect-[2/3]";
 };
 
-// Simple validador de URL de imagen
+// Validador simple de URL de imagen
 export const isValidImageUrl = (url) => {
-  return typeof url === "string" && url.trim() !== "" && url.startsWith("http");
+  return typeof url === "string" && url.trim().startsWith("http");
 };

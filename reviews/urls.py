@@ -1,5 +1,4 @@
 from django.urls import path
-
 from reviews.views.friends_reviews_view import FriendsReviewsView
 from reviews.views.popular_reviews_view import PopularReviewsView
 

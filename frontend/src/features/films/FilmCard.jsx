@@ -11,6 +11,7 @@ import LogModal from "@/features/reviews/LogModal";
 import { getSizedPosterUrl } from "@/utils/imageUtils";
 import "./css/FilmCard.css";
 import { memo } from "react";
+import noImgPlaceholder from "@/assets/no_img_placeholder.png";
 
 function FilmCard({
   id,
@@ -44,7 +45,10 @@ function FilmCard({
     }
   };
 
-  const imgSrc = useMemo(() => getSizedPosterUrl(posterUrl, size), [posterUrl, size]);
+  const imgSrc = useMemo(() => {
+    const url = getSizedPosterUrl(posterUrl, size);
+    return url || noImgPlaceholder;
+  }, [posterUrl, size]);
 
   return (
     <div className="film-card-wrapper flex flex-col items-center overflow-visible">
@@ -91,7 +95,12 @@ function FilmCard({
       <LogModal
         isOpen={showLogModal}
         onClose={() => setShowLogModal(false)}
-        film={{ id, title, year, posterUrl: getSizedPosterUrl(posterUrl, "md") }}
+        film={{
+          id,
+          title,
+          year,
+          posterUrl: getSizedPosterUrl(posterUrl, "md") || noImgPlaceholder,
+        }}
         onSave={(data) => {
           console.log("📘 FilmCard log saved:", data);
           setShowLogModal(false);

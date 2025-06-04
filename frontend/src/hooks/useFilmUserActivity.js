@@ -1,4 +1,3 @@
-// src/hooks/useFilmUserActivity.js
 import { useEffect, useState, useCallback } from "react";
 import api from "@/services/axios";
 import useUserStore from "@/store/user/userStore";
