@@ -1,4 +1,3 @@
-// src/features/reviews/LogModal.jsx
 import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { X } from "lucide-react";

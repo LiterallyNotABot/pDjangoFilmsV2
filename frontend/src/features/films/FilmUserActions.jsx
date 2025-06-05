@@ -12,14 +12,8 @@ import LogModal from "@/features/reviews/LogModal"; // el señor modal
 
 export default function FilmUserActions({ filmId, onTriggerLogin, filmData }) {
   const { user } = useUserStore();
-  const {
-    liked,
-    watched,
-    watchlisted,
-    rating,
-    updateField,
-    loading,
-  } = useFilmUserActivity(filmId);
+  const { liked, watched, watchlisted, rating, updateField, toggleWatchlist, loading } =
+    useFilmUserActivity(filmId);
 
   const [showModal, setShowModal] = useState(false);
 
@@ -43,7 +37,11 @@ export default function FilmUserActions({ filmId, onTriggerLogin, filmData }) {
             label="Watch"
             active={watched}
             Icon={EyeIcon}
-            onClick={() => updateField("watched", !watched)}
+            onClick={(e) => {
+              e.stopPropagation();
+              e.preventDefault();
+              updateField("watched", !watched);
+            }}
           />
           <IconAction
             label="Like"
@@ -55,7 +53,7 @@ export default function FilmUserActions({ filmId, onTriggerLogin, filmData }) {
             label="Watchlist"
             active={watchlisted}
             Icon={PlusIcon}
-            onClick={() => updateField("watchlisted", !watchlisted)}
+            onClick={() => toggleWatchlist()}
           />
         </div>
 
@@ -101,10 +99,13 @@ export default function FilmUserActions({ filmId, onTriggerLogin, filmData }) {
 
 function IconAction({ Icon, label, active, onClick }) {
   return (
-    <div className="flex flex-col items-center text-zinc-300 group">
-      <Icon size="xl" active={active} onClick={onClick} />
+    <button
+      onClick={onClick}
+      className="flex flex-col items-center text-zinc-300 group focus:outline-none"
+    >
+      <Icon size="xl" active={active} />
       <span className="text-xs mt-1 text-zinc-300">{label}</span>
-    </div>
+    </button>
   );
 }
 

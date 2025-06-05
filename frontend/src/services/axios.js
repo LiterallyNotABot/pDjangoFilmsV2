@@ -18,8 +18,10 @@ const controllerMap = new Map();
 
 api.interceptors.request.use((request) => {
   const method = request.method?.toLowerCase();
-  const paramsKey = method === "get" ? JSON.stringify(request.params || {}) : "";
-  const urlKey = `${method || "get"}:${request.url}:${paramsKey}`;
+  const paramsKey =
+    method === "get" ? JSON.stringify(request.params || {}) : "";
+  const dataKey = method !== "get" ? JSON.stringify(request.data || {}) : "";
+  const urlKey = `${method || "get"}:${request.url}:${paramsKey}:${dataKey}`;
 
   // Abort previous matching request
   if (controllerMap.has(urlKey)) {

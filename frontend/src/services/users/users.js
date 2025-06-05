@@ -1,38 +1,46 @@
-import api from "../axios";
-import { handleApiError } from "../exceptionHelper";
+import { fetchData, patchData, postData, deleteData } from "../requestHandler";
 
 export const loginUser = async (username, password) => {
-  try {
-    const res = await api.post("/auth/jwt/create/", { username, password });
+  const { access, refresh } = await postData("/auth/jwt/create/", {
+    username,
+    password,
+  });
 
-    const { access, refresh } = res.data;
-    localStorage.setItem("access_token", access);
-    localStorage.setItem("refresh_token", refresh);
+  localStorage.setItem("access_token", access);
+  localStorage.setItem("refresh_token", refresh);
 
-    const userRes = await api.get("/users/me/", {
-      headers: {
-        Authorization: `Bearer ${access}`,
-      },
-    });
+  const user = await fetchData("/users/me/");
 
-    return {
-      user: userRes.data,
-      token: access,
-    };
-  } catch (err) {
-    throw handleApiError(err);
-  }
+  return {
+    user,
+    token: access,
+  };
 };
 
 export const registerUser = async (username, email, password) => {
-  try {
-    const res = await api.post("/users/register/", {
-      username,
-      email,
-      password,
-    });
-    return res.data;
-  } catch (err) {
-    throw handleApiError(err);
-  }
+  return postData("/users/register/", {
+    username,
+    email,
+    password,
+  });
+};
+
+export const getUserFilmActivity = (filmId, signal = null) => {
+  return fetchData(`/users/film-activity/${filmId}/`, { signal });
+};
+
+export const patchUserFilmActivity = (filmId, payload, signal = null) => {
+  return patchData(`/users/film-activity/${filmId}/`, payload, { signal });
+};
+
+export const getWatchlistStatus = (filmId, signal = null) => {
+  return fetchData(`/users/film-activity/${filmId}/watchlist/`, { signal });
+};
+
+export const postWatchlistEntry = (filmId, signal = null) => {
+  return postData(`/users/film-activity/${filmId}/watchlist/`, {}, { signal });
+};
+
+export const deleteWatchlistEntry = (filmId, signal = null) => {
+  return deleteData(`/users/film-activity/${filmId}/watchlist/`, { signal });
 };
