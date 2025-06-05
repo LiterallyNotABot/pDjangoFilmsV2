@@ -28,27 +28,34 @@ class FilmUserActivityViewSet(
 
         print(f"GET_OBJECT → user: {user.id}, film: {film_id}, method: {method}, auto_create: {auto_create}")
 
-        try:
-            instance = self.get_queryset().get(film_id=film_id, user=user)
-            print(f"→ instance id: {instance.film_and_user_id}, found existing")
+        instance = FilmAndUser.all_objects.filter(film_id=film_id, user=user).first()
+
+        if instance:
+            print(f"→ instance id: {instance.film_and_user_id}, exists (active={instance.active})")
+            if not instance.active and auto_create:
+                print(f"→ instance was soft-deleted, reactivating...")
+                instance.active = True
+                instance.deleted = False
+                instance.save()
             return instance
-        except FilmAndUser.DoesNotExist:
-            if auto_create:
-                instance, _ = reactivate_or_create(
-                    self.get_queryset().model,
-                    lookup={"user": user, "film_id": film_id},
-                    defaults={}
-                )
-                print(f"→ instance id: {instance.film_and_user_id}, auto-created")
-                return instance
-            print("→ no instance found, returning synthetic empty instance")
-            return FilmAndUser(
-                film_id=film_id,
-                user=user,
-                watched=False,
-                liked=False,
-                rating=None
+
+        if auto_create:
+            instance, _ = reactivate_or_create(
+                FilmAndUser,
+                lookup={"user": user, "film_id": film_id},
+                defaults={}
             )
+            print(f"→ instance id: {instance.film_and_user_id}, auto-created")
+            return instance
+
+        print("→ no instance found, returning synthetic empty instance")
+        return FilmAndUser(
+            film_id=film_id,
+            user=user,
+            watched=False,
+            liked=False,
+            rating=None
+        )
 
     def raise_does_not_exist(self):
         from rest_framework.exceptions import NotFound
@@ -73,6 +80,14 @@ class FilmUserActivityViewSet(
     def perform_update(self, serializer):
         instance = serializer.save()
         print(
-            f"→ UPDATED instance {instance.film_and_user_id}: liked={instance.liked}, watched={instance.watched}, rating={instance.rating}")
+            f"→ UPDATED instance {instance.film_and_user_id}: liked={instance.liked}, watched={instance.watched}, rating={instance.rating}"
+        )
+
         instance.full_clean()
         instance.save()
+
+        if not instance.watched and not instance.liked and instance.rating is None:
+            print(f"→ instance {instance.film_and_user_id} now empty, performing soft delete")
+            instance.active = False
+            instance.deleted = True
+            instance.save()
