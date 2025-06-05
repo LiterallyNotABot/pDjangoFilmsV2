@@ -23,17 +23,18 @@ class FilmAndUserSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         raw_data = self.initial_data
-        rating_val = raw_data.get("rating", None)
 
-        if rating_val is None:
-            data["rating"] = None
-        else:
-            try:
-                data["rating"] = Rating.objects.get(rating_value=rating_val)
-            except Rating.DoesNotExist:
-                raise serializers.ValidationError({
-                    "rating": f"No Rating with value {rating_val}"
-                })
+        if "rating" in raw_data:
+            rating_val = raw_data.get("rating")
+            if rating_val is None:
+                data["rating"] = None
+            else:
+                try:
+                    data["rating"] = Rating.objects.get(rating_value=rating_val)
+                except Rating.DoesNotExist:
+                    raise serializers.ValidationError({
+                        "rating": f"No Rating with value {rating_val}"
+                    })
 
         return data
 

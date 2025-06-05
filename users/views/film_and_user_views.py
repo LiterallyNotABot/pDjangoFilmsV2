@@ -74,5 +74,5 @@ class FilmUserActivityViewSet(
         instance = serializer.save()
         print(
             f"→ UPDATED instance {instance.film_and_user_id}: liked={instance.liked}, watched={instance.watched}, rating={instance.rating}")
-        instance.full_clean()  # Esto llama a clean() y valida campos
+        instance.full_clean()
         instance.save()

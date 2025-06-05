@@ -15,6 +15,7 @@ class Follower(SoftDeleteModel):
     date_followed = models.DateTimeField(verbose_name="Date Followed")
 
 
+
 class FilmAndUser(SoftCreateModel):
     film_and_user_id = models.AutoField(primary_key=True, verbose_name="Film and User ID")
     film = models.ForeignKey(Film, on_delete=models.CASCADE, verbose_name="Film")
