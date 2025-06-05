@@ -1,10 +1,11 @@
 from rest_framework import generics
 from rest_framework.decorators import api_view, permission_classes
+from rest_framework.generics import ListAPIView
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from films.models import Film, FilmAndPerson
-from films.serializers.serializers import FilmSerializer
+from films.models import Film, FilmAndPerson, Genre
+from films.serializers.serializers import FilmSerializer, GenreSerializer
 from rest_framework.permissions import AllowAny
 from rest_framework import status
 from films.serializers.mini_film_serializer import MiniFilmSerializer
@@ -82,3 +83,8 @@ def get_filtered_films(request):
 
     serializer = MiniFilmSerializer(page, many=True)
     return paginator.get_paginated_response(serializer.data)
+
+class GenreListView(ListAPIView):
+    queryset = Genre.objects.filter(active=True, deleted=False)
+    serializer_class = GenreSerializer
+    permission_classes = [AllowAny]

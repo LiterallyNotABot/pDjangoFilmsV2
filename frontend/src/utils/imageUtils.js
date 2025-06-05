@@ -9,28 +9,43 @@ export const getSizedPosterUrl = (url, size = "md") => {
 
   if (!url || typeof url !== "string") return null;
 
-  // Si ya es una URL completa, la devolvemos tal cual
-  if (url.startsWith("http")) return url;
+  const tmdbBase = "https://image.tmdb.org/t/p/";
+  const desiredSize = sizeMap[size] || sizeMap.md;
 
-  // Si es una ruta relativa válida de TMDB
-  if (url.trim().startsWith("/")) {
-    const base = "https://image.tmdb.org/t/p/";
-    const path = url.split("/").pop();
-    return `${base}${sizeMap[size] || sizeMap.md}/${path}`;
+  // Caso: URL completa de TMDB (ya incluye base)
+  if (url.startsWith(tmdbBase)) {
+    const filename = url.split("/").pop();
+    return `${tmdbBase}${desiredSize}/${filename}`;
   }
 
-  return null;
+  // Caso: ruta relativa de TMDB (ej. "/kqjL17yufvn9OVLyXYpvtyrFfak.jpg")
+  if (url.startsWith("/")) {
+    return `${tmdbBase}${desiredSize}${url}`;
+  }
+
+  // Si no es TMDB, se devuelve tal cual
+  return url;
 };
 
-
-// Devuelve backdrop optimizado (o placeholder local)
+// Devuelve backdrop optimizado (reemplaza /original/ por w1280)
 export const getOptimizedBackdropUrl = (url) => {
   if (!url || typeof url !== "string") {
     return "/assets/backdrop_placeholder.png";
   }
-  return url.includes("/original/")
-    ? url.replace("/original/", "/w1280/")
-    : url;
+
+  const tmdbBase = "https://image.tmdb.org/t/p/";
+
+  // Si es completa de TMDB y usa /original/
+  if (url.startsWith(tmdbBase) && url.includes("/original/")) {
+    return url.replace("/original/", "/w1280/");
+  }
+
+  // Si es solo un path relativo
+  if (url.startsWith("/")) {
+    return `${tmdbBase}w1280${url}`;
+  }
+
+  return url;
 };
 
 // Placeholder directo para tipos comunes

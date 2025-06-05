@@ -1,6 +1,5 @@
-import axios from "../axios";
+// services/films/genres.js
+import { fetchData } from "../requestHandler";
 
-export const getAllGenres = async () => {
-  const res = await axios.get("/genres/");
-  return res.data;
-};
+export const fetchGenres = (signal = null) =>
+  fetchData("/genres/", { signal });

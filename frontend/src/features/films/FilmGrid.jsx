@@ -2,14 +2,14 @@ import { useState, useEffect, useMemo, useCallback } from "react";
 import PropTypes from "prop-types";
 import FilmCard from "./FilmCard";
 import { getFilmsByPerson } from "../../services/films/persons";
-import { fetchFilmsByFilter } from "../../services/films/films";
+import { fetchFilteredFilms } from "../../services/films/films";
 import { Button } from "@/components/ui/Button";
 import FilterSortBar from "./grid_adds/FilterSortBar";
 import DropdownSelector from "./grid_adds/DropdownSelector";
 import { useSearchParams } from "react-router-dom";
 
 const gridClassMap = {
-  sm: "grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6",
+  sm: "grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-12",
   md: "grid-cols-2 sm:grid-cols-3 md:grid-cols-4",
   lg: "grid-cols-1 sm:grid-cols-2 md:grid-cols-3",
   xl: "grid-cols-1 sm:grid-cols-2",
@@ -79,7 +79,7 @@ export default function FilmGrid({
             page_size: pageSize,
           };
 
-          res = await fetchFilmsByFilter(filters, signal);
+          res = await fetchFilteredFilms(filters, signal);
         }
 
         if (!res || typeof res !== "object" || !Array.isArray(res.results)) {
@@ -155,7 +155,9 @@ export default function FilmGrid({
         <p className="text-gray-400">Loading...</p>
       ) : films?.length ? (
         <>
-          <div className={`grid gap-6 justify-center ${gridClassMap[cardSize]}`}>
+          <div
+            className={`grid gap-6 justify-center ${gridClassMap[cardSize]}`}
+          >
             {films.map((film) => (
               <FilmCard
                 key={film.id}
@@ -163,6 +165,7 @@ export default function FilmGrid({
                 title={film.title}
                 year={film.year}
                 posterUrl={film.posterUrl}
+                backdropUrl={film.backdropUrl}
                 size={cardSize}
               />
             ))}
@@ -177,15 +180,39 @@ export default function FilmGrid({
               >
                 {"<"}
               </Button>
-              {Array.from({ length: totalPages }, (_, i) => (
-                <Button
-                  key={i}
-                  variant={i + 1 === currentPage ? "primary" : "secondary"}
-                  onClick={() => setCurrentPage(i + 1)}
-                >
-                  {i + 1}
-                </Button>
-              ))}
+
+              {Array.from({ length: totalPages }, (_, i) => i + 1)
+                .filter((page) => {
+                  return (
+                    page === 1 ||
+                    page === totalPages ||
+                    (page >= currentPage - 2 && page <= currentPage + 2)
+                  );
+                })
+                .reduce((acc, page, i, arr) => {
+                  if (i > 0 && page - arr[i - 1] > 1) acc.push("...");
+                  acc.push(page);
+                  return acc;
+                }, [])
+                .map((page, i) =>
+                  page === "..." ? (
+                    <span
+                      key={`ellipsis-${i}`}
+                      className="px-3 py-1 text-gray-400 select-none"
+                    >
+                      ...
+                    </span>
+                  ) : (
+                    <Button
+                      key={page}
+                      variant={page === currentPage ? "primary" : "secondary"}
+                      onClick={() => setCurrentPage(page)}
+                    >
+                      {page}
+                    </Button>
+                  )
+                )}
+
               <Button
                 variant="secondary"
                 disabled={currentPage === totalPages}

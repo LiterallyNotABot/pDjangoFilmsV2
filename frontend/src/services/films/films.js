@@ -9,5 +9,6 @@ export const getAllFilms = (signal) =>
 export const getLatestFilms = (limit = 10, signal) =>
   fetchData("/films/latest/", { params: { limit }, signal });
 
-export const fetchFilmsByFilter = (filters, signal) =>
-  fetchData("/films/", { params: filters, signal });
+export const fetchFilteredFilms = (filters = {}, signal = null) => {
+  return fetchData("/films/filtered/", { params: filters, signal });
+};
