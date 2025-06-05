@@ -1,9 +1,0 @@
-@import 'tailwindcss';
-
-.ui-title {
-  @apply text-3xl font-bold text-white mb-4;
-}
-
-.ui-subtitle {
-  @apply text-xl font-semibold text-gray-300 mb-2;
-}

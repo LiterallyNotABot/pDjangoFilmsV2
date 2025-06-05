@@ -1,21 +1,13 @@
-import axios from "../axios";
+import { fetchData } from "../requestHandler";
 
-export const getFilmById = async (id) => {
-  const res = await axios.get(`/films/${id}/`);
-  return res.data;
-};
+export const getFilmById = (id, signal) =>
+  fetchData(`/films/${id}/`, { signal });
 
-export const getAllFilms = async () => {
-  const res = await axios.get("/films/");
-  return res.data;
-};
+export const getAllFilms = (signal) =>
+  fetchData("/films/", { signal });
 
-export const getLatestFilms = async (limit = 10) => {
-  const res = await axios.get(`/films/latest/?limit=${limit}`);
-  return res.data;
-};
+export const getLatestFilms = (limit = 10, signal) =>
+  fetchData("/films/latest/", { params: { limit }, signal });
 
-export const getFriendsActivityFilms = async (limit = 10) => {
-  const res = await axios.get(`/films/friends-activity/?limit=${limit}`);
-  return res.data;
-};
+export const fetchFilmsByFilter = (filters, signal) =>
+  fetchData("/films/", { params: filters, signal });

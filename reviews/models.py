@@ -1,18 +1,20 @@
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.utils import timezone
+from core.models import SoftDeleteModel, SoftManagedModel
 from films.models import Film
+
 User = get_user_model()
 
-class Rating(models.Model):
+
+class Rating(SoftDeleteModel):
     rating_id = models.AutoField(primary_key=True)
     rating_value = models.DecimalField(
         max_digits=2,
         decimal_places=1,
         verbose_name="Rating Value"
     )
-    active = models.BooleanField(default=True, verbose_name="Is Active?")
-    deleted = models.BooleanField(default=False, verbose_name="Is Deleted?")
 
     class Meta:
         managed = True
@@ -25,15 +27,13 @@ class Rating(models.Model):
             raise ValidationError("Rating value must be between 0.5 and 5.")
 
 
-class Log(models.Model):
+class Log(SoftManagedModel):
     log_id = models.AutoField(primary_key=True, verbose_name="Log ID")
     film = models.ForeignKey(Film, on_delete=models.CASCADE, verbose_name="Film")
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="User")
     rating = models.ForeignKey(Rating, on_delete=models.SET_NULL, blank=True, null=True, verbose_name="Rating")
     liked = models.BooleanField(default=False, verbose_name="Liked?")
     entry_date = models.DateTimeField(auto_now_add=True, verbose_name="Entry Date")
-    active = models.BooleanField(default=True, verbose_name="Is Active?")
-    deleted = models.BooleanField(default=False, verbose_name="Is Deleted?")
 
     class Meta:
         managed = True
@@ -42,12 +42,11 @@ class Log(models.Model):
         verbose_name_plural = "Logs"
 
 
-class Review(models.Model):
+class Review(SoftManagedModel):
     review_id = models.AutoField(primary_key=True, verbose_name="Review ID")
-    log = models.ForeignKey(Log, on_delete=models.CASCADE, verbose_name="Log")
+    log = models.ForeignKey("reviews.Log", on_delete=models.CASCADE, verbose_name="Log")
     body = models.TextField(verbose_name="Review Body")
-    active = models.BooleanField(default=True, verbose_name="Is Active?")
-    deleted = models.BooleanField(default=False, verbose_name="Is Deleted?")
+    entry_date = models.DateTimeField(default=timezone.now, verbose_name="Created at")
 
     class Meta:
         managed = True
@@ -56,12 +55,10 @@ class Review(models.Model):
         verbose_name_plural = "Reviews"
 
 
-class ReviewAndLikeByUser(models.Model):
+class ReviewAndLikeByUser(SoftDeleteModel):
     like_id = models.AutoField(primary_key=True, verbose_name="Like ID")
     log = models.ForeignKey(Log, on_delete=models.CASCADE, verbose_name="Log")
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="User")
-    active = models.BooleanField(default=True, verbose_name="Is Active?")
-    deleted = models.BooleanField(default=False, verbose_name="Is Deleted?")
 
     class Meta:
         managed = True

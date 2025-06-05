@@ -1,6 +1,7 @@
 from rest_framework import serializers
-from reviews.models import Review, ReviewAndLikeByUser
 from films.serializers.mini_film_serializer import MiniFilmSerializer
+from reviews.models import Review, ReviewAndLikeByUser
+
 
 class ReviewWithFilmSerializer(serializers.ModelSerializer):
     film = serializers.SerializerMethodField()
@@ -32,5 +33,8 @@ class ReviewWithFilmSerializer(serializers.ModelSerializer):
 
     def get_likes(self, obj):
         return ReviewAndLikeByUser.objects.filter(
-            log=obj.log, active=True, deleted=False
+            log=obj.log,
+            active=True,
+            deleted=False
         ).count()
+

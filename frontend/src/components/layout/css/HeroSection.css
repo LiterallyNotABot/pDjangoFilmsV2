@@ -1,8 +1,8 @@
 @import 'tailwindcss';
 
 .hero-section {
-  @apply relative w-full max-w-6xl mx-auto bg-cover bg-center overflow-hidden rounded-xl;
-  aspect-ratio: 2.39 / 1;
+ @apply relative w-full max-w-6xl mx-auto bg-cover bg-center overflow-hidden rounded-xl;
+   aspect-ratio: 2.39 / 1;
 
   mask-image: radial-gradient(
     circle at center,

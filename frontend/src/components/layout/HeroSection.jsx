@@ -1,6 +1,8 @@
+import PropTypes from "prop-types";
 import Backdrop from "./Backdrop";
+import { memo } from "react";
 
-export default function HeroSection({ user, backdropUrl, onJoin }) {
+function HeroSection({ user, backdropUrl, onJoin }) {
   return (
     <>
       <Backdrop imageUrl={backdropUrl} />
@@ -25,3 +27,11 @@ export default function HeroSection({ user, backdropUrl, onJoin }) {
     </>
   );
 }
+
+HeroSection.propTypes = {
+  user: PropTypes.object,
+  backdropUrl: PropTypes.string.isRequired,
+  onJoin: PropTypes.func.isRequired,
+};
+
+export default memo(HeroSection);

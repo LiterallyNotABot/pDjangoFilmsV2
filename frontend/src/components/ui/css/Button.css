@@ -1,15 +1,16 @@
 @import "tailwindcss";
 
 .btn {
-  @apply px-4 py-2 rounded-md font-semibold transition duration-200;
+  @apply px-4 py-2 rounded-md font-semibold transition duration-200 cursor-pointer;
 }
 
+
 .btn--primary {
-  @apply bg-green-800 text-white hover:bg-green-800;
+  @apply bg-green-600 text-white hover:bg-red-800;
 }
 
 .btn--secondary {
-  @apply bg-gray-700 text-white hover:bg-gray-800;
+  @apply bg-gray-700 text-white hover:bg-red-800;
 }
 
 .btn--danger {

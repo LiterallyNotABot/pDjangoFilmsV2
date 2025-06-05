@@ -1,9 +1,10 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
+from django.db.models import Count, Q
 from reviews.models import Review
 from reviews.serializers.reviews_feed_serializer import ReviewWithFilmSerializer
-from django.db.models import Count, Q
+
 
 class PopularReviewsView(APIView):
     permission_classes = [AllowAny]
@@ -16,6 +17,7 @@ class PopularReviewsView(APIView):
 
         reviews = (
             Review.objects.filter(active=True, deleted=False)
+            .select_related("log__film", "log__user", "log__rating")
             .annotate(
                 like_count=Count(
                     "log__reviewandlikebyuser",

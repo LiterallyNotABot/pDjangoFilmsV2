@@ -1,11 +1,7 @@
-import axios from "../axios";
+import { fetchData } from "../requestHandler";
 
-export const getPopularLists = async (limit = 10) => {
-  const response = await axios.get(`/users/lists/popular/?limit=${limit}`);
-  return response.data;
-};
+export const getPopularLists = (limit = 10, signal) =>
+  fetchData("/users/lists/popular/", { params: { limit }, signal });
 
-export async function getFriendsLists(limit = 6) {
-  const response = await axios.get(`/users/lists/friends/?limit=${limit}`);
-  return response.data;
-}
+export const getFriendsLists = (limit = 6, signal) =>
+  fetchData("/users/lists/friends/", { params: { limit }, signal });

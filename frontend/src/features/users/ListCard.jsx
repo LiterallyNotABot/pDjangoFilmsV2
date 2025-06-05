@@ -1,16 +1,17 @@
 import PropTypes from "prop-types";
 import FilmCard from "../films/FilmCard";
-import { Heart } from "lucide-react";
+import HeartIcon from "../../components/ui/icons/HeartIcon";
 import "./css/ListCard.css";
+import { memo } from "react";
 
-export default function ListCard({ list }) {
+function ListCard({ list }) {
   return (
     <div className="poster-container overflow-visible">
       <div className="list-card">
         <div className="list-posters">
           {list.films.slice(0, 5).map((film, idx) => (
             <div
-              key={idx}
+              key={film.id}
               className="poster-wrapper"
               style={{ zIndex: 5 - idx }}
             >
@@ -18,6 +19,7 @@ export default function ListCard({ list }) {
                 id={film.id}
                 title={film.title}
                 posterUrl={film.posterUrl}
+                year={film.year}
                 size="sm"
                 showUserActions={false}
               />
@@ -29,8 +31,8 @@ export default function ListCard({ list }) {
 
         <div className="list-meta">
           <span className="user">@{list.user}</span>
-          <span className="flex items-center gap-1 text-red-500">
-            <Heart size={14} strokeWidth={1.5} /> {list.likes}
+          <span className="flex items-center gap-1 text-green-500">
+            <HeartIcon active size="sm" /> {list.likes}
           </span>
         </div>
       </div>
@@ -47,8 +49,11 @@ ListCard.propTypes = {
         id: PropTypes.number.isRequired,
         title: PropTypes.string.isRequired,
         posterUrl: PropTypes.string,
+        year: PropTypes.number,
       })
     ).isRequired,
     likes: PropTypes.number,
   }).isRequired,
 };
+
+export default memo(ListCard);

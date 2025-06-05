@@ -5,37 +5,41 @@ import Modal from "../ui/Modal";
 import LoginForm from "../forms/LoginForm";
 import RegisterForm from "../forms/RegisterForm";
 import ScrollToTop from "./ScrollToTop";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import "./css/Layout.css";
 
 export default function Layout() {
-  const [showLogin, setShowLogin] = useState(false);
-  const [showRegister, setShowRegister] = useState(false);
+  const [modalType, setModalType] = useState(null); // "login" | "register" | null
 
   useEffect(() => {
-    document.body.style.overflow = (showLogin || showRegister) ? 'hidden' : 'auto';
-  }, [showLogin, showRegister]);
+    const body = document.body;
+    body.style.overflow = modalType ? "hidden" : "auto";
+    return () => {
+      body.style.overflow = "auto"; // Cleanup
+    };
+  }, [modalType]);
+
+  const closeModal = useCallback(() => setModalType(null), []);
+  const openLogin = useCallback(() => setModalType("login"), []);
+  const openRegister = useCallback(() => setModalType("register"), []);
 
   return (
     <>
       <ScrollToTop />
-      <Navbar 
-        onLoginClick={() => setShowLogin(true)} 
-        onRegisterClick={() => setShowRegister(true)} 
-      />
-      
+      <Navbar onLoginClick={openLogin} onRegisterClick={openRegister} />
+
       <main className="app-layout">
         <Outlet />
       </main>
 
       <Footer />
 
-      <Modal isOpen={showLogin} onClose={() => setShowLogin(false)}>
-        <LoginForm onSuccess={() => setShowLogin(false)} />
+      <Modal isOpen={modalType === "login"} onClose={closeModal}>
+        <LoginForm onSuccess={closeModal} />
       </Modal>
 
-      <Modal isOpen={showRegister} onClose={() => setShowRegister(false)}>
-        <RegisterForm onSuccess={() => setShowRegister(false)} />
+      <Modal isOpen={modalType === "register"} onClose={closeModal}>
+        <RegisterForm onSuccess={closeModal} />
       </Modal>
     </>
   );

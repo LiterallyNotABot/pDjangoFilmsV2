@@ -4,57 +4,64 @@ import HeroSection from "../components/layout/HeroSection";
 import LatestPosters from "../components/home/LatestPosters";
 import ReviewFeed from "../features/reviews/ReviewFeed";
 import ListFeed from "../features/users/ListFeed";
-
-import {
-  getLatestFilms,
-  getFriendsActivityFilms,
-} from "../services/films/films";
-
+import axios from "axios";
+import { getLatestFilms } from "../services/films/films";
+import { getFriendsActivityFilms } from "../services/activity/activity";
 import {
   getPopularReviews,
   getFriendsReviews,
 } from "../services/reviews/reviews";
-
-import {
-  getPopularLists,
-  getFriendsLists,
-} from "../services/users/lists";
+import { getPopularLists, getFriendsLists } from "../services/users/lists";
+import { handleApiError } from "../services/exceptionHelper";
 
 export default function Home() {
   const { user } = useUserStore();
-
   const [films, setFilms] = useState([]);
   const [reviews, setReviews] = useState([]);
   const [lists, setLists] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const controller = new AbortController();
+    const signal = controller.signal;
+
     const fetchData = async () => {
+      setLoading(true);
+      const isLoggedIn = !!user;
+
       try {
-        // Films
-        const filmsData = user
-          ? await getFriendsActivityFilms(12)
-          : await getLatestFilms(12);
-        setFilms(filmsData);
+        const [filmsData, reviewsData, listsData] = await Promise.all([
+          isLoggedIn
+            ? getFriendsActivityFilms(12, signal)
+            : getLatestFilms(12, signal),
+          isLoggedIn
+            ? getFriendsReviews(6, signal)
+            : getPopularReviews(6, signal),
+          isLoggedIn ? getFriendsLists(6, signal) : getPopularLists(6, signal),
+        ]);
 
-        // Reviews
-        const reviewsData = user
-          ? await getFriendsReviews(6)
-          : await getPopularReviews(6);
-        setReviews(reviewsData);
-
-        // Lists
-        const listsData = user
-          ? await getFriendsLists(6)
-          : await getPopularLists(6);
-        setLists(listsData);
-
+        setFilms(filmsData || []);
+        setReviews(reviewsData || []);
+        setLists(listsData || []);
       } catch (error) {
-        console.error("Error fetching home data:", error);
+        if (error) {
+          console.error("Error fetching home data:", error.message || error);
+        }
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchData();
-  }, [user]);
+
+    return () => controller.abort(); // Cancela si el componente se desmonta
+  }, [user?.id]);
+
+  if (loading) {
+    return (
+      <div className="text-center text-gray-400 py-12">Loading homepage...</div>
+    );
+  }
 
   return (
     <>

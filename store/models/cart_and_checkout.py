@@ -2,13 +2,17 @@ from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils import timezone
 from store.models.catalog import Product
-User=get_user_model()
+from core.models import SoftDeleteModel, ActiveManager
 
-class Cart(models.Model):
+User = get_user_model()
+
+
+class Cart(SoftDeleteModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='carts')
     created_at = models.DateTimeField(auto_now_add=True)
-    active = models.BooleanField(default=True, verbose_name="Is Active?")
-    deleted = models.BooleanField(default=False, verbose_name="Is Deleted?")
+
+    objects = ActiveManager()
+    all_objects = models.Manager()
 
     class Meta:
         db_table = 'Carts'
@@ -17,13 +21,14 @@ class Cart(models.Model):
         return f"Cart #{self.pk} for {self.user}"
 
 
-class CartItem(models.Model):
+class CartItem(SoftDeleteModel):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='items')
     product = models.ForeignKey(Product, on_delete=models.PROTECT)
     quantity = models.PositiveIntegerField(default=1)
     added_at = models.DateTimeField(auto_now_add=True)
-    active = models.BooleanField(default=True, verbose_name="Is Active?")
-    deleted = models.BooleanField(default=False, verbose_name="Is Deleted?")
+
+    objects = ActiveManager()
+    all_objects = models.Manager()
 
     class Meta:
         db_table = 'CartItems'
@@ -33,13 +38,14 @@ class CartItem(models.Model):
         return f"{self.quantity} × {self.product.name}"
 
 
-class CheckoutSession(models.Model):
+class CheckoutSession(SoftDeleteModel):
     cart = models.OneToOneField(Cart, on_delete=models.CASCADE, related_name='checkout_session')
     stripe_session_id = models.CharField(max_length=255, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
     completed = models.BooleanField(default=False)
-    active = models.BooleanField(default=True, verbose_name="Is Active?")
-    deleted = models.BooleanField(default=False, verbose_name="Is Deleted?")
+
+    objects = ActiveManager()
+    all_objects = models.Manager()
 
     class Meta:
         db_table = 'CheckoutSessions'
@@ -48,12 +54,13 @@ class CheckoutSession(models.Model):
         return f"Checkout for Cart #{self.cart.id} ({'✔' if self.completed else 'Pending'})"
 
 
-class CheckoutLog(models.Model):
+class CheckoutLog(SoftDeleteModel):
     stripe_event_id = models.CharField(max_length=255, unique=True)
     payload = models.JSONField()
     received_at = models.DateTimeField(default=timezone.now)
-    active = models.BooleanField(default=True, verbose_name="Is Active?")
-    deleted = models.BooleanField(default=False, verbose_name="Is Deleted?")
+
+    objects = ActiveManager()
+    all_objects = models.Manager()
 
     class Meta:
         db_table = 'CheckoutLogs'

@@ -1,11 +1,9 @@
 import PropTypes from "prop-types";
+import { getOptimizedBackdropUrl } from "@/utils/imageUtils";
 import "./css/HeroSection.css";
 
 export default function Backdrop({ imageUrl, size = "default" }) {
-  // Usa versión reducida si es de TMDb
-  const optimizedUrl = imageUrl?.includes("/original/")
-    ? imageUrl.replace("/original/", "/w1280/")
-    : imageUrl;
+  const optimizedUrl = getOptimizedBackdropUrl(imageUrl);
 
   return (
     <section

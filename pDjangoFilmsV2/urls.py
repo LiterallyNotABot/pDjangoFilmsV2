@@ -29,9 +29,10 @@ urlpatterns = [
     path('store/', include('store.urls')),
     path('comms/', include('comms.urls')),
     path("users/", include("users.urls")),
-    path("films/", include("films.urls")),
+    path("films/", include("films.films_urls")),
+    path("persons/", include("films.persons_urls")),
     path("reviews/", include("reviews.urls")),
+    path("activity/", include("activity.urls")),
     path('auth/jwt/create/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('auth/jwt/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-

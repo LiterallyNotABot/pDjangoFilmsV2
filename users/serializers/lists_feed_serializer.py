@@ -1,14 +1,11 @@
 from rest_framework import serializers
+
+from films.serializers.mini_film_serializer import MiniFilmSerializer
 from users.models import List, ListAndFilm, ListAndLikeByUser
 
-class ListFilmPreviewSerializer(serializers.Serializer):
-    id = serializers.IntegerField(source="film.film_id")
-    title = serializers.CharField(source="film.title")
-    posterUrl = serializers.CharField(source="film.poster_url")
-    backdropUrl = serializers.CharField(source="film.backdrop_url", allow_null=True)
 
 
-class PopularListSerializer(serializers.ModelSerializer):
+class ListFeedSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(source="list_id")
     name = serializers.CharField(source="list_name")
     user = serializers.CharField(source="user.username")
@@ -29,4 +26,4 @@ class PopularListSerializer(serializers.ModelSerializer):
 
     def get_films(self, obj):
         qs = ListAndFilm.objects.filter(list=obj, active=True, deleted=False).select_related("film")[:5]
-        return ListFilmPreviewSerializer(qs, many=True).data
+        return MiniFilmSerializer([entry.film for entry in qs], many=True).data
