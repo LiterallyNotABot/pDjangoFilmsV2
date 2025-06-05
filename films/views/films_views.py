@@ -66,3 +66,19 @@ def get_films_by_person_and_role(request):
     page = paginator.paginate_queryset(films, request)
     serializer = MiniFilmSerializer(page, many=True)
     return paginator.get_paginated_response(serializer.data)
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def get_filtered_films(request):
+    from films.views.base_film_filters import get_base_film_queryset, apply_film_filters
+
+    page_size = int(request.query_params.get("page_size", 20))
+    queryset = get_base_film_queryset()
+    filtered_qs = apply_film_filters(queryset, request.query_params).order_by("-popularity")
+
+    paginator = PageNumberPagination()
+    paginator.page_size = page_size
+    page = paginator.paginate_queryset(filtered_qs, request)
+
+    serializer = MiniFilmSerializer(page, many=True)
+    return paginator.get_paginated_response(serializer.data)

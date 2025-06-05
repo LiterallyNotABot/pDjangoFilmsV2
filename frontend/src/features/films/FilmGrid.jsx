@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo, useCallback } from "react";
 import PropTypes from "prop-types";
 import FilmCard from "./FilmCard";
 import { getFilmsByPerson } from "../../services/films/persons";
+import { fetchFilmsByFilter } from "../../services/films/films";
 import { Button } from "@/components/ui/Button";
 import FilterSortBar from "./grid_adds/FilterSortBar";
 import DropdownSelector from "./grid_adds/DropdownSelector";
@@ -31,14 +32,14 @@ export default function FilmGrid({
 }) {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  // ✅ Transform searchParams into plain object to ensure reactivity
   const searchFilters = useMemo(() => {
     const query = Object.fromEntries(searchParams.entries());
-
     return {
       role: query.role || "Actor",
       genre: query.genre || null,
       language: query.language || null,
+      country: query.country || null,
+      company: query.company || null,
       sort: query.sort || null,
     };
   }, [searchParams]);
@@ -54,16 +55,32 @@ export default function FilmGrid({
     async (signal = null) => {
       setLoading(true);
       try {
-        const res = await getFilmsByPerson(
-          personId,
-          searchFilters.role,
-          currentPage,
-          searchFilters.genre,
-          searchFilters.language,
-          searchFilters.sort,
-          pageSize,
-          signal
-        );
+        let res;
+
+        if (personId) {
+          res = await getFilmsByPerson(
+            personId,
+            searchFilters.role,
+            currentPage,
+            searchFilters.genre,
+            searchFilters.language,
+            searchFilters.sort,
+            pageSize,
+            signal
+          );
+        } else {
+          const filters = {
+            genre: searchFilters.genre,
+            language: searchFilters.language,
+            country: searchFilters.country,
+            company: searchFilters.company,
+            sort: searchFilters.sort,
+            page: currentPage,
+            page_size: pageSize,
+          };
+
+          res = await fetchFilmsByFilter(filters, signal);
+        }
 
         if (!res || typeof res !== "object" || !Array.isArray(res.results)) {
           throw new Error("Invalid film data received.");
@@ -72,7 +89,7 @@ export default function FilmGrid({
         setFilms(res.results);
         setTotalPages(Math.ceil((res.count || 0) / pageSize));
       } catch (err) {
-        if (err?.code === "ERR_CANCELED") return;
+        if (err?.code !== "ERR_CANCELED") console.error(err);
         setFilms([]);
       } finally {
         setLoading(false);
@@ -83,6 +100,8 @@ export default function FilmGrid({
       searchFilters.role,
       searchFilters.genre,
       searchFilters.language,
+      searchFilters.country,
+      searchFilters.company,
       searchFilters.sort,
       currentPage,
       pageSize,
@@ -185,7 +204,7 @@ export default function FilmGrid({
 }
 
 FilmGrid.propTypes = {
-  personId: PropTypes.string.isRequired,
+  personId: PropTypes.string,
   cardSize: PropTypes.oneOf(["sm", "md", "lg", "xl"]),
   filters: PropTypes.arrayOf(
     PropTypes.shape({

@@ -6,13 +6,11 @@ import "react-datepicker/dist/react-datepicker.css";
 import StarRating from "@/components/ui/StarRating";
 import HeartIcon from "@/components/ui/icons/HeartIcon";
 import { postLog } from "@/services/reviews/logs";
-import {
-  patchUserFilmActivity,
-  deleteWatchlistEntry,
-} from "@/services/users/users";
+import {patchUserFilmActivity, deleteWatchlistEntry,} from "@/services/users/users";
 import useFilmActivityStore from "@/store/film/useFilmActivityStore";
 import { toast } from "react-hot-toast";
 import { isNotFoundError, handleApiError } from "@/services/exceptionHelper";
+import "./css/LogModal.css";
 
 export default function LogModal({ isOpen, onClose, film, onSave = () => {} }) {
   const today = new Date();
@@ -43,7 +41,6 @@ export default function LogModal({ isOpen, onClose, film, onSave = () => {} }) {
         rating: rating || null,
       });
 
-      // Ignora error si no hay entrada en la watchlist
       await deleteWatchlistEntry(film.id).catch((err) => {
         if (!isNotFoundError(err)) throw err;
       });
@@ -79,11 +76,11 @@ export default function LogModal({ isOpen, onClose, film, onSave = () => {} }) {
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 bg-black/90 backdrop-blur-sm" />
+          <div className="modal-overlay" />
         </Transition.Child>
 
-        <div className="fixed inset-0 overflow-y-auto">
-          <div className="flex min-h-full items-center justify-center p-4">
+        <div className="modal-wrapper">
+          <div className="modal-inner">
             <Transition.Child
               as={Fragment}
               enter="ease-out duration-300"
@@ -93,21 +90,20 @@ export default function LogModal({ isOpen, onClose, film, onSave = () => {} }) {
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <Dialog.Panel className="w-full max-w-3xl transform overflow-hidden rounded-2xl bg-zinc-950 text-white p-6 shadow-2xl border border-zinc-800 hover:border-yellow-600 transition-all">
-                {/* Header */}
-                <div className="flex justify-between items-start mb-5">
+              <Dialog.Panel className="modal-panel">
+                <div className="modal-header">
                   <h2 className="text-2xl font-bold text-red-600">
                     Log this film
                   </h2>
-                  <div className="flex items-center gap-3">
+                  <div className="modal-date-controls">
                     <label className="text-sm text-zinc-400 font-medium">
                       Watched on
                     </label>
                     <DatePicker
                       selected={watchedDate}
                       onChange={setWatchedDate}
-                      className="bg-zinc-800 text-white border border-zinc-600 text-sm rounded px-2 py-1"
-                      calendarClassName="bg-zinc-900 text-white border border-zinc-600 rounded shadow"
+                      className="modal-datepicker"
+                      calendarClassName="modal-calendar"
                       popperPlacement="bottom-end"
                       dateFormat="dd/MM/yyyy"
                     />
@@ -120,38 +116,32 @@ export default function LogModal({ isOpen, onClose, film, onSave = () => {} }) {
                   </div>
                 </div>
 
-                {/* Review */}
-                <div className="flex gap-6 mb-6">
+                <div className="modal-review-section">
                   <img
                     src={film?.posterUrl}
                     alt={film?.title}
-                    className="w-24 rounded-lg shadow border border-zinc-700"
+                    className="modal-poster"
                   />
-                  <div className="flex-1">
-                    <h3 className="text-lg font-semibold text-white mb-2">
+                  <div className="modal-review-info">
+                    <h3 className="modal-review-title">
                       {film?.title}{" "}
-                      <span className="text-zinc-500 font-normal">
-                        ({film?.year})
-                      </span>
+                      <span className="modal-review-year">({film?.year})</span>
                     </h3>
-                    <label className="block text-sm text-zinc-400 font-medium mb-1">
-                      Your Review
-                    </label>
+                    <label className="modal-review-label">Your Review</label>
                     <textarea
                       value={review}
                       onChange={(e) => setReview(e.target.value)}
                       placeholder="What did you think?"
                       rows={4}
-                      className="w-full bg-zinc-800 border border-zinc-600 text-white rounded-lg p-3 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-600 resize-none"
+                      className="modal-textarea"
                     />
                   </div>
                 </div>
 
-                {/* Rating / Liked / Save */}
-                <div className="flex items-center justify-between mt-4">
-                  <div className="flex items-center gap-6">
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm text-zinc-300">Rating</span>
+                <div className="modal-footer">
+                  <div className="modal-footer-left">
+                    <div className="modal-footer-group">
+                      <span className="modal-footer-label">Rating</span>
                       <StarRating
                         value={rating}
                         onChange={setRating}
@@ -159,8 +149,8 @@ export default function LogModal({ isOpen, onClose, film, onSave = () => {} }) {
                         interactive
                       />
                     </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm text-zinc-300">Liked</span>
+                    <div className="modal-footer-group">
+                      <span className="modal-footer-label">Liked</span>
                       <HeartIcon
                         active={liked}
                         size="lg"
@@ -173,9 +163,9 @@ export default function LogModal({ isOpen, onClose, film, onSave = () => {} }) {
                   <button
                     onClick={handleSubmit}
                     disabled={loading}
-                    className={`px-5 py-2 ${
-                      loading ? "bg-zinc-600" : "bg-red-600 hover:bg-green-600"
-                    } text-white font-semibold rounded-lg shadow transition`}
+                    className={`modal-save-button ${
+                      loading ? "modal-save-loading" : "modal-save-ready"
+                    }`}
                   >
                     {loading ? "Saving..." : "Save Log"}
                   </button>
