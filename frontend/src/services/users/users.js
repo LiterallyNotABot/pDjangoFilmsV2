@@ -1,4 +1,5 @@
 import { fetchData, patchData, postData, deleteData } from "../requestHandler";
+import { handleApiError } from "@/services/exceptionHelper";
 
 export const loginUser = async (username, password) => {
   const { access, refresh } = await postData("/auth/jwt/create/", {
@@ -41,6 +42,15 @@ export const postWatchlistEntry = (filmId, signal = null) => {
   return postData(`/users/film-activity/${filmId}/watchlist/`, {}, { signal });
 };
 
-export const deleteWatchlistEntry = (filmId, signal = null) => {
-  return deleteData(`/users/film-activity/${filmId}/watchlist/`, { signal });
+export const deleteWatchlistEntry = async (filmId, signal = null) => {
+  try {
+    return await deleteData(`/users/film-activity/${filmId}/watchlist/`, { signal });
+  } catch (err) {
+    if (err?.status === 404) {
+      console.info("Watchlist entry not found — skipping.");
+      return null;
+    }
+
+    throw err;
+  }
 };

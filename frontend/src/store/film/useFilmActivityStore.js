@@ -1,4 +1,3 @@
-// src/store/film/useFilmActivityStore.js
 import { create } from "zustand";
 
 const useFilmActivityStore = create((set, get) => ({
@@ -13,6 +12,7 @@ const useFilmActivityStore = create((set, get) => ({
             liked: false,
             watched: false,
             rating: 0,
+            watchlisted: false, 
           }),
           ...updates,
         },
@@ -24,7 +24,9 @@ const useFilmActivityStore = create((set, get) => ({
       liked: false,
       watched: false,
       rating: 0,
+      watchlisted: false,
     },
 }));
+
 
 export default useFilmActivityStore;

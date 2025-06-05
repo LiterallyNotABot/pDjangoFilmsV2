@@ -128,7 +128,10 @@ function FilmCard({
           year,
           posterUrl: getSizedPosterUrl(posterUrl, "md") || noImgPlaceholder,
         }}
-        onSave={refetch} // ✅ Solo actualiza el estado
+        onSave={() => {
+          refetch();
+          setShowLogModal(false);
+        }}
       />
     </div>
   );

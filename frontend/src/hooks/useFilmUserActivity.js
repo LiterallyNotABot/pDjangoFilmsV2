@@ -11,16 +11,17 @@ import {
 
 export default function useFilmUserActivity(filmId) {
   const { user } = useUserStore();
+
   const liked = useFilmActivityStore((state) => state.activityByFilmId[filmId]?.liked ?? false);
   const watched = useFilmActivityStore((state) => state.activityByFilmId[filmId]?.watched ?? false);
   const rating = useFilmActivityStore((state) => state.activityByFilmId[filmId]?.rating ?? 0);
+  const watchlisted = useFilmActivityStore((state) => state.activityByFilmId[filmId]?.watchlisted ?? false);
   const setActivity = useFilmActivityStore((state) => state.setActivity);
 
-  const [watchlisted, setWatchlisted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [togglingWatchlist, setTogglingWatchlist] = useState(false);
 
-  useEffect(() => {
+  const fetchActivity = useCallback(() => {
     if (!user || !filmId) return;
 
     setLoading(true);
@@ -30,21 +31,22 @@ export default function useFilmUserActivity(filmId) {
       getWatchlistStatus(filmId),
     ])
       .then(([activityData, watchlistData]) => {
-        if (activityData) {
-          setActivity(filmId, {
-            liked: activityData.liked ?? false,
-            watched: activityData.watched ?? false,
-            rating: activityData.rating ?? 0,
-          });
-        }
-
-        setWatchlisted(watchlistData?.in_watchlist ?? false);
+        setActivity(filmId, {
+          liked: activityData?.liked ?? false,
+          watched: activityData?.watched ?? false,
+          rating: activityData?.rating ?? 0,
+          watchlisted: watchlistData?.in_watchlist ?? false,
+        });
       })
       .catch((err) => {
         console.error("Activity fetch error:", err);
       })
       .finally(() => setLoading(false));
   }, [filmId, user, setActivity]);
+
+  useEffect(() => {
+    fetchActivity();
+  }, [fetchActivity]);
 
   const updateField = useCallback(
     (field, value) => {
@@ -79,13 +81,13 @@ export default function useFilmUserActivity(filmId) {
 
     action(filmId)
       .then(() => {
-        setWatchlisted((prev) => !prev);
+        setActivity(filmId, { watchlisted: !watchlisted });
       })
       .catch((err) => {
         console.error("Failed to update watchlist:", err?.message || err);
       })
       .finally(() => setTogglingWatchlist(false));
-  }, [filmId, user, watchlisted]);
+  }, [filmId, user, watchlisted, setActivity]);
 
   return {
     liked,
@@ -96,5 +98,6 @@ export default function useFilmUserActivity(filmId) {
     toggleWatchlist,
     loading,
     togglingWatchlist,
+    refetch: fetchActivity, 
   };
 }
