@@ -3,13 +3,13 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from users.models import FilmAndUser
 from users.serializers.film_and_user_serializer import FilmAndUserSerializer
-from core.mixins import SoftCreateMixin, SoftDeleteMixin
-from core.helpers import reactivate_or_create
+from core.mixins import SoftCreateMixin, SoftDeleteMixin, SoftObjectRetrievalMixin
 
 
 class FilmUserActivityViewSet(
     SoftCreateMixin,
     SoftDeleteMixin,
+    SoftObjectRetrievalMixin,
     mixins.RetrieveModelMixin,
     mixins.UpdateModelMixin,
     viewsets.GenericViewSet
@@ -23,29 +23,18 @@ class FilmUserActivityViewSet(
     def get_object(self):
         film_id = self.kwargs["film_id"]
         user = self.request.user
-        method = self.request.method.upper()
-        auto_create = method in ["PATCH", "PUT"]
+        auto_create = self.request.method.upper() in ["PATCH", "PUT"]
 
-        print(f"GET_OBJECT → user: {user.id}, film: {film_id}, method: {method}, auto_create: {auto_create}")
+        print(f"GET_OBJECT → user: {user.id}, film: {film_id}, auto_create: {auto_create}")
 
-        instance = FilmAndUser.all_objects.filter(film_id=film_id, user=user).first()
+        instance = self.get_or_soft_create_object(
+            model=FilmAndUser,
+            lookup={"user": user, "film_id": film_id},
+            defaults={},
+            auto_create=auto_create
+        )
 
         if instance:
-            print(f"→ instance id: {instance.film_and_user_id}, exists (active={instance.active})")
-            if not instance.active and auto_create:
-                print(f"→ instance was soft-deleted, reactivating...")
-                instance.active = True
-                instance.deleted = False
-                instance.save()
-            return instance
-
-        if auto_create:
-            instance, _ = reactivate_or_create(
-                FilmAndUser,
-                lookup={"user": user, "film_id": film_id},
-                defaults={}
-            )
-            print(f"→ instance id: {instance.film_and_user_id}, auto-created")
             return instance
 
         print("→ no instance found, returning synthetic empty instance")
@@ -56,10 +45,6 @@ class FilmUserActivityViewSet(
             liked=False,
             rating=None
         )
-
-    def raise_does_not_exist(self):
-        from rest_framework.exceptions import NotFound
-        raise NotFound("No hay relación film-usuario para este film.")
 
     def get_lookup_from_validated_data(self, data):
         return {
@@ -73,20 +58,16 @@ class FilmUserActivityViewSet(
         return Response(serializer.data)
 
     def partial_update(self, request, *args, **kwargs):
-        print(f"PATCH — partial_update triggered")
+        print("PATCH — partial_update triggered")
         print(f"Incoming PATCH data: {request.data}")
         return super().partial_update(request, *args, **kwargs)
 
     def perform_update(self, serializer):
         instance = serializer.save()
-        print(
-            f"→ UPDATED instance {instance.film_and_user_id}: liked={instance.liked}, watched={instance.watched}, rating={instance.rating}"
-        )
-
         instance.full_clean()
         instance.save()
 
-        if not instance.watched and not instance.liked and instance.rating is None:
+        if instance.should_soft_delete():
             print(f"→ instance {instance.film_and_user_id} now empty, performing soft delete")
             instance.active = False
             instance.deleted = True

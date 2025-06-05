@@ -34,3 +34,19 @@ class SoftCreateMixin:
 
     def get_lookup_from_validated_data(self, data):
         raise NotImplementedError("Must define get_lookup_from_validated_data() in your ViewSet.")
+
+class SoftObjectRetrievalMixin:
+    def get_or_soft_create_object(self, model, lookup: dict, defaults: dict = None, auto_create=False):
+        instance = model.all_objects.filter(**lookup).first()
+        if instance:
+            if not instance.active and auto_create:
+                instance.active = True
+                instance.deleted = False
+                instance.save()
+            return instance
+
+        if auto_create:
+            instance, _ = reactivate_or_create(model, lookup=lookup, defaults=defaults or {})
+            return instance
+
+        return None  # Caller decides what to do with None

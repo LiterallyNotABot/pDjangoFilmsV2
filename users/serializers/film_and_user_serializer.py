@@ -3,8 +3,31 @@ from users.models import FilmAndUser
 from reviews.models import Rating
 
 
+class RatingField(serializers.Field):
+    default_error_messages = {
+        'invalid': 'Invalid rating value.'
+    }
+
+    def __init__(self, **kwargs):
+        kwargs['required'] = False
+        kwargs['allow_null'] = True
+        super().__init__(**kwargs)
+
+    def to_representation(self, obj):
+        return obj.rating_value if obj else None
+
+    def to_internal_value(self, data):
+        if data is None:
+            return None
+        try:
+            return Rating.objects.get(rating_value=data)
+        except Rating.DoesNotExist:
+            self.fail('invalid')
+
+
+
 class FilmAndUserSerializer(serializers.ModelSerializer):
-    rating = serializers.SerializerMethodField()
+    rating = RatingField()
 
     class Meta:
         model = FilmAndUser
@@ -18,32 +41,15 @@ class FilmAndUserSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = ["film_and_user_id", "user"]
 
-    def get_rating(self, obj):
-        return obj.rating.rating_value if obj.rating else None
-
-    def validate(self, data):
-        raw_data = self.initial_data
-
-        if "rating" in raw_data:
-            rating_val = raw_data.get("rating")
-            if rating_val is None:
-                data["rating"] = None
-            else:
-                try:
-                    data["rating"] = Rating.objects.get(rating_value=rating_val)
-                except Rating.DoesNotExist:
-                    raise serializers.ValidationError({
-                        "rating": f"No Rating with value {rating_val}"
-                    })
-
-        return data
-
     def update(self, instance, validated_data):
-        instance.liked = validated_data.get("liked", instance.liked)
-        instance.watched = validated_data.get("watched", instance.watched)
+        for attr in ["liked", "watched"]:
+            if attr in validated_data:
+                setattr(instance, attr, validated_data[attr])
 
-        if "rating" in validated_data:
-            instance.rating = validated_data["rating"]
+        # Asegurar que rating se actualice incluso si es None
+        if "rating" in self.initial_data:
+            instance.rating = validated_data.get("rating", None)
 
         instance.save()
         return instance
+

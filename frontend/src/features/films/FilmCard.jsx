@@ -10,8 +10,8 @@ import PencilIcon from "@/components/ui/icons/PencilIcon";
 import LogModal from "@/features/reviews/LogModal";
 import { getSizedPosterUrl } from "@/utils/imageUtils";
 import "./css/FilmCard.css";
-import { memo } from "react";
 import noImgPlaceholder from "@/assets/no_img_placeholder.png";
+import useFilmUserActivity from "@/hooks/useFilmUserActivity";
 
 function FilmCard({
   id,
@@ -27,6 +27,7 @@ function FilmCard({
   const navigate = useNavigate();
   const { user: currentUser } = useUserStore();
   const [showLogModal, setShowLogModal] = useState(false);
+  const { liked, watched, updateField } = useFilmUserActivity(id);
 
   const sizes = {
     sm: "w-21 h-30",
@@ -53,27 +54,70 @@ function FilmCard({
   return (
     <div className="film-card-wrapper flex flex-col items-center overflow-visible">
       <div className={`film-card ${posterSize} group z-10`}>
-        {(size === "sm" || size === "md") ? (
+        {size === "sm" || size === "md" ? (
           <Tooltip content={`${title} (${year ?? ""})`}>
             <div className="poster-click-area" onClick={handleClick}>
-              <img loading="lazy" src={imgSrc} alt={title} className="film-poster-img" />
+              <img
+                loading="lazy"
+                src={imgSrc}
+                alt={title}
+                className="film-poster-img"
+              />
             </div>
           </Tooltip>
         ) : (
           <div className="poster-click-area" onClick={handleClick}>
-            <img loading="lazy" src={imgSrc} alt={title} className="film-poster-img" />
+            <img
+              loading="lazy"
+              src={imgSrc}
+              alt={title}
+              className="film-poster-img"
+            />
           </div>
         )}
 
         {currentUser && showUserActions && (
           <div className="film-card-icons opacity-0 group-hover:opacity-100 transition">
-            <EyeIcon size="md" className="hover:text-red-400" />
-            <HeartIcon size="md" className="hover:text-green-400" />
-            <PencilIcon
-              size="md"
-              className="hover:text-red-300"
-              onClick={() => setShowLogModal(true)}
-            />
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                updateField("watched", !watched);
+              }}
+              className="focus:outline-none"
+            >
+              <EyeIcon
+                size="md"
+                active={watched}
+                className="hover:text-red-400"
+              />
+            </button>
+
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                updateField("liked", !liked);
+              }}
+              className="focus:outline-none"
+            >
+              <HeartIcon
+                size="md"
+                active={liked}
+                className="hover:text-green-400"
+              />
+            </button>
+
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowLogModal(true);
+              }}
+              className="focus:outline-none"
+            >
+              <PencilIcon
+                size="md"
+                className="hover:text-red-300"
+              />
+            </button>
           </div>
         )}
       </div>
@@ -122,4 +166,4 @@ FilmCard.propTypes = {
   onOpenModal: PropTypes.func,
 };
 
-export default memo(FilmCard);
+export default FilmCard;

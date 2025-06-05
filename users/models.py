@@ -33,6 +33,8 @@ class FilmAndUser(SoftCreateModel):
             models.UniqueConstraint(fields=["user", "film"], name="unique_user_film_interaction")
         ]
 
+    def should_soft_delete(self):
+        return not self.watched and not self.liked and self.rating is None
 
 
 

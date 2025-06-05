@@ -1,5 +1,6 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useCallback, useState } from "react";
 import useUserStore from "@/store/user/userStore";
+import useFilmActivityStore from "@/store/film/useFilmActivityStore";
 import {
   getUserFilmActivity,
   patchUserFilmActivity,
@@ -10,12 +11,10 @@ import {
 
 export default function useFilmUserActivity(filmId) {
   const { user } = useUserStore();
-
-  const [activity, setActivity] = useState({
-    liked: false,
-    watched: false,
-    rating: 0,
-  });
+  const liked = useFilmActivityStore((state) => state.activityByFilmId[filmId]?.liked ?? false);
+  const watched = useFilmActivityStore((state) => state.activityByFilmId[filmId]?.watched ?? false);
+  const rating = useFilmActivityStore((state) => state.activityByFilmId[filmId]?.rating ?? 0);
+  const setActivity = useFilmActivityStore((state) => state.setActivity);
 
   const [watchlisted, setWatchlisted] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -32,7 +31,7 @@ export default function useFilmUserActivity(filmId) {
     ])
       .then(([activityData, watchlistData]) => {
         if (activityData) {
-          setActivity({
+          setActivity(filmId, {
             liked: activityData.liked ?? false,
             watched: activityData.watched ?? false,
             rating: activityData.rating ?? 0,
@@ -45,33 +44,30 @@ export default function useFilmUserActivity(filmId) {
         console.error("Activity fetch error:", err);
       })
       .finally(() => setLoading(false));
-  }, [filmId, user]);
+  }, [filmId, user, setActivity]);
 
   const updateField = useCallback(
     (field, value) => {
       if (!user || !filmId) return;
 
-      setActivity((prev) => {
-        const prevValue = prev[field];
+      const isRating = field === "rating";
+      const current = { liked, watched, rating }[field];
+      const newValue = isRating && current === value ? 0 : value;
+      if (current === newValue) return;
 
-        const isRating = field === "rating";
-        const newValue = isRating && prevValue === value ? 0 : value;
-        if (prevValue === newValue) return prev;
+      const backendValue = isRating && newValue === 0 ? null : newValue;
 
-        const backendValue = isRating && newValue === 0 ? null : newValue;
-
-        patchUserFilmActivity(filmId, { [field]: backendValue }).catch(
-          (err) => {
-            if (err?.code !== "ERR_CANCELED") {
-              console.error(`Failed to update ${field}:`, err?.message || err);
-            }
+      patchUserFilmActivity(filmId, { [field]: backendValue })
+        .then(() => {
+          setActivity(filmId, { [field]: newValue });
+        })
+        .catch((err) => {
+          if (err?.code !== "ERR_CANCELED") {
+            console.error(`Failed to update ${field}:`, err?.message || err);
           }
-        );
-
-        return { ...prev, [field]: newValue };
-      });
+        });
     },
-    [filmId, user]
+    [filmId, user, liked, watched, rating, setActivity]
   );
 
   const toggleWatchlist = useCallback(() => {
@@ -79,13 +75,11 @@ export default function useFilmUserActivity(filmId) {
 
     setTogglingWatchlist(true);
 
-    const action = watchlisted
-      ? deleteWatchlistEntry
-      : postWatchlistEntry;
+    const action = watchlisted ? deleteWatchlistEntry : postWatchlistEntry;
 
     action(filmId)
       .then(() => {
-        setWatchlisted(!watchlisted);
+        setWatchlisted((prev) => !prev);
       })
       .catch((err) => {
         console.error("Failed to update watchlist:", err?.message || err);
@@ -94,7 +88,9 @@ export default function useFilmUserActivity(filmId) {
   }, [filmId, user, watchlisted]);
 
   return {
-    ...activity,
+    liked,
+    watched,
+    rating,
     watchlisted,
     updateField,
     toggleWatchlist,
