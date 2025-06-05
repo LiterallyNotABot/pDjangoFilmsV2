@@ -27,7 +27,7 @@ function FilmCard({
   const navigate = useNavigate();
   const { user: currentUser } = useUserStore();
   const [showLogModal, setShowLogModal] = useState(false);
-  const { liked, watched, updateField } = useFilmUserActivity(id);
+  const { liked, watched, updateField, refetch } = useFilmUserActivity(id);
 
   const sizes = {
     sm: "w-21 h-30",
@@ -78,46 +78,29 @@ function FilmCard({
 
         {currentUser && showUserActions && (
           <div className="film-card-icons opacity-0 group-hover:opacity-100 transition">
-            <button
+            <EyeIcon
+              size="md"
+              active={watched}
+              className="hover:text-red-400"
               onClick={(e) => {
                 e.stopPropagation();
                 updateField("watched", !watched);
               }}
-              className="focus:outline-none"
-            >
-              <EyeIcon
-                size="md"
-                active={watched}
-                className="hover:text-red-400"
-              />
-            </button>
-
-            <button
+            />
+            <HeartIcon
+              size="md"
+              active={liked}
+              className="hover:text-green-400"
               onClick={(e) => {
                 e.stopPropagation();
                 updateField("liked", !liked);
               }}
-              className="focus:outline-none"
-            >
-              <HeartIcon
-                size="md"
-                active={liked}
-                className="hover:text-green-400"
-              />
-            </button>
-
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                setShowLogModal(true);
-              }}
-              className="focus:outline-none"
-            >
-              <PencilIcon
-                size="md"
-                className="hover:text-red-300"
-              />
-            </button>
+            />
+            <PencilIcon
+              size="md"
+              className="hover:text-red-300"
+              onClick={() => setShowLogModal(true)}
+            />
           </div>
         )}
       </div>
@@ -145,10 +128,7 @@ function FilmCard({
           year,
           posterUrl: getSizedPosterUrl(posterUrl, "md") || noImgPlaceholder,
         }}
-        onSave={(data) => {
-          console.log("📘 FilmCard log saved:", data);
-          setShowLogModal(false);
-        }}
+        onSave={refetch} // ✅ Solo actualiza el estado
       />
     </div>
   );

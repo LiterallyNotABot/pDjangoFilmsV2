@@ -2,13 +2,9 @@ from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
-from django.test import RequestFactory
-from django.urls import resolve
 from reviews.models import Log, Review, Rating
-from users.views.film_and_user_views import FilmUserActivityViewSet
-from users.views.watchlist_views import ToggleWatchlistEntryView
 
-class CreateLogAndReviewView(APIView):
+class LogFilmView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
@@ -24,7 +20,7 @@ class CreateLogAndReviewView(APIView):
             return Response({"detail": "Film ID is required."}, status=status.HTTP_400_BAD_REQUEST)
 
         rating_obj = None
-        if rating_value:
+        if rating_value is not None:
             rating_obj, _ = Rating.objects.get_or_create(rating_value=rating_value)
 
         log = Log.objects.create(
@@ -39,23 +35,6 @@ class CreateLogAndReviewView(APIView):
                 log=log,
                 body=review_text
             )
-
-        factory = RequestFactory()
-        patch_request = factory.patch(
-            f"/users/film-activity/{film_id}/",
-            {
-                "watched": True,
-                "liked": liked,
-                "rating": rating_obj.rating_id if rating_obj else None,
-            },
-            content_type="application/json"
-        )
-        patch_request.user = user
-        patch_response = FilmUserActivityViewSet.as_view({"patch": "partial_update"})(patch_request, film_id=film_id)
-
-        delete_request = factory.delete(f"/users/film-activity/{film_id}/watchlist/")
-        delete_request.user = user
-        _ = ToggleWatchlistEntryView.as_view()(delete_request, film_id=film_id)
 
         return Response(
             {"detail": "Log created", "log_id": log.log_id},

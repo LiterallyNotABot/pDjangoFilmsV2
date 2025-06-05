@@ -8,12 +8,20 @@ import PencilIcon from "@/components/ui/icons/PencilIcon";
 import ListIcon from "@/components/ui/icons/ListIcon";
 import StarRating from "@/components/ui/StarRating";
 import { Button } from "@/components/ui/Button";
-import LogModal from "@/features/reviews/LogModal"; // el señor modal
+import LogModal from "@/features/reviews/LogModal";
 
 export default function FilmUserActions({ filmId, onTriggerLogin, filmData }) {
   const { user } = useUserStore();
-  const { liked, watched, watchlisted, rating, updateField, toggleWatchlist, loading } =
-    useFilmUserActivity(filmId);
+  const {
+    liked,
+    watched,
+    watchlisted,
+    rating,
+    updateField,
+    toggleWatchlist,
+    loading,
+    refetch,
+  } = useFilmUserActivity(filmId);
 
   const [showModal, setShowModal] = useState(false);
 
@@ -31,7 +39,7 @@ export default function FilmUserActions({ filmId, onTriggerLogin, filmData }) {
   return (
     <>
       <div className="bg-zinc-900 rounded-lg overflow-hidden text-sm text-white shadow">
-        {/* Top row of icon buttons */}
+        {/* Acciones principales */}
         <div className="flex justify-around border-b border-zinc-700 p-4">
           <IconAction
             label="Watch"
@@ -57,7 +65,7 @@ export default function FilmUserActions({ filmId, onTriggerLogin, filmData }) {
           />
         </div>
 
-        {/* Star rating */}
+        {/* Rating */}
         <div className="text-center border-b border-zinc-700 p-5">
           <p className="mb-2 text-gray-400 text-base">Rate</p>
           <StarRating
@@ -68,7 +76,7 @@ export default function FilmUserActions({ filmId, onTriggerLogin, filmData }) {
           />
         </div>
 
-        {/* Additional actions */}
+        {/* Extras */}
         <div className="divide-y divide-zinc-700">
           <ActionItem
             icon={<PencilIcon size="lg" />}
@@ -83,13 +91,13 @@ export default function FilmUserActions({ filmId, onTriggerLogin, filmData }) {
         </div>
       </div>
 
-      {/* Señor Modal */}
+      {/* Modal de log */}
       <LogModal
         isOpen={showModal}
         onClose={() => setShowModal(false)}
         film={filmData}
-        onSave={(data) => {
-          console.log("📝 Log saved:", data);
+        onSave={() => {
+          refetch();
           setShowModal(false);
         }}
       />
