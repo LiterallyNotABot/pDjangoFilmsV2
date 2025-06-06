@@ -29,6 +29,7 @@ export default function FilmGrid({
   sortOptions = [],
   showRoleDropdown = false,
   roles = [],
+  defaultSort = "popularity",
 }) {
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -40,9 +41,10 @@ export default function FilmGrid({
       language: query.language || null,
       country: query.country || null,
       company: query.company || null,
-      sort: query.sort || null,
+      decade: query.decade || null, // ✅ AÑADIR ESTO
+      sort: query.sort || defaultSort,
     };
-  }, [searchParams]);
+  }, [searchParams, defaultSort]);
 
   const [films, setFilms] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -50,6 +52,14 @@ export default function FilmGrid({
   const [loading, setLoading] = useState(true);
 
   const pageSize = useMemo(() => pageSizes[cardSize], [cardSize]);
+
+  useEffect(() => {
+    if (!searchParams.get("sort") && defaultSort) {
+      const newParams = new URLSearchParams(searchParams.toString());
+      newParams.set("sort", defaultSort);
+      setSearchParams(newParams);
+    }
+  }, [defaultSort, searchParams, setSearchParams]);
 
   const fetchFilms = useCallback(
     async (signal = null) => {
@@ -74,6 +84,7 @@ export default function FilmGrid({
             language: searchFilters.language,
             country: searchFilters.country,
             company: searchFilters.company,
+            decade: searchFilters.decade,
             sort: searchFilters.sort,
             page: currentPage,
             page_size: pageSize,
@@ -95,17 +106,7 @@ export default function FilmGrid({
         setLoading(false);
       }
     },
-    [
-      personId,
-      searchFilters.role,
-      searchFilters.genre,
-      searchFilters.language,
-      searchFilters.country,
-      searchFilters.company,
-      searchFilters.sort,
-      currentPage,
-      pageSize,
-    ]
+    [personId, searchFilters, currentPage, pageSize]
   );
 
   useEffect(() => {
@@ -118,7 +119,19 @@ export default function FilmGrid({
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [currentPage]);
 
-  const currentRole = searchFilters.role;
+  const handleRoleChange = (role) => {
+    const newParams = new URLSearchParams(searchParams.toString());
+    newParams.set("role", role);
+    setSearchParams(newParams);
+    setCurrentPage(1);
+  };
+
+  const handleSortChange = (sortValue) => {
+    const newParams = new URLSearchParams(searchParams.toString());
+    newParams.set("sort", sortValue);
+    setSearchParams(newParams);
+    setCurrentPage(1);
+  };
 
   const roleOptions = Array.isArray(roles)
     ? roles.map((r) =>
@@ -128,13 +141,6 @@ export default function FilmGrid({
       )
     : [];
 
-  const handleRoleChange = (role) => {
-    const newParams = new URLSearchParams(searchParams.toString());
-    newParams.set("role", role);
-    setSearchParams(newParams);
-    setCurrentPage(1);
-  };
-
   return (
     <div className="space-y-6">
       {(showRoleDropdown || filters.length > 0 || sortOptions.length > 0) && (
@@ -142,12 +148,16 @@ export default function FilmGrid({
           {showRoleDropdown && (
             <DropdownSelector
               label="Role"
-              value={currentRole}
+              value={searchFilters.role}
               options={roleOptions}
               onChange={handleRoleChange}
             />
           )}
-          <FilterSortBar filters={filters} sortOptions={sortOptions} />
+          <FilterSortBar
+            filters={filters}
+            sortOptions={sortOptions}
+            onSortChange={handleSortChange}
+          />
         </div>
       )}
 
@@ -233,31 +243,9 @@ export default function FilmGrid({
 FilmGrid.propTypes = {
   personId: PropTypes.string,
   cardSize: PropTypes.oneOf(["sm", "md", "lg", "xl"]),
-  filters: PropTypes.arrayOf(
-    PropTypes.shape({
-      key: PropTypes.string.isRequired,
-      options: PropTypes.arrayOf(
-        PropTypes.shape({
-          value: PropTypes.string.isRequired,
-          label: PropTypes.string.isRequired,
-        })
-      ).isRequired,
-    })
-  ),
-  sortOptions: PropTypes.arrayOf(
-    PropTypes.shape({
-      value: PropTypes.string.isRequired,
-      label: PropTypes.string.isRequired,
-    })
-  ),
+  filters: PropTypes.array,
+  sortOptions: PropTypes.array,
   showRoleDropdown: PropTypes.bool,
-  roles: PropTypes.arrayOf(
-    PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.shape({
-        role: PropTypes.string.isRequired,
-        count: PropTypes.number,
-      }),
-    ])
-  ),
+  roles: PropTypes.array,
+  defaultSort: PropTypes.string,
 };
