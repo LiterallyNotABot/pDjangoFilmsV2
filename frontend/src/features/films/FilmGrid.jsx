@@ -122,19 +122,25 @@ export default function FilmGrid({
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [currentPage]);
 
-  const handleRoleChange = (role) => {
-    const newParams = new URLSearchParams(searchParams.toString());
-    newParams.set("role", role);
-    setSearchParams(newParams);
-    setCurrentPage(1);
-  };
+  const handleRoleChange = useCallback(
+    (role) => {
+      const newParams = new URLSearchParams(searchParams.toString());
+      newParams.set("role", role);
+      setSearchParams(newParams);
+      setCurrentPage(1);
+    },
+    [searchParams, setSearchParams]
+  );
 
-  const handleSortChange = (sortValue) => {
-    const newParams = new URLSearchParams(searchParams.toString());
-    newParams.set("sort", sortValue);
-    setSearchParams(newParams);
-    setCurrentPage(1);
-  };
+  const handleSortChange = useCallback(
+    (sortValue) => {
+      const newParams = new URLSearchParams(searchParams.toString());
+      newParams.set("sort", sortValue);
+      setSearchParams(newParams);
+      setCurrentPage(1);
+    },
+    [searchParams, setSearchParams]
+  );
 
   const roleOptions = Array.isArray(roles)
     ? roles.map((r) =>
