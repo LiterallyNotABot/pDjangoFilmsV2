@@ -1,7 +1,7 @@
 from rest_framework import viewsets, mixins
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from users.models import FilmAndUser
+from users.models import FilmAndUser, Watchlist
 from users.serializers.film_and_user_serializer import FilmAndUserSerializer
 from core.mixins import SoftCreateMixin, SoftDeleteMixin, SoftObjectRetrievalMixin
 
@@ -72,3 +72,30 @@ class FilmUserActivityViewSet(
             instance.active = False
             instance.deleted = True
             instance.save()
+
+class FilmActivitiesView(mixins.ListModelMixin, viewsets.GenericViewSet):
+    permission_classes = [IsAuthenticated]
+
+    def list(self, request, *args, **kwargs):
+        film_ids = request.data.get("film_ids", [])
+        if not isinstance(film_ids, list):
+            return Response({"detail": "film_ids must be a list"}, status=400)
+
+        user = request.user
+        activities = FilmAndUser.all_objects.filter(user=user, film_id__in=film_ids)
+        watchlisted_ids = set(
+            Watchlist.objects.filter(user=user, film_id__in=film_ids).values_list("film_id", flat=True)
+        )
+
+        result = {int(fid): {"liked": False, "watched": False, "rating": None, "watchlisted": False} for fid in film_ids}
+        for act in activities:
+            result[act.film_id].update({
+                "liked": act.liked,
+                "watched": act.watched,
+                "rating": float(act.rating.rating_value) if act.rating else None,
+            })
+        for fid in watchlisted_ids:
+            if int(fid) in result:
+                result[int(fid)]["watchlisted"] = True
+
+        return Response(result)
