@@ -61,23 +61,19 @@ export default function PencilIcon({
       />
 
       {film && (
-
-        <Suspense fallback={<div className="text-gray-400 p-4">Loading...</div>}>
-          <LogModal
-            isOpen={showModal}
-            onClose={() => setShowModal(false)}
-            film={{
-              id: film.id,
-              title: film.title,
-              year: film.year,
-              posterUrl: getSizedPosterUrl(film.posterUrl, "md"),
-            }}
-            onSave={(data) => {
-              console.log("📝 Saved from PencilIcon", data);
-              setShowModal(false);
-            }}
-          />
-        </Suspense>
+        <LogModal
+          isOpen={showModal}
+          onClose={() => setShowModal(false)}
+          film={{
+            id: film.id,
+            title: film.title,
+            year: film.year,
+            posterUrl: getSizedPosterUrl(film.posterUrl, "md"),
+          }}
+          onSave={() => {
+            setShowModal(false);
+          }}
+        />
 
       )}
     </>

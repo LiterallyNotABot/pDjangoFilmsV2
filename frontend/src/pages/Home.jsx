@@ -68,7 +68,8 @@ export default function Home() {
       <HeroSection
         user={user}
         backdropUrl="https://image.tmdb.org/t/p/original/oXGt9e7FIwojD99Cn1p764C83eO.jpg"
-        onJoin={() => console.info("open register modal")}
+        onJoin={() => {}}
+
       />
 
       <LatestPosters

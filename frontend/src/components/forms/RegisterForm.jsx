@@ -15,7 +15,6 @@ export default function RegisterForm({ onSuccess }) {
 
     try {
       await registerUser(username, email, password);
-      console.info("User registered");
       if (onSuccess) onSuccess();
     } catch (err) {
       console.error("Error during registration:", err);
