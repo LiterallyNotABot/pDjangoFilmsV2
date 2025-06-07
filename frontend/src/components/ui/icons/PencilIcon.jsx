@@ -61,6 +61,7 @@ export default function PencilIcon({
       />
 
       {film && (
+
         <Suspense fallback={<div className="text-gray-400 p-4">Loading...</div>}>
           <LogModal
             isOpen={showModal}
@@ -77,6 +78,7 @@ export default function PencilIcon({
             }}
           />
         </Suspense>
+
       )}
     </>
   );

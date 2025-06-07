@@ -16,19 +16,20 @@ export default function useFilmUserActivity(filmId) {
   const watched = useFilmActivityStore((state) => state.activityByFilmId[filmId]?.watched ?? false);
   const rating = useFilmActivityStore((state) => state.activityByFilmId[filmId]?.rating ?? 0);
   const watchlisted = useFilmActivityStore((state) => state.activityByFilmId[filmId]?.watchlisted ?? false);
+  const hasActivity = useFilmActivityStore((state) => state.activityByFilmId[filmId] !== undefined);
   const setActivity = useFilmActivityStore((state) => state.setActivity);
 
   const [loading, setLoading] = useState(false);
   const [togglingWatchlist, setTogglingWatchlist] = useState(false);
 
-  const fetchActivity = useCallback(() => {
+  const fetchActivity = useCallback((signal = null) => {
     if (!user || !filmId) return;
 
     setLoading(true);
 
     Promise.all([
-      getUserFilmActivity(filmId),
-      getWatchlistStatus(filmId),
+      getUserFilmActivity(filmId, signal),
+      getWatchlistStatus(filmId, signal),
     ])
       .then(([activityData, watchlistData]) => {
         setActivity(filmId, {
@@ -45,9 +46,11 @@ export default function useFilmUserActivity(filmId) {
   }, [filmId, user, setActivity]);
 
   useEffect(() => {
-    fetchActivity();
+    const controller = new AbortController();
+    fetchActivity(controller.signal);
+    return () => controller.abort();
   }, [fetchActivity]);
-
+  
   const updateField = useCallback(
     (field, value) => {
       if (!user || !filmId) return;
