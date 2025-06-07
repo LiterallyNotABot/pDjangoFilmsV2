@@ -150,6 +150,22 @@ export default function FilmGrid({
       )
     : [];
 
+  const paginationPages = useMemo(() => {
+    return Array.from({ length: totalPages }, (_, i) => i + 1)
+      .filter((page) => {
+        return (
+          page === 1 ||
+          page === totalPages ||
+          (page >= currentPage - 2 && page <= currentPage + 2)
+        );
+      })
+      .reduce((acc, page, i, arr) => {
+        if (i > 0 && page - arr[i - 1] > 1) acc.push("...");
+        acc.push(page);
+        return acc;
+      }, []);
+  }, [currentPage, totalPages]);
+
   return (
     <div className="space-y-6">
       {(showRoleDropdown || filters.length > 0 || sortOptions.length > 0) && (
@@ -200,37 +216,24 @@ export default function FilmGrid({
                 {"<"}
               </Button>
 
-              {Array.from({ length: totalPages }, (_, i) => i + 1)
-                .filter((page) => {
-                  return (
-                    page === 1 ||
-                    page === totalPages ||
-                    (page >= currentPage - 2 && page <= currentPage + 2)
-                  );
-                })
-                .reduce((acc, page, i, arr) => {
-                  if (i > 0 && page - arr[i - 1] > 1) acc.push("...");
-                  acc.push(page);
-                  return acc;
-                }, [])
-                .map((page, i) =>
-                  page === "..." ? (
-                    <span
-                      key={`ellipsis-${i}`}
-                      className="px-3 py-1 text-gray-400 select-none"
-                    >
-                      ...
-                    </span>
-                  ) : (
-                    <Button
-                      key={page}
-                      variant={page === currentPage ? "primary" : "secondary"}
-                      onClick={() => setCurrentPage(page)}
-                    >
-                      {page}
-                    </Button>
-                  )
-                )}
+              {paginationPages.map((page, i) =>
+                page === "..." ? (
+                  <span
+                    key={`ellipsis-${i}`}
+                    className="px-3 py-1 text-gray-400 select-none"
+                  >
+                    ...
+                  </span>
+                ) : (
+                  <Button
+                    key={page}
+                    variant={page === currentPage ? "primary" : "secondary"}
+                    onClick={() => setCurrentPage(page)}
+                  >
+                    {page}
+                  </Button>
+                )
+              )}
 
               <Button
                 variant="secondary"
