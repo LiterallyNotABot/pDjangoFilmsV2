@@ -3,22 +3,27 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 from asgiref.sync import sync_to_async
 from django.contrib.auth.models import User
 from .models import ChatRoom, ChatMessage, ChatRoomMembership
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
-        print(">>> CONNECT EJECUTADO")
+        logger.debug(">>> CONNECT EJECUTADO")
 
         self.room_key = self.scope['url_route']['kwargs']['room_key']
         self.room_group_name = f'chat_{self.room_key}'
         user = self.scope["user"]
 
-        print(f"Intentando conectar usuario: {user.username} a sala: {self.room_key}")
+        logger.debug(
+            "Intentando conectar usuario: %s a sala: %s", user.username, self.room_key
+        )
 
         try:
             room = await sync_to_async(ChatRoom.objects.get)(key=self.room_key)
         except ChatRoom.DoesNotExist:
-            print("Sala no existe")
+            logger.warning("Sala no existe")
             await self.close()
             return
 
@@ -29,7 +34,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         )
 
         if not created and not membership.active:
-            print(f"Usuario {user.username} no tiene acceso a la sala.")
+            logger.warning("Usuario %s no tiene acceso a la sala.", user.username)
             await self.close()
             return
 
@@ -38,12 +43,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
             self.channel_name
         )
 
-        print(f"{user.username} conectado y unido a {self.room_group_name}")
+        logger.info("%s conectado y unido a %s", user.username, self.room_group_name)
         await self.accept()
 
     async def disconnect(self, close_code):
         user = self.scope["user"]
-        print(f"{user.username} desconectado de {self.room_group_name}")
+        logger.info("%s desconectado de %s", user.username, self.room_group_name)
 
         try:
             room = await sync_to_async(ChatRoom.objects.get)(key=self.room_key)
@@ -57,17 +62,17 @@ class ChatConsumer(AsyncWebsocketConsumer):
         )
 
     async def receive(self, text_data):
-        print(">>> RECEIVE EJECUTADO")
+        logger.debug(">>> RECEIVE EJECUTADO")
 
         data = json.loads(text_data)
         message = data.get('message', '').strip()
         user = self.scope["user"]
 
         if not message:
-            print("Mensaje vacío ignorado")
+            logger.debug("Mensaje vacío ignorado")
             return
 
-        print(f"Mensaje recibido de {user.username}: {message}")
+        logger.debug("Mensaje recibido de %s: %s", user.username, message)
 
         await self.save_message(user, self.room_key, message)
 
@@ -89,5 +94,5 @@ class ChatConsumer(AsyncWebsocketConsumer):
     @sync_to_async
     def save_message(self, user, room_key, message):
         room = ChatRoom.objects.get(key=room_key)
-        print(f"Guardando mensaje en sala '{room.name}': {message}")
+        logger.debug("Guardando mensaje en sala '%s': %s", room.name, message)
         return ChatMessage.objects.create(room=room, user=user, message=message)

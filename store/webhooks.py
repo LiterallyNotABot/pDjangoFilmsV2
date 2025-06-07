@@ -3,6 +3,9 @@ from django.conf import settings
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
+import logging
+
+logger = logging.getLogger(__name__)
 
 @csrf_exempt
 def stripe_webhook(request):
@@ -20,6 +23,6 @@ def stripe_webhook(request):
     # Procesar evento (solo para testing)
     if event['type'] == 'checkout.session.completed':
         session = event['data']['object']
-        print(f"✅ Pago exitoso: {session['id']}")
+        logger.info("\u2705 Pago exitoso: %s", session['id'])
 
     return HttpResponse(status=200)
