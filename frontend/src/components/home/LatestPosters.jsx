@@ -1,11 +1,13 @@
 import PropTypes from "prop-types";
-import { memo, useCallback } from "react";
+import { memo, useCallback, useMemo } from "react";
 import HorizontalGrid from "../ui/HorizontalGrid";
 import FilmCard from "../../features/films/FilmCard";
 import useUserStore from "../../store/user/userStore";
+import useBulkFilmActivities from "@/hooks/useBulkFilmActivities";
 
 function LatestPosters({ films = [], isFriendsActivity = false }) {
   const { user } = useUserStore();
+  useBulkFilmActivities(useMemo(() => films.map((f) => f.id), [films]));
 
   const renderItem = useCallback(
     (film) => (

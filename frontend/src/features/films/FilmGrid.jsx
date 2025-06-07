@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import FilmCard from "./FilmCard";
 import { getFilmsByPerson } from "../../services/films/persons";
 import { fetchFilteredFilms } from "../../services/films/films";
+import useBulkFilmActivities from "@/hooks/useBulkFilmActivities";
 import { Button } from "@/components/ui/Button";
 import FilterSortBar from "./grid_adds/FilterSortBar";
 import DropdownSelector from "./grid_adds/DropdownSelector";
@@ -52,6 +53,8 @@ export default function FilmGrid({
   const [loading, setLoading] = useState(true);
 
   const pageSize = useMemo(() => pageSizes[cardSize], [cardSize]);
+
+  useBulkFilmActivities(useMemo(() => films.map((f) => f.id), [films]));
 
   useEffect(() => {
     if (!searchParams.get("sort") && defaultSort) {
