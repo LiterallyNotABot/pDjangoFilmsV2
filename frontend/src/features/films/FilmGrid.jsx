@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import FilmCard from "./FilmCard";
 import { getFilmsByPerson } from "../../services/films/persons";
 import { fetchFilteredFilms } from "../../services/films/films";
+import useBulkFilmActivities from "@/hooks/useBulkFilmActivities";
 import { Button } from "@/components/ui/Button";
 import FilterSortBar from "./grid_adds/FilterSortBar";
 import DropdownSelector from "./grid_adds/DropdownSelector";
@@ -52,6 +53,8 @@ export default function FilmGrid({
   const [loading, setLoading] = useState(true);
 
   const pageSize = useMemo(() => pageSizes[cardSize], [cardSize]);
+
+  useBulkFilmActivities(useMemo(() => films.map((f) => f.id), [films]));
 
   useEffect(() => {
     if (!searchParams.get("sort") && defaultSort) {
@@ -119,19 +122,25 @@ export default function FilmGrid({
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [currentPage]);
 
-  const handleRoleChange = (role) => {
-    const newParams = new URLSearchParams(searchParams.toString());
-    newParams.set("role", role);
-    setSearchParams(newParams);
-    setCurrentPage(1);
-  };
+  const handleRoleChange = useCallback(
+    (role) => {
+      const newParams = new URLSearchParams(searchParams.toString());
+      newParams.set("role", role);
+      setSearchParams(newParams);
+      setCurrentPage(1);
+    },
+    [searchParams, setSearchParams]
+  );
 
-  const handleSortChange = (sortValue) => {
-    const newParams = new URLSearchParams(searchParams.toString());
-    newParams.set("sort", sortValue);
-    setSearchParams(newParams);
-    setCurrentPage(1);
-  };
+  const handleSortChange = useCallback(
+    (sortValue) => {
+      const newParams = new URLSearchParams(searchParams.toString());
+      newParams.set("sort", sortValue);
+      setSearchParams(newParams);
+      setCurrentPage(1);
+    },
+    [searchParams, setSearchParams]
+  );
 
   const roleOptions = Array.isArray(roles)
     ? roles.map((r) =>
@@ -140,6 +149,22 @@ export default function FilmGrid({
           : { label: `${r.role} (${r.count})`, value: r.role }
       )
     : [];
+
+  const paginationPages = useMemo(() => {
+    return Array.from({ length: totalPages }, (_, i) => i + 1)
+      .filter((page) => {
+        return (
+          page === 1 ||
+          page === totalPages ||
+          (page >= currentPage - 2 && page <= currentPage + 2)
+        );
+      })
+      .reduce((acc, page, i, arr) => {
+        if (i > 0 && page - arr[i - 1] > 1) acc.push("...");
+        acc.push(page);
+        return acc;
+      }, []);
+  }, [currentPage, totalPages]);
 
   return (
     <div className="space-y-6">
@@ -191,37 +216,24 @@ export default function FilmGrid({
                 {"<"}
               </Button>
 
-              {Array.from({ length: totalPages }, (_, i) => i + 1)
-                .filter((page) => {
-                  return (
-                    page === 1 ||
-                    page === totalPages ||
-                    (page >= currentPage - 2 && page <= currentPage + 2)
-                  );
-                })
-                .reduce((acc, page, i, arr) => {
-                  if (i > 0 && page - arr[i - 1] > 1) acc.push("...");
-                  acc.push(page);
-                  return acc;
-                }, [])
-                .map((page, i) =>
-                  page === "..." ? (
-                    <span
-                      key={`ellipsis-${i}`}
-                      className="px-3 py-1 text-gray-400 select-none"
-                    >
-                      ...
-                    </span>
-                  ) : (
-                    <Button
-                      key={page}
-                      variant={page === currentPage ? "primary" : "secondary"}
-                      onClick={() => setCurrentPage(page)}
-                    >
-                      {page}
-                    </Button>
-                  )
-                )}
+              {paginationPages.map((page, i) =>
+                page === "..." ? (
+                  <span
+                    key={`ellipsis-${i}`}
+                    className="px-3 py-1 text-gray-400 select-none"
+                  >
+                    ...
+                  </span>
+                ) : (
+                  <Button
+                    key={page}
+                    variant={page === currentPage ? "primary" : "secondary"}
+                    onClick={() => setCurrentPage(page)}
+                  >
+                    {page}
+                  </Button>
+                )
+              )}
 
               <Button
                 variant="secondary"

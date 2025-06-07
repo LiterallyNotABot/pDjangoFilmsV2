@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useState, lazy, Suspense } from "react";
 import { PencilLine } from "lucide-react";
 import PropTypes from "prop-types";
 import clsx from "clsx";
-import LogModal from "@/features/reviews/LogModal";
+const LogModal = lazy(() => import("@/features/reviews/LogModal"));
 
 // Función local para evitar imports fantasmas
 const getSizedPosterUrl = (url, size = "md") => {
@@ -74,6 +74,7 @@ export default function PencilIcon({
             setShowModal(false);
           }}
         />
+
       )}
     </>
   );

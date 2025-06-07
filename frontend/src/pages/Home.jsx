@@ -69,6 +69,7 @@ export default function Home() {
         user={user}
         backdropUrl="https://image.tmdb.org/t/p/original/oXGt9e7FIwojD99Cn1p764C83eO.jpg"
         onJoin={() => {}}
+
       />
 
       <LatestPosters

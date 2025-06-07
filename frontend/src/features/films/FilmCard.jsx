@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
-import { useMemo, useState } from "react";
+import { memo, useMemo, useState } from "react";
 import useUserStore from "../../store/user/userStore";
 import FilmActivityFooter from "../users/FilmActivityFooter";
 import Tooltip from "../../components/ui/Tooltip";
@@ -151,4 +151,4 @@ FilmCard.propTypes = {
   onOpenModal: PropTypes.func,
 };
 
-export default FilmCard;
+export default memo(FilmCard);

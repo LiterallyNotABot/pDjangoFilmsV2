@@ -1,9 +1,14 @@
-export default function FilmHeader({ film }) {
-  const directors = film.crew?.filter(
-    (member) => member.role.name.toLowerCase() === "director"
-  ) || [];
+import { useMemo } from "react";
 
-  const directorNames = directors.map(d => d.person.name);
+export default function FilmHeader({ film }) {
+  const directorNames = useMemo(() => {
+    const directors =
+      film.crew?.filter(
+        (member) => member.role.name.toLowerCase() === "director"
+      ) || [];
+
+    return directors.map((d) => d.person.name);
+  }, [film.crew]);
   const hasDirectors = directorNames.length > 0;
 
   return (

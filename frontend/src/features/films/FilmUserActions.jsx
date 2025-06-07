@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, lazy, Suspense } from "react";
 import useUserStore from "@/store/user/userStore";
 import useFilmUserActivity from "@/hooks/useFilmUserActivity";
 import EyeIcon from "@/components/ui/icons/EyeIcon";
@@ -8,7 +8,7 @@ import PencilIcon from "@/components/ui/icons/PencilIcon";
 import ListIcon from "@/components/ui/icons/ListIcon";
 import StarRating from "@/components/ui/StarRating";
 import { Button } from "@/components/ui/Button";
-import LogModal from "@/features/reviews/LogModal";
+const LogModal = lazy(() => import("@/features/reviews/LogModal"));
 
 export default function FilmUserActions({ filmId, onTriggerLogin, filmData }) {
   const { user } = useUserStore();
@@ -86,21 +86,25 @@ export default function FilmUserActions({ filmId, onTriggerLogin, filmData }) {
           <ActionItem
             icon={<ListIcon size="lg" />}
             text="Add to lists..."
+
             onClick={() => {}}
+
           />
         </div>
       </div>
 
       {/* Modal de log */}
-      <LogModal
-        isOpen={showModal}
-        onClose={() => setShowModal(false)}
-        film={filmData}
-        onSave={() => {
-          refetch();
-          setShowModal(false);
-        }}
-      />
+      <Suspense fallback={<div className="text-gray-400 p-4">Loading...</div>}>
+        <LogModal
+          isOpen={showModal}
+          onClose={() => setShowModal(false)}
+          film={filmData}
+          onSave={() => {
+            refetch();
+            setShowModal(false);
+          }}
+        />
+      </Suspense>
     </>
   );
 }

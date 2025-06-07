@@ -6,10 +6,14 @@ export default function PersonStats({ personId, totalFilms }) {
   const [seenCount, setSeenCount] = useState(0);
 
   useEffect(() => {
+    const controller = new AbortController();
+
     axios
-      .get(`/users/me/stats/person/${personId}/`)
+      .get(`/users/me/stats/person/${personId}/`, { signal: controller.signal })
       .then((res) => setSeenCount(res.data.seen))
       .catch(() => {});
+
+    return () => controller.abort();
   }, [personId]);
 
   const percent = totalFilms > 0 ? Math.round((seenCount / totalFilms) * 100) : 0;
