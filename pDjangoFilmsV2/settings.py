@@ -49,6 +49,10 @@ INSTALLED_APPS = [
     'films',
     'integrations',
     'reviews',
+<<<<<<< HEAD
+=======
+    'search',
+>>>>>>> 5b57e0c (Elasticsearch)
     'store',
     'users',
 
