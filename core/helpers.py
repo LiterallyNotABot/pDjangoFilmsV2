@@ -1,3 +1,8 @@
+import logging
+
+logger = logging.getLogger(__name__)
+
+
 def reactivate_or_create(model, lookup: dict, defaults: dict = None):
     defaults = defaults or {}
 
@@ -5,7 +10,7 @@ def reactivate_or_create(model, lookup: dict, defaults: dict = None):
 
     if instance:
         if not instance.active:
-            print(f"→ Re-activating soft-deleted instance: {instance}")
+            logger.info("\u2192 Re-activating soft-deleted instance: %s", instance)
             for key, value in defaults.items():
                 setattr(instance, key, value)
             instance.active = True

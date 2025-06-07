@@ -3,6 +3,9 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from users.models import FilmAndUser, Watchlist
 from users.serializers.film_and_user_serializer import FilmAndUserSerializer
+import logging
+
+logger = logging.getLogger(__name__)
 from core.mixins import SoftCreateMixin, SoftDeleteMixin, SoftObjectRetrievalMixin
 
 
@@ -25,7 +28,12 @@ class FilmUserActivityViewSet(
         user = self.request.user
         auto_create = self.request.method.upper() in ["PATCH", "PUT"]
 
-        print(f"GET_OBJECT → user: {user.id}, film: {film_id}, auto_create: {auto_create}")
+        logger.debug(
+            "GET_OBJECT → user: %s, film: %s, auto_create: %s",
+            user.id,
+            film_id,
+            auto_create,
+        )
 
         instance = self.get_or_soft_create_object(
             model=FilmAndUser,
@@ -37,7 +45,7 @@ class FilmUserActivityViewSet(
         if instance:
             return instance
 
-        print("→ no instance found, returning synthetic empty instance")
+        logger.debug("\u2192 no instance found, returning synthetic empty instance")
         return FilmAndUser(
             film_id=film_id,
             user=user,
@@ -58,8 +66,8 @@ class FilmUserActivityViewSet(
         return Response(serializer.data)
 
     def partial_update(self, request, *args, **kwargs):
-        print("PATCH — partial_update triggered")
-        print(f"Incoming PATCH data: {request.data}")
+        logger.debug("PATCH — partial_update triggered")
+        logger.debug("Incoming PATCH data: %s", request.data)
         return super().partial_update(request, *args, **kwargs)
 
     def perform_update(self, serializer):
@@ -68,7 +76,10 @@ class FilmUserActivityViewSet(
         instance.save()
 
         if instance.should_soft_delete():
-            print(f"→ instance {instance.film_and_user_id} now empty, performing soft delete")
+            logger.info(
+                "\u2192 instance %s now empty, performing soft delete",
+                instance.film_and_user_id,
+            )
             instance.active = False
             instance.deleted = True
             instance.save()
