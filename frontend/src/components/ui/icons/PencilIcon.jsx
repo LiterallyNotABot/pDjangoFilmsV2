@@ -70,8 +70,7 @@ export default function PencilIcon({
             year: film.year,
             posterUrl: getSizedPosterUrl(film.posterUrl, "md"),
           }}
-          onSave={(data) => {
-            console.log("📝 Saved from PencilIcon", data);
+          onSave={() => {
             setShowModal(false);
           }}
         />

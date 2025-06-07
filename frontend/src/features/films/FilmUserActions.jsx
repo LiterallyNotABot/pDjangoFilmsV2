@@ -86,7 +86,7 @@ export default function FilmUserActions({ filmId, onTriggerLogin, filmData }) {
           <ActionItem
             icon={<ListIcon size="lg" />}
             text="Add to lists..."
-            onClick={() => console.log("abrir listas (próximo modal)")}
+            onClick={() => {}}
           />
         </div>
       </div>
