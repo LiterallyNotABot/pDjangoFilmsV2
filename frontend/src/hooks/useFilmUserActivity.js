@@ -16,6 +16,7 @@ export default function useFilmUserActivity(filmId) {
   const watched = useFilmActivityStore((state) => state.activityByFilmId[filmId]?.watched ?? false);
   const rating = useFilmActivityStore((state) => state.activityByFilmId[filmId]?.rating ?? 0);
   const watchlisted = useFilmActivityStore((state) => state.activityByFilmId[filmId]?.watchlisted ?? false);
+  const hasActivity = useFilmActivityStore((state) => state.activityByFilmId[filmId] !== undefined);
   const setActivity = useFilmActivityStore((state) => state.setActivity);
 
   const [loading, setLoading] = useState(false);
@@ -45,8 +46,9 @@ export default function useFilmUserActivity(filmId) {
   }, [filmId, user, setActivity]);
 
   useEffect(() => {
+    if (!user || !filmId || hasActivity) return;
     fetchActivity();
-  }, [fetchActivity]);
+  }, [fetchActivity, user, filmId, hasActivity]);
 
   const updateField = useCallback(
     (field, value) => {
