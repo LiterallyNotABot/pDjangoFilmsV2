@@ -1,95 +1,97 @@
-import os
-import sys
-import django
-import time
-import requests
-from decimal import Decimal
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny
+from rest_framework.response import Response
+from search.indexes.user import UserDocument
+from search.indexes.person import PersonDocument
+from search.indexes.list import ListDocument
+from search.indexes.film import FilmDocument
+from elasticsearch_dsl import Q
 
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'pDjangoFilmsV2.settings')
-django.setup()
+@api_view(["GET"])
+@permission_classes([AllowAny])
+def global_search(request):
+    query = request.GET.get("q", "").strip()
+    if not query:
+        return Response({"error": "Missing search query."}, status=400)
 
-from tmdb_connector import search_movies, get_movie_details, get_movie_credits
-from population_helper import *
+    limit = int(request.GET.get("limit", 5))
 
-sleep_time=0.1
+    results = {
+        "films": [],
+        "users": [],
+        "persons": [],
+        "lists": [],
+    }
 
-def safe_sleep(seconds=sleep_time):
-    time.sleep(seconds)
+    film_query = Q(
+        "function_score",
+        query=Q("multi_match", query=query, fields=["title^4", "genres^3", "cast^2", "directors", "synopsis"]),
+        functions=[
+            {
+                "field_value_factor": {
+                    "field": "popularity",
+                    "factor": 1.2,
+                    "modifier": "sqrt",
+                    "missing": 1
+                }
+            }
+        ],
+        boost_mode="sum",
+        score_mode="sum"
+    )
 
-def import_movies_by_query(query):
-    first_page = search_movies(query)
-    safe_sleep()
-    total_pages = first_page.get('total_pages', 1)
+    film_hits = FilmDocument.search().query(film_query)[:limit]
+    for hit in film_hits:
+        results["films"].append(hit.to_dict())
 
-    for page in range(1, total_pages + 1):
-        print(f"Processing page {page}/{total_pages}")
-        page_data = search_movies(query, page=page)
-        safe_sleep()
-        movies = page_data.get('results', [])
+    # USERS
+    user_hits = UserDocument.search().query(
+        "multi_match",
+        query=query,
+        fields=["bio", "location", "given_name", "username", "email"]
+    )[:limit]
+    for hit in user_hits:
+        results["users"].append(hit.to_dict())
 
-        for movie_data in movies:
-            movie_id = movie_data['id']
-            print(f"Importing movie ID {movie_id}: {movie_data.get('title')}")
+    person_query = Q(
+        "function_score",
+        query=Q("multi_match", query=query, fields=["name^4", "alias^2", "biography", "place_of_birth"]),
+        functions=[
+            {
+                "script_score": {
+                    "script": {
+                        "source": """
+                            String n = doc['name.raw'].value.toLowerCase();
+                            String q = params.q.toLowerCase();
+                            return n.contains(q) ? 2000 : 0;
+                        """,
+                        "params": {"q": query}
+                    }
+                }
+            },
+            {
+                "field_value_factor": {
+                    "field": "relevance_score",
+                    "factor": 5.0,
+                    "modifier": "sqrt",
+                    "missing": 1
+                }
+            }
+        ],
+        boost_mode="max",
+        score_mode="sum"
+    )
 
-            full_details = get_movie_details_safe(movie_id)
-            safe_sleep()
-            credits = get_movie_credits_safe(movie_id)
-            safe_sleep()
+    person_hits = PersonDocument.search().query(person_query)[:limit]
+    for hit in person_hits:
+        results["persons"].append(hit.to_dict())
 
-            if not full_details or not credits:
-                print(f"Skipping movie ID {movie_id} due to missing data.")
-                continue
+    list_hits = ListDocument.search().query(
+        "multi_match",
+        query=query,
+        fields=["list_name^3", "list_description"]
+    )[:limit]
+    for hit in list_hits:
+        results["lists"].append(hit.to_dict())
 
-            print(f"Full details for movie ID {movie_id}: {full_details}")
-
-            release_year = None
-            if full_details.get('release_date'):
-                try:
-                    release_year = int(full_details['release_date'][:4])
-                except (ValueError, TypeError):
-                    release_year = None
-
-            popularity = full_details.get('popularity')
-            if popularity is not None:
-                popularity = Decimal(str(popularity))
-
-            film = insert_or_update_film({
-                'title': full_details.get('title'),
-                'release_year': release_year,
-                'runtime': full_details.get('runtime'),
-                'synopsis': full_details.get('overview'),
-                'budget': full_details.get('budget'),
-                'revenue': full_details.get('revenue'),
-                'status': full_details.get('status'),
-                'tagline': full_details.get('tagline'),
-                'poster_url': f"https://image.tmdb.org/t/p/original{full_details['poster_path']}" if full_details.get('poster_path') else '',
-                'backdrop_url': f"https://image.tmdb.org/t/p/original{full_details['backdrop_path']}" if full_details.get('backdrop_path') else '',
-                'popularity': popularity,
-                'api_film_id': full_details.get('id')
-            })
-
-            insert_genres(film, full_details.get('genres', []))
-            insert_people_and_roles(film, credits.get('cast', []), credits.get('crew', []))
-            insert_production_companies(film, full_details.get('production_companies', []))
-            insert_countries(film, full_details.get('production_countries', []))
-            insert_languages(film, full_details.get('spoken_languages', []), original_language_code=full_details.get('original_language'))
-
-def get_movie_details_safe(movie_id):
-    try:
-        return get_movie_details(movie_id)
-    except requests.exceptions.HTTPError as e:
-        print(f"Error fetching movie details for ID {movie_id}: {e}")
-        return None
-
-def get_movie_credits_safe(movie_id):
-    try:
-        return get_movie_credits(movie_id)
-    except requests.exceptions.HTTPError as e:
-        print(f"Error fetching movie credits for ID {movie_id}: {e}")
-        return None
-
-
-if __name__ == '__main__':
-    title = input("Enter the movie title to search: ")
-    import_movies_by_query(title)
+    return Response(results)
