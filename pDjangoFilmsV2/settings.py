@@ -49,10 +49,7 @@ INSTALLED_APPS = [
     'films',
     'integrations',
     'reviews',
-<<<<<<< HEAD
-=======
     'search',
->>>>>>> 5b57e0c (Elasticsearch)
     'store',
     'users',
 
@@ -66,6 +63,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'cloudinary',
     'cloudinary_storage',
+    'django_elasticsearch_dsl',
 
 ]
 
@@ -222,6 +220,13 @@ CLOUDINARY_STORAGE = {
 }
 
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+ELASTICSEARCH_DSL = {
+    'default': {
+        'hosts': 'http://localhost:9200',
+    },
+}
+
 
 
 # TESTING RESPONSE AUTH - ONLY IF DEBUG - USER CREDENTIALS MUST BE HASHED
