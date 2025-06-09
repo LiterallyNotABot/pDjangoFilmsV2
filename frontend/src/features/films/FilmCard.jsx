@@ -42,7 +42,7 @@ function FilmCard({
     if (onOpenModal) onOpenModal(id);
     else {
       navigate(`/films/${id}`, {
-        state: { backdropUrl }, // ✅ Usamos el prop correctamente
+        state: { backdropUrl },
       });
     }
   };

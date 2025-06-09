@@ -9,7 +9,7 @@ import ListCard from "@/features/users/ListCard";
 function SearchResultCard({ type, data }) {
   let content = null;
   let linkTarget = "/";
-  
+
   switch (type) {
     case "film":
       linkTarget = `/films/${data.id}`;
@@ -33,13 +33,11 @@ function SearchResultCard({ type, data }) {
       break;
 
     case "person":
-      linkTarget = `/persons/${data.id}`;
+      linkTarget = `/person/${data.id}`;
       content = (
         <div className="flex gap-4 items-start">
-          <div className="w-16 h-16 rounded-full overflow-hidden">
-            <PersonCard person={data} />
-          </div>
-          <div className="text-white text-sm">
+          <PersonCard person={data} size="sm" />
+          <div className="text-white text-sm flex-1">
             <h3 className="font-semibold text-base">{data.name}</h3>
             {data.alias && <p className="text-zinc-400">Alias: {data.alias}</p>}
             <p className="text-gray-300 line-clamp-2">{data.biography}</p>
@@ -56,7 +54,9 @@ function SearchResultCard({ type, data }) {
           <div className="text-white text-sm">
             <h3 className="font-semibold text-base">{data.list_name}</h3>
             <p className="text-zinc-400">por @{data.username}</p>
-            <p className="text-gray-300 line-clamp-2">{data.list_description}</p>
+            <p className="text-gray-300 line-clamp-2">
+              {data.list_description}
+            </p>
           </div>
         </div>
       );
@@ -71,7 +71,9 @@ function SearchResultCard({ type, data }) {
           </div>
           <div className="flex-1 text-sm">
             <h3 className="font-semibold">@{data.username}</h3>
-            {data.given_name && <p className="text-zinc-400">{data.given_name}</p>}
+            {data.given_name && (
+              <p className="text-zinc-400">{data.given_name}</p>
+            )}
             <p className="text-gray-300">{data.bio}</p>
           </div>
         </div>

@@ -103,7 +103,7 @@ export default function PersonDetails() {
 
         <aside className="space-y-4">
           <div className="flex flex-col items-center space-y-4">
-            <PersonCard person={person} />
+            <PersonCard person={person} size="lg" />
             <PersonsInfo person={person} />
           </div>
         </aside>
