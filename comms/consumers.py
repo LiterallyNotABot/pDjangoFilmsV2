@@ -1,5 +1,4 @@
 import json
-
 from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.db import database_sync_to_async
 from django.contrib.auth import get_user_model
@@ -12,37 +11,28 @@ User = get_user_model()
 class ChatConsumer(AsyncWebsocketConsumer):
     """WebSocket consumer para chat en tiempo real."""
 
-    # ------------------------------------------------------------------
-    # Conexión
-    # ------------------------------------------------------------------
     async def connect(self):
-        # Clave de la sala tomada del path ws/chat/<room_key>/
-        self.room_key: str = self.scope["url_route"]["kwargs"]["room_key"]
-        self.room_group_name: str = f"chat_{self.room_key}"
-
+        self.room_key = self.scope["url_route"]["kwargs"]["room_key"]
+        self.room_group_name = f"chat_{self.room_key}"
         user = self.scope["user"]
+
         if not user.is_authenticated:
             await self.close()
             return
 
-        user_id = user.id  # ⚠️ Convierte UserLazyObject → int
-
-        # Comprueba que la sala existe
+        # Comprueba que la sala existe o cierra
         room = await self._get_room_or_close()
         if room is None:
             return
 
-        # Crea / activa la membresía
-        await self._ensure_membership(room, user_id)
+        # Activa o crea la membresía
+        await self._ensure_membership(room, user.id)
 
-        # Une el canal al grupo y acepta el WebSocket
+        # Únete al grupo y acepta conexión
         await self.channel_layer.group_add(self.room_group_name, self.channel_name)
         await self.accept()
         print(f"🟢 {user.username} conectado a {self.room_group_name}")
 
-    # ------------------------------------------------------------------
-    # Desconexión
-    # ------------------------------------------------------------------
     async def disconnect(self, close_code):
         user = self.scope["user"]
         if user.is_authenticated:
@@ -51,42 +41,38 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
         await self.channel_layer.group_discard(self.room_group_name, self.channel_name)
 
-    # ------------------------------------------------------------------
-    # Recepción de mensajes
-    # ------------------------------------------------------------------
     async def receive(self, text_data: str):
         data = json.loads(text_data or "{}")
-        message: str = data.get("message", "").strip()
+        message = data.get("message", "").strip()
         user = self.scope["user"]
 
         if not message or not user.is_authenticated:
-            return  # Ignora mensajes vacíos o sin auth
+            return
 
-        # Guarda el mensaje
-        await self._save_message(user.id, message)
+        # 1) Guarda el mensaje y recupera la instancia
+        chat_msg = await self._save_message(user.id, message)
 
-        # Reenvía al grupo
+        # 2) Emite al grupo con id, message, timestamp e user
         await self.channel_layer.group_send(
             self.room_group_name,
             {
                 "type": "chat_message",
-                "message": message,
-                "username": user.username,
+                "id": chat_msg.id,
+                "message": chat_msg.message,
+                "timestamp": chat_msg.timestamp.isoformat(),
+                "user": user.username,
             },
         )
 
-    # ------------------------------------------------------------------
-    # Envío a los clientes
-    # ------------------------------------------------------------------
     async def chat_message(self, event):
+        # Envia al cliente el payload completo
         await self.send(text_data=json.dumps({
-            "message": event["message"],
-            "username": event["username"],
+            "id":        event["id"],
+            "message":   event["message"],
+            "timestamp": event["timestamp"],
+            "user":      event["user"],
         }))
 
-    # ------------------------------------------------------------------
-    # Helpers síncronos envueltos
-    # ------------------------------------------------------------------
     @database_sync_to_async
     def _get_room(self):
         return ChatRoom.objects.filter(key=self.room_key).first()

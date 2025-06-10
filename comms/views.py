@@ -36,7 +36,6 @@ class ChatMessagesView(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        # ← ANTES: room = ChatRoom.objects.get(pk=self.kwargs["pk"])
         room = ChatRoom.objects.get(key=self.kwargs["key"])
 
         if not ChatRoomMembership.objects.filter(room=room, user=self.request.user).exists():
@@ -58,3 +57,16 @@ class JoinChatView(APIView):
     ChatRoomMembership.objects.get_or_create(user=request.user, room=room, defaults={"active":True})
     serializer = ChatRoomSerializer(room)
     return Response(serializer.data)
+
+class LeaveChatView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request, key):
+        try:
+            room = ChatRoom.objects.get(key=key)
+        except ChatRoom.DoesNotExist:
+            return Response({"detail":"Sala no encontrada"}, status=404)
+        ChatRoomMembership.objects.filter(
+            user=request.user, room=room, active=True
+        ).update(active=False)
+        return Response(status=204)

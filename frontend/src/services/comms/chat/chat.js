@@ -1,4 +1,4 @@
-import { fetchData, postData } from "../../requestHandler";
+import { fetchData, postData, deleteData } from "../../requestHandler";
 
 export const getUserChats = (signal) =>
   fetchData("/comms/chats/", { signal });
