@@ -178,8 +178,8 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            # "hosts": [('127.0.0.1', 6379)], # original
-                "hosts": [('redis', 6379)], # container
+             "hosts": [('127.0.0.1', 6379)], # original
+               # "hosts": [('redis', 6379)], # container
         },
     },
 }
@@ -204,6 +204,8 @@ CORS_ALLOW_HEADERS = list(default_headers) + [
 ]
 
 SIMPLE_JWT = {
+    "SIGNING_KEY": SECRET_KEY,
+    "ALGORITHM": "HS256",
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
     'ROTATE_REFRESH_TOKENS': False,

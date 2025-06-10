@@ -1,3 +1,5 @@
+import uuid
+
 from django.db import models
 from django.contrib.auth import get_user_model
 from core.models import SoftManagedModel
@@ -77,6 +79,11 @@ class ChatRoom(SoftManagedModel):
 
     def __str__(self):
         return f"{self.name} ({self.key})"
+
+    def save(self, *args, **kwargs):
+        if not self.key:
+            self.key = uuid.uuid4().hex[:32]
+        super().save(*args, **kwargs)
 
 
 class ChatRoomMembership(SoftManagedModel):
