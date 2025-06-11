@@ -2,11 +2,11 @@ import json
 from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.db import database_sync_to_async
 from django.contrib.auth import get_user_model
+from rest_framework.exceptions import PermissionDenied
 
 from .models import ChatRoom, ChatRoomMembership, ChatMessage
 
 User = get_user_model()
-
 
 class ChatConsumer(AsyncWebsocketConsumer):
     """WebSocket consumer para chat en tiempo real."""
@@ -25,8 +25,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
         if room is None:
             return
 
-        # Activa o crea la membresía
-        await self._ensure_membership(room, user.id)
+        # Verifica que YA exista una membresía activa (se creó en JoinChatView)
+        has_membership = await self._has_membership(room, user.id)
+        if not has_membership:
+            # Si no está suscrito, no le permitimos conectar
+            await self.close()
+            return
 
         # Únete al grupo y acepta conexión
         await self.channel_layer.group_add(self.room_group_name, self.channel_name)
@@ -34,12 +38,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
         print(f"🟢 {user.username} conectado a {self.room_group_name}")
 
     async def disconnect(self, close_code):
-        user = self.scope["user"]
-        if user.is_authenticated:
-            await self._deactivate_membership(user.id)
-            print(f"🔴 {user.username} salió de {self.room_group_name}")
-
+        # Solo descartamos el canal; NO modificamos la membresía
         await self.channel_layer.group_discard(self.room_group_name, self.channel_name)
+        print(f"🔴 WebSocket desconectado de {self.room_group_name}")
 
     async def receive(self, text_data: str):
         data = json.loads(text_data or "{}")
@@ -52,20 +53,20 @@ class ChatConsumer(AsyncWebsocketConsumer):
         # 1) Guarda el mensaje y recupera la instancia
         chat_msg = await self._save_message(user.id, message)
 
-        # 2) Emite al grupo con id, message, timestamp e user
+        # 2) Emite al grupo con id, message, timestamp y user
         await self.channel_layer.group_send(
             self.room_group_name,
             {
-                "type": "chat_message",
-                "id": chat_msg.id,
-                "message": chat_msg.message,
+                "type":      "chat_message",
+                "id":        chat_msg.id,
+                "message":   chat_msg.message,
                 "timestamp": chat_msg.timestamp.isoformat(),
-                "user": user.username,
+                "user":      user.username,
             },
         )
 
     async def chat_message(self, event):
-        # Envia al cliente el payload completo
+        # Envía al cliente el payload completo
         await self.send(text_data=json.dumps({
             "id":        event["id"],
             "message":   event["message"],
@@ -84,23 +85,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
         return room
 
     @database_sync_to_async
-    def _ensure_membership(self, room: ChatRoom, user_id: int):
-        membership, created = ChatRoomMembership.objects.get_or_create(
-            room=room,
-            user_id=user_id,
-            defaults={"active": True},
-        )
-        if not created and not membership.active:
-            membership.active = True
-            membership.save(update_fields=["active"])
+    def _has_membership(self, room: ChatRoom, user_id: int) -> bool:
+        return ChatRoomMembership.objects.filter(
+            room=room, user_id=user_id, active=True
+        ).exists()
 
     @database_sync_to_async
-    def _deactivate_membership(self, user_id: int):
-        ChatRoomMembership.objects.filter(
-            room__key=self.room_key, user_id=user_id, active=True
-        ).update(active=False)
-
-    @database_sync_to_async
-    def _save_message(self, user_id: int, message: str):
+    def _save_message(self, user_id: int, message: str) -> ChatMessage:
         room = ChatRoom.objects.get(key=self.room_key)
         return ChatMessage.objects.create(room=room, user_id=user_id, message=message)

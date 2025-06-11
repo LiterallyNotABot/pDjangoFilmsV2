@@ -15,16 +15,16 @@ export default function ChatInput({ onSend }) {
     <form onSubmit={handleSubmit} className="flex gap-2">
       <input
         type="text"
-        className="flex-1 border rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-        placeholder="Escribe un mensaje..."
+        placeholder="Type a message..."
         value={value}
         onChange={(e) => setValue(e.target.value)}
+        className="flex-1 border border-[#222222] bg-[#111111] text-white rounded px-3 py-2 text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#00ff00]"
       />
       <button
         type="submit"
-        className="bg-blue-500 text-white px-4 py-2 rounded text-sm hover:bg-blue-600"
+        className="bg-[#00ff00] hover:bg-[#00ff00]/80 text-black px-4 py-2 rounded text-sm font-medium transition-colors"
       >
-        Enviar
+        Send
       </button>
     </form>
   );

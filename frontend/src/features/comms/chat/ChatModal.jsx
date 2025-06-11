@@ -1,31 +1,25 @@
 // src/features/comms/chat/ChatModal.jsx
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import useUserStore from "../../../store/user/userStore";
 import ChatListView from "./ChatListView";
 import ChatRoomView from "./ChatRoomView";
 
 export default function ChatModal({ onClose }) {
+  const user = useUserStore((state) => state.user);
   const [activeChatId, setActiveChatId] = useState(null);
 
-  return (
-    <div className="fixed bottom-0 right-0 w-82 h-120 bg-white border rounded-t-lg shadow-lg flex flex-col overflow-hidden z-50">
-      <div className="absolute top-2 right-2">
-        {onClose && (
-          <button
-            onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 text-xl"
-          >
-            ×
-          </button>
-        )}
-      </div>
+  // Close if user logs out
+  useEffect(() => {
+    if (!user) onClose();
+  }, [user, onClose]);
 
+  return (
+    <div className="fixed bottom-3 right-20 w-[20.5rem] h-[30rem] bg-[#111111] border border-[#222222] rounded-lg shadow-lg flex flex-col overflow-hidden z-50 text-white">
       {activeChatId ? (
-        (
-          <ChatRoomView
-            chatKey={activeChatId}
-            onBack={() => setActiveChatId(null)}
-          />
-        )
+        <ChatRoomView
+          chatKey={activeChatId}
+          onBack={() => setActiveChatId(null)}
+        />
       ) : (
         <ChatListView onSelectChat={setActiveChatId} />
       )}

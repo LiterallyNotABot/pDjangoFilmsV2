@@ -13,8 +13,7 @@ class ChatRoomListCreateView(generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        # Solo chats donde el usuario es miembro activo
-        return ChatRoom.objects.filter(memberships__user=self.request.user).distinct()
+        return (ChatRoom.objects.filter(memberships__user=self.request.user, memberships__active=True).distinct())
 
     def perform_create(self, serializer):
         # Crea la sala y agrega la membresía
@@ -53,7 +52,6 @@ class JoinChatView(APIView):
       room = ChatRoom.objects.get(key=key, is_closed=False)
     except ChatRoom.DoesNotExist:
       return Response({"detail":"Sala no encontrada"}, status=404)
-    # crea membership si no existía activo
     ChatRoomMembership.objects.get_or_create(user=request.user, room=room, defaults={"active":True})
     serializer = ChatRoomSerializer(room)
     return Response(serializer.data)
