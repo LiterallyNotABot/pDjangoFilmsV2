@@ -7,6 +7,7 @@ import {
 } from "../services/films/persons";
 import PersonsInfo from "../features/films/persons/PersonsInfo";
 import FilmGrid from "../features/films/FilmGrid";
+import PersonCard from "../features/films/persons/PersonCard";
 
 export default function PersonDetails() {
   const { id } = useParams();
@@ -101,7 +102,10 @@ export default function PersonDetails() {
         </div>
 
         <aside className="space-y-4">
-          <PersonsInfo person={person} />
+          <div className="flex flex-col items-center space-y-4">
+            <PersonCard person={person} size="lg" />
+            <PersonsInfo person={person} />
+          </div>
         </aside>
       </div>
     </div>

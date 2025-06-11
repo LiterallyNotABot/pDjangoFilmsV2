@@ -2,13 +2,14 @@ import { useState, useEffect, useMemo, useCallback } from "react";
 import PropTypes from "prop-types";
 import FilmCard from "./FilmCard";
 import { getFilmsByPerson } from "../../services/films/persons";
+import { fetchFilteredFilms } from "../../services/films/films";
 import { Button } from "@/components/ui/Button";
 import FilterSortBar from "./grid_adds/FilterSortBar";
 import DropdownSelector from "./grid_adds/DropdownSelector";
 import { useSearchParams } from "react-router-dom";
 
 const gridClassMap = {
-  sm: "grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6",
+  sm: "grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-12",
   md: "grid-cols-2 sm:grid-cols-3 md:grid-cols-4",
   lg: "grid-cols-1 sm:grid-cols-2 md:grid-cols-3",
   xl: "grid-cols-1 sm:grid-cols-2",
@@ -28,20 +29,22 @@ export default function FilmGrid({
   sortOptions = [],
   showRoleDropdown = false,
   roles = [],
+  defaultSort = "popularity",
 }) {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  // ✅ Transform searchParams into plain object to ensure reactivity
   const searchFilters = useMemo(() => {
     const query = Object.fromEntries(searchParams.entries());
-
     return {
       role: query.role || "Actor",
       genre: query.genre || null,
       language: query.language || null,
-      sort: query.sort || null,
+      country: query.country || null,
+      company: query.company || null,
+      decade: query.decade || null, // ✅ AÑADIR ESTO
+      sort: query.sort || defaultSort,
     };
-  }, [searchParams]);
+  }, [searchParams, defaultSort]);
 
   const [films, setFilms] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -50,20 +53,45 @@ export default function FilmGrid({
 
   const pageSize = useMemo(() => pageSizes[cardSize], [cardSize]);
 
+  useEffect(() => {
+    if (!searchParams.get("sort") && defaultSort) {
+      const newParams = new URLSearchParams(searchParams.toString());
+      newParams.set("sort", defaultSort);
+      setSearchParams(newParams);
+    }
+  }, [defaultSort, searchParams, setSearchParams]);
+
   const fetchFilms = useCallback(
     async (signal = null) => {
       setLoading(true);
       try {
-        const res = await getFilmsByPerson(
-          personId,
-          searchFilters.role,
-          currentPage,
-          searchFilters.genre,
-          searchFilters.language,
-          searchFilters.sort,
-          pageSize,
-          signal
-        );
+        let res;
+
+        if (personId) {
+          res = await getFilmsByPerson(
+            personId,
+            searchFilters.role,
+            currentPage,
+            searchFilters.genre,
+            searchFilters.language,
+            searchFilters.sort,
+            pageSize,
+            signal
+          );
+        } else {
+          const filters = {
+            genre: searchFilters.genre,
+            language: searchFilters.language,
+            country: searchFilters.country,
+            company: searchFilters.company,
+            decade: searchFilters.decade,
+            sort: searchFilters.sort,
+            page: currentPage,
+            page_size: pageSize,
+          };
+
+          res = await fetchFilteredFilms(filters, signal);
+        }
 
         if (!res || typeof res !== "object" || !Array.isArray(res.results)) {
           throw new Error("Invalid film data received.");
@@ -72,21 +100,13 @@ export default function FilmGrid({
         setFilms(res.results);
         setTotalPages(Math.ceil((res.count || 0) / pageSize));
       } catch (err) {
-        if (err?.code === "ERR_CANCELED") return;
+        if (err?.code !== "ERR_CANCELED") console.error(err);
         setFilms([]);
       } finally {
         setLoading(false);
       }
     },
-    [
-      personId,
-      searchFilters.role,
-      searchFilters.genre,
-      searchFilters.language,
-      searchFilters.sort,
-      currentPage,
-      pageSize,
-    ]
+    [personId, searchFilters, currentPage, pageSize]
   );
 
   useEffect(() => {
@@ -99,7 +119,19 @@ export default function FilmGrid({
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [currentPage]);
 
-  const currentRole = searchFilters.role;
+  const handleRoleChange = (role) => {
+    const newParams = new URLSearchParams(searchParams.toString());
+    newParams.set("role", role);
+    setSearchParams(newParams);
+    setCurrentPage(1);
+  };
+
+  const handleSortChange = (sortValue) => {
+    const newParams = new URLSearchParams(searchParams.toString());
+    newParams.set("sort", sortValue);
+    setSearchParams(newParams);
+    setCurrentPage(1);
+  };
 
   const roleOptions = Array.isArray(roles)
     ? roles.map((r) =>
@@ -109,13 +141,6 @@ export default function FilmGrid({
       )
     : [];
 
-  const handleRoleChange = (role) => {
-    const newParams = new URLSearchParams(searchParams.toString());
-    newParams.set("role", role);
-    setSearchParams(newParams);
-    setCurrentPage(1);
-  };
-
   return (
     <div className="space-y-6">
       {(showRoleDropdown || filters.length > 0 || sortOptions.length > 0) && (
@@ -123,12 +148,16 @@ export default function FilmGrid({
           {showRoleDropdown && (
             <DropdownSelector
               label="Role"
-              value={currentRole}
+              value={searchFilters.role}
               options={roleOptions}
               onChange={handleRoleChange}
             />
           )}
-          <FilterSortBar filters={filters} sortOptions={sortOptions} />
+          <FilterSortBar
+            filters={filters}
+            sortOptions={sortOptions}
+            onSortChange={handleSortChange}
+          />
         </div>
       )}
 
@@ -136,7 +165,9 @@ export default function FilmGrid({
         <p className="text-gray-400">Loading...</p>
       ) : films?.length ? (
         <>
-          <div className={`grid gap-6 justify-center ${gridClassMap[cardSize]}`}>
+          <div
+            className={`grid gap-6 justify-center ${gridClassMap[cardSize]}`}
+          >
             {films.map((film) => (
               <FilmCard
                 key={film.id}
@@ -144,6 +175,7 @@ export default function FilmGrid({
                 title={film.title}
                 year={film.year}
                 posterUrl={film.posterUrl}
+                backdropUrl={film.backdropUrl}
                 size={cardSize}
               />
             ))}
@@ -158,15 +190,39 @@ export default function FilmGrid({
               >
                 {"<"}
               </Button>
-              {Array.from({ length: totalPages }, (_, i) => (
-                <Button
-                  key={i}
-                  variant={i + 1 === currentPage ? "primary" : "secondary"}
-                  onClick={() => setCurrentPage(i + 1)}
-                >
-                  {i + 1}
-                </Button>
-              ))}
+
+              {Array.from({ length: totalPages }, (_, i) => i + 1)
+                .filter((page) => {
+                  return (
+                    page === 1 ||
+                    page === totalPages ||
+                    (page >= currentPage - 2 && page <= currentPage + 2)
+                  );
+                })
+                .reduce((acc, page, i, arr) => {
+                  if (i > 0 && page - arr[i - 1] > 1) acc.push("...");
+                  acc.push(page);
+                  return acc;
+                }, [])
+                .map((page, i) =>
+                  page === "..." ? (
+                    <span
+                      key={`ellipsis-${i}`}
+                      className="px-3 py-1 text-gray-400 select-none"
+                    >
+                      ...
+                    </span>
+                  ) : (
+                    <Button
+                      key={page}
+                      variant={page === currentPage ? "primary" : "secondary"}
+                      onClick={() => setCurrentPage(page)}
+                    >
+                      {page}
+                    </Button>
+                  )
+                )}
+
               <Button
                 variant="secondary"
                 disabled={currentPage === totalPages}
@@ -185,33 +241,11 @@ export default function FilmGrid({
 }
 
 FilmGrid.propTypes = {
-  personId: PropTypes.string.isRequired,
+  personId: PropTypes.string,
   cardSize: PropTypes.oneOf(["sm", "md", "lg", "xl"]),
-  filters: PropTypes.arrayOf(
-    PropTypes.shape({
-      key: PropTypes.string.isRequired,
-      options: PropTypes.arrayOf(
-        PropTypes.shape({
-          value: PropTypes.string.isRequired,
-          label: PropTypes.string.isRequired,
-        })
-      ).isRequired,
-    })
-  ),
-  sortOptions: PropTypes.arrayOf(
-    PropTypes.shape({
-      value: PropTypes.string.isRequired,
-      label: PropTypes.string.isRequired,
-    })
-  ),
+  filters: PropTypes.array,
+  sortOptions: PropTypes.array,
   showRoleDropdown: PropTypes.bool,
-  roles: PropTypes.arrayOf(
-    PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.shape({
-        role: PropTypes.string.isRequired,
-        count: PropTypes.number,
-      }),
-    ])
-  ),
+  roles: PropTypes.array,
+  defaultSort: PropTypes.string,
 };

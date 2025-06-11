@@ -7,6 +7,8 @@ import RegisterForm from "../forms/RegisterForm";
 import ScrollToTop from "./ScrollToTop";
 import { useState, useEffect, useCallback } from "react";
 import "./css/Layout.css";
+import ChatLauncher from "../../features/comms/chat/ChatLauncher";
+
 
 export default function Layout() {
   const [modalType, setModalType] = useState(null); // "login" | "register" | null
@@ -41,6 +43,8 @@ export default function Layout() {
       <Modal isOpen={modalType === "register"} onClose={closeModal}>
         <RegisterForm onSuccess={closeModal} />
       </Modal>
+
+      <ChatLauncher />
     </>
   );
 }

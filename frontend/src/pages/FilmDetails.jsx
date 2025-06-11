@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import Backdrop from "../components/layout/Backdrop";
 import { getFilmById } from "../services/films/films";
 import FilmCard from "../features/films/FilmCard";
@@ -13,7 +13,11 @@ import LoginForm from "@/components/forms/LoginForm";
 
 export default function FilmDetails() {
   const { id } = useParams();
+  const location = useLocation();
+  const initialBackdrop = location.state?.backdropUrl || null;
+
   const [film, setFilm] = useState(null);
+  const [backdrop, setBackdrop] = useState(initialBackdrop);
   const [friendActivity, setFriendActivity] = useState([]);
   const [showLoginModal, setShowLoginModal] = useState(false);
 
@@ -22,6 +26,7 @@ export default function FilmDetails() {
       try {
         const data = await getFilmById(id);
         setFilm(data);
+        setBackdrop(data.backdrop_url);
       } catch (error) {
         console.error("Error loading film:", error);
       }
@@ -33,7 +38,6 @@ export default function FilmDetails() {
   useEffect(() => {
     if (!film) return;
 
-    // Mock data: replace with getFriendActivityByFilm(film.film_id) when ready
     setFriendActivity([
       {
         username: "hannahwebb",
@@ -65,23 +69,22 @@ export default function FilmDetails() {
 
   return (
     <>
-      <Backdrop imageUrl={film.backdrop_url} size="medium" />
+      <Backdrop imageUrl={backdrop} size="medium" />
 
       <div className="max-w-6xl mx-auto px-4 py-12 space-y-8 md:space-y-0 md:grid md:grid-cols-[1fr_3fr_1fr] md:gap-10">
-        {/* Poster column */}
         <div className="md:sticky md:top-24 md:self-start order-1 md:order-none">
           <FilmCard
             id={film.film_id}
             title={film.title}
             year={film.release_year}
             posterUrl={film.poster_url}
+            backdropUrl={film.backdrop_url}
             size="xl"
             showUserActions={true}
             showUserTag={false}
           />
         </div>
 
-        {/* Main content column */}
         <div className="space-y-6 order-3 md:order-none">
           <FilmHeader film={film} />
           <FilmTabs film={film} />
@@ -93,7 +96,6 @@ export default function FilmDetails() {
           )}
         </div>
 
-        {/* Sidebar actions column */}
         <div className="md:sticky md:top-24 md:self-start order-2 md:order-none space-y-6">
           <FilmUserActions
             filmId={film.film_id}
@@ -109,7 +111,6 @@ export default function FilmDetails() {
         </div>
       </div>
 
-      {/* Login modal */}
       <Modal isOpen={showLoginModal} onClose={() => setShowLoginModal(false)}>
         <LoginForm onSuccess={() => setShowLoginModal(false)} />
       </Modal>

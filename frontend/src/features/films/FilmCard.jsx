@@ -18,6 +18,7 @@ function FilmCard({
   title,
   year,
   posterUrl,
+  backdropUrl,
   size = "md",
   user = null,
   showUserTag = false,
@@ -41,7 +42,7 @@ function FilmCard({
     if (onOpenModal) onOpenModal(id);
     else {
       navigate(`/films/${id}`, {
-        state: { backdropUrl: user?.backdropUrl || null },
+        state: { backdropUrl },
       });
     }
   };
@@ -142,6 +143,7 @@ FilmCard.propTypes = {
   title: PropTypes.string.isRequired,
   year: PropTypes.number,
   posterUrl: PropTypes.string,
+  backdropUrl: PropTypes.string, // ✅ lo declaramos
   size: PropTypes.oneOf(["sm", "md", "lg", "xl"]),
   user: PropTypes.object,
   showUserTag: PropTypes.bool,

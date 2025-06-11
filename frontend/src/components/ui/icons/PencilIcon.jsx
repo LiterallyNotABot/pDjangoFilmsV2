@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useState, lazy, Suspense } from "react";
 import { PencilLine } from "lucide-react";
 import PropTypes from "prop-types";
 import clsx from "clsx";
-import LogModal from "@/features/reviews/LogModal";
 
-// Función local para evitar imports fantasmas
+const LogModal = lazy(() => import("@/features/reviews/LogModal"));
+
 const getSizedPosterUrl = (url, size = "md") => {
   const sizeMap = {
     sm: "w92",
@@ -23,7 +23,7 @@ export default function PencilIcon({
   className = "",
   onClick,
   interactive = true,
-  film = null, // Si se pasa film, abre LogModal automáticamente
+  film = null, 
 }) {
   const sizeMap = {
     xs: 12,
@@ -45,36 +45,14 @@ export default function PencilIcon({
   return (
     <>
       <PencilLine
+        className={clsx("cursor-pointer", className, { "text-primary": active })}
         size={px}
-        strokeWidth={1.5}
         onClick={interactive ? handleClick : undefined}
-        className={clsx(
-          "transition",
-          interactive && "cursor-pointer",
-          active
-            ? "text-zinc-400"
-            : interactive
-            ? "text-zinc-400 hover:text-red-500"
-            : "text-zinc-400",
-          className
-        )}
       />
-
-      {film && (
-        <LogModal
-          isOpen={showModal}
-          onClose={() => setShowModal(false)}
-          film={{
-            id: film.id,
-            title: film.title,
-            year: film.year,
-            posterUrl: getSizedPosterUrl(film.posterUrl, "md"),
-          }}
-          onSave={(data) => {
-            console.log("📝 Saved from PencilIcon", data);
-            setShowModal(false);
-          }}
-        />
+      {showModal && film && (
+        <Suspense fallback={<div>Cargando...</div>}>
+          <LogModal open={showModal} onClose={() => setShowModal(false)} film={film} />
+        </Suspense>
       )}
     </>
   );
@@ -82,14 +60,9 @@ export default function PencilIcon({
 
 PencilIcon.propTypes = {
   active: PropTypes.bool,
-  size: PropTypes.oneOf(["xs", "sm", "md", "lg", "xl"]),
+  size: PropTypes.string,
   className: PropTypes.string,
   onClick: PropTypes.func,
   interactive: PropTypes.bool,
-  film: PropTypes.shape({
-    id: PropTypes.number.isRequired,
-    title: PropTypes.string.isRequired,
-    year: PropTypes.number,
-    posterUrl: PropTypes.string,
-  }),
+  film: PropTypes.object,
 };

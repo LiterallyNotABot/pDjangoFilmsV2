@@ -23,8 +23,8 @@ services:
 
   web:
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ../..
+      dockerfile: devtools/Dockerfile
     container_name: django_app
     command: >
       sh -c "python manage.py makemigrations &&
@@ -33,7 +33,7 @@ services:
              python manage.py collectstatic --noinput &&
              daphne -b 0.0.0.0 -p 8000 pDjangoFilmsV2.asgi:application"
     volumes:
-      - .:/code
+      - ../:/code
     ports:
       - "8000:8000"
     depends_on:
@@ -43,7 +43,7 @@ services:
       - DJANGO_SETTINGS_MODULE=pDjangoFilmsV2.settings
       - PYTHONDONTWRITEBYTECODE=1
       - PYTHONUNBUFFERED=1
-      - DB_HOST=db  # Este es el cambio importante
+      - DB_HOST=db
     extra_hosts:
       - "host.docker.internal:host-gateway"
 

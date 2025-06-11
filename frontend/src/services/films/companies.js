@@ -1,8 +1,7 @@
-import axios from "../axios";
+import { fetchData } from "../requestHandler";
 
-export const getFilmsByCompany = async (companyId) => {
-  const res = await axios.get("/films/", {
-    params: { company: companyId },
-  });
-  return res.data;
-};
+export const getFilmsByCompany = (signal = null) =>
+  fetchData("/countries/", { signal });
+
+export const fetchCompanyById = (id, signal) =>
+  fetchData(`/films/companies/${id}/`, { signal });

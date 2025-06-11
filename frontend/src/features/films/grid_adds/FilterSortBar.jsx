@@ -13,7 +13,6 @@ export default function FilterSortBar({ filters = [], sortOptions = [] }) {
 
   return (
     <div className="flex flex-wrap gap-4 items-center">
-      {/* Render filtros */}
       {filters.map(({ key, options }) => {
         const currentValue = searchParams.get(key);
         const selectedLabel = options.find((o) => o.value === currentValue)?.label;
@@ -29,7 +28,6 @@ export default function FilterSortBar({ filters = [], sortOptions = [] }) {
         );
       })}
 
-      {/* Render sort (solo uno) */}
       {sortOptions.length > 0 && (
         (() => {
           const key = "sort";

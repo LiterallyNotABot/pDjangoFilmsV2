@@ -1,0 +1,89 @@
+@import 'tailwindcss';
+
+.modal-overlay {
+  @apply fixed inset-0 bg-black/90 backdrop-blur-sm;
+}
+
+.modal-wrapper {
+  @apply fixed inset-0 overflow-y-auto;
+}
+
+.modal-inner {
+  @apply flex min-h-full items-center justify-center p-4;
+}
+
+.modal-panel {
+  @apply w-full max-w-3xl transform overflow-hidden rounded-2xl bg-zinc-950 text-white p-6 shadow-2xl border border-zinc-800 hover:border-yellow-600 transition-all;
+}
+
+.modal-header {
+  @apply flex justify-between items-start mb-5;
+}
+
+.modal-date-controls {
+  @apply flex items-center gap-3;
+}
+
+.modal-datepicker {
+  @apply bg-zinc-800 text-white border border-zinc-600 text-sm rounded px-2 py-1;
+}
+
+.modal-calendar {
+  @apply bg-zinc-900 text-white border border-zinc-600 rounded shadow;
+}
+
+.modal-review-section {
+  @apply flex gap-6 mb-6;
+}
+
+.modal-poster {
+  @apply w-24 rounded-lg shadow border border-zinc-700;
+}
+
+.modal-review-info {
+  @apply flex-1;
+}
+
+.modal-review-title {
+  @apply text-lg font-semibold text-white mb-2;
+}
+
+.modal-review-year {
+  @apply text-zinc-500 font-normal;
+}
+
+.modal-review-label {
+  @apply block text-sm text-zinc-400 font-medium mb-1;
+}
+
+.modal-textarea {
+  @apply w-full bg-zinc-800 border border-zinc-600 text-white rounded-lg p-3 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-600 resize-none;
+}
+
+.modal-footer {
+  @apply flex items-center justify-between mt-4;
+}
+
+.modal-footer-left {
+  @apply flex items-center gap-6;
+}
+
+.modal-footer-group {
+  @apply flex items-center gap-2;
+}
+
+.modal-footer-label {
+  @apply text-sm text-zinc-300;
+}
+
+.modal-save-button {
+  @apply px-5 py-2 text-white font-semibold rounded-lg shadow transition;
+}
+
+.modal-save-loading {
+  @apply bg-zinc-600;
+}
+
+.modal-save-ready {
+  @apply bg-red-600 hover:bg-green-600;
+}
