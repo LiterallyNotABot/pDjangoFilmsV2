@@ -24,7 +24,6 @@ def stripe_webhook(request):
         session = event["data"]["object"]
         session_id = session["id"]
 
-        # 👉 [1] Guardar el log crudo del evento Stripe
         CheckoutLog.objects.create(
             stripe_event_id=event["id"],
             payload=event,
@@ -45,7 +44,6 @@ def stripe_webhook(request):
         items = CartItem.objects.filter(cart=cart, deleted=False)
         total_cents = sum(item.product.price_cents * item.quantity for item in items)
 
-        # 👉 [2] Crear la compra
         purchase = Purchase.objects.create(
             user=user,
             total_cents=total_cents,
@@ -54,7 +52,6 @@ def stripe_webhook(request):
             deleted=False,
         )
 
-        # 👉 [3] Crear los ítems de la compra
         for item in items:
             PurchaseItem.objects.create(
                 purchase=purchase,
@@ -63,7 +60,6 @@ def stripe_webhook(request):
                 price_cents=item.product.price_cents,
             )
 
-        # 👉 [4] Registrar el pago en Payments
         from store.models.payment import Payment
         Payment.objects.create(
             purchase=purchase,
@@ -73,7 +69,6 @@ def stripe_webhook(request):
             status="succeeded",
         )
 
-        # 👉 [5] Marcar la sesión como completada
         checkout.completed = True
         checkout.save()
 
