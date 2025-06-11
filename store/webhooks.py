@@ -72,4 +72,6 @@ def stripe_webhook(request):
         checkout.completed = True
         checkout.save()
 
+        CartItem.objects.filter(cart=cart).delete()
+
     return HttpResponse(status=200)
