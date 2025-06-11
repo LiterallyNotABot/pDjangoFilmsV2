@@ -4,7 +4,6 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
-
 from .models import ChatRoom, ChatRoomMembership, ChatMessage
 from .serializers import ChatRoomSerializer, ChatMessageSerializer
 
@@ -16,7 +15,6 @@ class ChatRoomListCreateView(generics.ListCreateAPIView):
         return (ChatRoom.objects.filter(memberships__user=self.request.user, memberships__active=True).distinct())
 
     def perform_create(self, serializer):
-        # Crea la sala y agrega la membresía
         room = serializer.save(created_by=self.request.user)
         ChatRoomMembership.objects.create(room=room, user=self.request.user)
 

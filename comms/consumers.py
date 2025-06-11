@@ -20,27 +20,22 @@ class ChatConsumer(AsyncWebsocketConsumer):
             await self.close()
             return
 
-        # Comprueba que la sala existe o cierra
         room = await self._get_room_or_close()
         if room is None:
             return
 
-        # Verifica que YA exista una membresía activa (se creó en JoinChatView)
         has_membership = await self._has_membership(room, user.id)
         if not has_membership:
-            # Si no está suscrito, no le permitimos conectar
             await self.close()
             return
 
-        # Únete al grupo y acepta conexión
         await self.channel_layer.group_add(self.room_group_name, self.channel_name)
         await self.accept()
-        print(f"🟢 {user.username} conectado a {self.room_group_name}")
+        print(f" {user.username} connected to {self.room_group_name}")
 
     async def disconnect(self, close_code):
-        # Solo descartamos el canal; NO modificamos la membresía
         await self.channel_layer.group_discard(self.room_group_name, self.channel_name)
-        print(f"🔴 WebSocket desconectado de {self.room_group_name}")
+        print(f" WebSocket connected to {self.room_group_name}")
 
     async def receive(self, text_data: str):
         data = json.loads(text_data or "{}")
@@ -50,10 +45,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
         if not message or not user.is_authenticated:
             return
 
-        # 1) Guarda el mensaje y recupera la instancia
         chat_msg = await self._save_message(user.id, message)
 
-        # 2) Emite al grupo con id, message, timestamp y user
         await self.channel_layer.group_send(
             self.room_group_name,
             {
@@ -66,7 +59,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
         )
 
     async def chat_message(self, event):
-        # Envía al cliente el payload completo
         await self.send(text_data=json.dumps({
             "id":        event["id"],
             "message":   event["message"],
