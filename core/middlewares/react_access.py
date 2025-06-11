@@ -13,14 +13,27 @@ class OnlyReactAccessMiddleware:
         if method == "OPTIONS":
             response = HttpResponse()
         else:
-            # Protected internal routes
-            protected_paths = ["/films/", "/persons/", "/users/", "/reviews/", "/activity/", "/search/", "/comms/", ]
-            if any(path.startswith(p) for p in protected_paths):
+            # Protected internal routes (except webhook)
+            protected_paths = [
+                "/films/",
+                "/persons/",
+                "/users/",
+                "/reviews/",
+                "/activity/",
+                "/search/",
+                "/comms/",
+                "/store/",
+            ]
+            # Open pipeline for Stripe service
+            excluded_paths = ["/store/webhook/"]
+
+            if any(path.startswith(p) for p in protected_paths) and path not in excluded_paths:
                 if request.headers.get("X-Internal-Access") != "DjangoFilmsFrontend":
                     return HttpResponseForbidden("Access denied")
+
             response = self.get_response(request)
 
-        # These headers MUST be present in any CORS response
+        # Add CORS headers if coming from allowed frontend origins
         if origin in [
             "http://localhost:5173",
             "http://localhost:5174",
