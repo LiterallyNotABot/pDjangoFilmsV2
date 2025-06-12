@@ -4,24 +4,23 @@ import HeartIcon from "../../components/ui/icons/HeartIcon";
 import "./css/ListCard.css";
 import { memo } from "react";
 
-function ListCard({ list }) {
+function ListCard({ list, activityMap = {}, onToggleLiked, onToggleWatched }) {
   return (
     <div className="poster-container overflow-visible">
       <div className="list-card">
         <div className="list-posters">
           {list.films.slice(0, 5).map((film, idx) => (
-            <div
-              key={film.id}
-              className="poster-wrapper"
-              style={{ zIndex: 5 - idx }}
-            >
+            <div key={film.id} className="poster-wrapper" style={{ zIndex: 5 - idx }}>
               <FilmCard
                 id={film.id}
                 title={film.title}
                 posterUrl={film.posterUrl}
                 year={film.year}
                 size="sm"
-                showUserActions={false}
+                showUserActions={true}
+                activity={activityMap[film.id]}
+                onToggleLiked={() => onToggleLiked(film.id)}
+                onToggleWatched={() => onToggleWatched(film.id)}
               />
             </div>
           ))}
@@ -54,6 +53,9 @@ ListCard.propTypes = {
     ).isRequired,
     likes: PropTypes.number,
   }).isRequired,
+  activityMap: PropTypes.object,
+  onToggleLiked: PropTypes.func,
+  onToggleWatched: PropTypes.func,
 };
 
 export default memo(ListCard);

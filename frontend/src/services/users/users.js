@@ -54,3 +54,10 @@ export const deleteWatchlistEntry = async (filmId, signal = null) => {
     throw err;
   }
 };
+
+
+export async function getUserFilmActivityBatch(filmIds) {
+  return await postData("/activity/user-film-activity/batch/", {
+    film_ids: filmIds,
+  });
+}

@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
-import HeartIcon from "../../components/ui/icons/HeartIcon";
-import PencilIcon from "../../components/ui/icons/PencilIcon";
-import StarIcon from "../../components/ui/icons/StarIcon";
+import HeartIcon from "../../../components/ui/icons/HeartIcon";
+import PencilIcon from "../../../components/ui/icons/PencilIcon";
+import StarIcon from "../../../components/ui/icons/StarIcon";
 
 export default function FilmActivityFooter({ rating, liked, reviewed }) {
   return (

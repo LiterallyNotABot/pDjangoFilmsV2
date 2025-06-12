@@ -4,7 +4,7 @@ import HeartIcon from "../../components/ui/icons/HeartIcon";
 import StarIcon from "../../components/ui/icons/StarIcon";
 import { memo } from "react";
 
-function ReviewCard({ review }) {
+function ReviewCard({ review, activityMap = {}, onToggleLiked, onToggleWatched }) {
   const film = review.film || {};
 
   return (
@@ -15,7 +15,10 @@ function ReviewCard({ review }) {
         posterUrl={film.posterUrl || ""}
         year={film.year}
         size="sm"
-        showUserActions={false}
+        showUserActions={true}
+        activity={activityMap[film.id]}
+        onToggleLiked={() => onToggleLiked(film.id)}
+        onToggleWatched={() => onToggleWatched(film.id)}
       />
 
       <div className="flex-1">
@@ -66,6 +69,9 @@ ReviewCard.propTypes = {
     body: PropTypes.string,
     likes: PropTypes.number,
   }).isRequired,
+  activityMap: PropTypes.object,
+  onToggleLiked: PropTypes.func,
+  onToggleWatched: PropTypes.func,
 };
 
 export default memo(ReviewCard);

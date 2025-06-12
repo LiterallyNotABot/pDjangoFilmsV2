@@ -2,8 +2,18 @@ import PropTypes from "prop-types";
 import ReviewCard from "./ReviewCard";
 import "./css/ReviewFeed.css";
 import { memo, useMemo } from "react";
+import useBatchFilmActivity from "@/hooks/useBatchFilmActivity";
+import useUserFilmToggle from "@/hooks/useUserFilmToggle";
 
 function ReviewFeed({ title = "Popular Reviews", reviews }) {
+  const filmIds = useMemo(
+    () => reviews.map((r) => r.film?.id).filter((id) => typeof id === "number"),
+    [reviews]
+  );
+
+  const { activityMap, setActivityForFilm } = useBatchFilmActivity(filmIds);
+  const handleToggle = useUserFilmToggle(activityMap, setActivityForFilm);
+
   const content = useMemo(
     () =>
       reviews.map((review) => (
@@ -13,9 +23,12 @@ function ReviewFeed({ title = "Popular Reviews", reviews }) {
             `${review.user?.username || "anon"}-${review.film?.id || "noFilm"}`
           }
           review={review}
+          activity={activityMap[review.film?.id]}
+          onToggleLiked={() => handleToggle(review.film?.id, "liked")}
+          onToggleWatched={() => handleToggle(review.film?.id, "watched")}
         />
       )),
-    [reviews]
+    [reviews, activityMap, handleToggle]
   );
 
   return (
