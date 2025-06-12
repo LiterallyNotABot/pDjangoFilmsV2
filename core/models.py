@@ -4,6 +4,10 @@ class SoftDeleteModel(models.Model):
     active = models.BooleanField(default=True)
     deleted = models.BooleanField(default=False)
 
+    @property
+    def id(self):
+        return getattr(self, self._meta.pk.attname)
+
     class Meta:
         abstract = True
 
