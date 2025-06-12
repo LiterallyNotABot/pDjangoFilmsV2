@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/Button";
 import FilterSortBar from "./grid_adds/FilterSortBar";
 import DropdownSelector from "./grid_adds/DropdownSelector";
 import { useSearchParams } from "react-router-dom";
+import useUserStore from "@/store/user/userStore"; // ✅ importamos el user
 
 const gridClassMap = {
   sm: "grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-12",
@@ -38,6 +39,7 @@ export default function FilmGrid({
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
+  const { user } = useUserStore(); // ✅ obtenemos user del store
 
   const searchFilters = useMemo(() => {
     const query = Object.fromEntries(searchParams.entries());
@@ -178,6 +180,7 @@ export default function FilmGrid({
                 backdropUrl={film.backdropUrl}
                 size={cardSize}
                 activity={activityMap[film.id]}
+                user={user} // ✅ aquí está el fix
                 onToggleLiked={(id) => handleToggle(id, "liked")}
                 onToggleWatched={(id) => handleToggle(id, "watched")}
               />

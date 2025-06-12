@@ -3,8 +3,11 @@ import FilmCard from "../films/FilmCard";
 import HeartIcon from "../../components/ui/icons/HeartIcon";
 import "./css/ListCard.css";
 import { memo } from "react";
+import useUserStore from "@/store/user/userStore";
 
 function ListCard({ list, activityMap = {}, onToggleLiked, onToggleWatched }) {
+  const { user } = useUserStore();
+
   return (
     <div className="poster-container overflow-visible">
       <div className="list-card">
@@ -18,6 +21,7 @@ function ListCard({ list, activityMap = {}, onToggleLiked, onToggleWatched }) {
                 year={film.year}
                 size="sm"
                 showUserActions={true}
+                user={user}
                 activity={activityMap[film.id]}
                 onToggleLiked={() => onToggleLiked(film.id)}
                 onToggleWatched={() => onToggleWatched(film.id)}

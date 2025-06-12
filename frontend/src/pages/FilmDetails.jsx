@@ -11,6 +11,7 @@ import FriendActivityBar from "../features/users/FriendActivityBar";
 import Modal from "@/components/ui/Modal";
 import LoginForm from "@/components/forms/LoginForm";
 import useFilmUserActivity from "@/hooks/useFilmUserActivity";
+import useUserStore from "@/store/user/userStore";
 
 export default function FilmDetails() {
   const { id } = useParams();
@@ -21,6 +22,8 @@ export default function FilmDetails() {
   const [backdrop, setBackdrop] = useState(initialBackdrop);
   const [friendActivity, setFriendActivity] = useState([]);
   const [showLoginModal, setShowLoginModal] = useState(false);
+
+  const { user } = useUserStore();
 
   // Fetch film data
   useEffect(() => {
@@ -96,6 +99,7 @@ export default function FilmDetails() {
             size="xl"
             showUserActions
             showUserTag={false}
+            user={user} // ✅ Para que se muestre la barra de actividad
             activity={{ liked, watched }}
             onToggleLiked={() => updateField("liked", !liked)}
             onToggleWatched={() => updateField("watched", !watched)}

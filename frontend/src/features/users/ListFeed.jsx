@@ -17,26 +17,22 @@ function ListFeed({ title = "Popular Lists", lists }) {
   const { activityMap, setActivityForFilm } = useBatchFilmActivity(filmIds);
   const handleToggle = useUserFilmToggle(activityMap, setActivityForFilm);
 
-  const renderedLists = useMemo(
-    () =>
-      lists.map((list, i) => (
-        <div key={list.id || i}>
-          <ListCard
-            list={list}
-            activityMap={activityMap}
-            onToggleLiked={handleToggle}
-            onToggleWatched={handleToggle}
-          />
-          {i < lists.length - 1 && <hr className="list-divider" />}
-        </div>
-      )),
-    [lists, activityMap, handleToggle]
-  );
-
   return (
     <section className="list-feed-section">
       <h2 className="list-feed-title">{title}</h2>
-      <div className="list-feed-list">{renderedLists}</div>
+      <div className="list-feed-list">
+        {lists.map((list, i) => (
+          <div key={list.id || i}>
+            <ListCard
+              list={list}
+              activityMap={activityMap}
+              onToggleLiked={(id) => handleToggle(id, "liked")}
+              onToggleWatched={(id) => handleToggle(id, "watched")}
+            />
+            {i < lists.length - 1 && <hr className="list-divider" />}
+          </div>
+        ))}
+      </div>
     </section>
   );
 }

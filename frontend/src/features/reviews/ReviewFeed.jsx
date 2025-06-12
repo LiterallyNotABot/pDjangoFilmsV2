@@ -14,27 +14,23 @@ function ReviewFeed({ title = "Popular Reviews", reviews }) {
   const { activityMap, setActivityForFilm } = useBatchFilmActivity(filmIds);
   const handleToggle = useUserFilmToggle(activityMap, setActivityForFilm);
 
-  const content = useMemo(
-    () =>
-      reviews.map((review) => (
-        <ReviewCard
-          key={
-            review.review_id ||
-            `${review.user?.username || "anon"}-${review.film?.id || "noFilm"}`
-          }
-          review={review}
-          activity={activityMap[review.film?.id]}
-          onToggleLiked={() => handleToggle(review.film?.id, "liked")}
-          onToggleWatched={() => handleToggle(review.film?.id, "watched")}
-        />
-      )),
-    [reviews, activityMap, handleToggle]
-  );
-
   return (
     <section className="review-feed-section">
       <h2 className="review-feed-title">{title}</h2>
-      <div className="space-y-6">{content}</div>
+      <div className="space-y-6">
+        {reviews.map((review) => (
+          <ReviewCard
+            key={
+              review.review_id ||
+              `${review.user?.username || "anon"}-${review.film?.id || "noFilm"}`
+            }
+            review={review}
+            activityMap={activityMap}
+            onToggleLiked={() => handleToggle(review.film?.id, "liked")}
+            onToggleWatched={() => handleToggle(review.film?.id, "watched")}
+          />
+        ))}
+      </div>
     </section>
   );
 }

@@ -3,9 +3,11 @@ import FilmCard from "../films/FilmCard";
 import HeartIcon from "../../components/ui/icons/HeartIcon";
 import StarIcon from "../../components/ui/icons/StarIcon";
 import { memo } from "react";
+import useUserStore from "@/store/user/userStore";
 
 function ReviewCard({ review, activityMap = {}, onToggleLiked, onToggleWatched }) {
   const film = review.film || {};
+  const { user } = useUserStore();
 
   return (
     <div className="flex gap-4 border-b border-zinc-800 pb-6">
@@ -16,6 +18,7 @@ function ReviewCard({ review, activityMap = {}, onToggleLiked, onToggleWatched }
         year={film.year}
         size="sm"
         showUserActions={true}
+        user={user}
         activity={activityMap[film.id]}
         onToggleLiked={() => onToggleLiked(film.id)}
         onToggleWatched={() => onToggleWatched(film.id)}
