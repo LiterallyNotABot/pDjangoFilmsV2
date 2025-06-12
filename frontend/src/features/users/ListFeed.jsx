@@ -1,11 +1,11 @@
 import PropTypes from "prop-types";
 import ListCard from "./ListCard";
 import "./css/ListFeed.css";
-import { memo, useMemo } from "react";
+import { useMemo } from "react";
 import useBatchFilmActivity from "@/hooks/useBatchFilmActivity";
 import useUserFilmToggle from "@/hooks/useUserFilmToggle";
 
-function ListFeed({ title = "Popular Lists", lists }) {
+export default function ListFeed({ title = "Popular Lists", lists }) {
   const filmIds = useMemo(() => {
     const ids = [];
     lists.forEach((list) => {
@@ -14,8 +14,11 @@ function ListFeed({ title = "Popular Lists", lists }) {
     return [...new Set(ids)];
   }, [lists]);
 
-  const { activityMap, setActivityForFilm } = useBatchFilmActivity(filmIds);
-  const handleToggle = useUserFilmToggle(activityMap, setActivityForFilm);
+  const { activityMap: rawActivityMap, setActivityForFilm } = useBatchFilmActivity(filmIds);
+  const handleToggle = useUserFilmToggle(rawActivityMap, setActivityForFilm);
+
+  // Para evitar problemas de re-render, forzamos nueva referencia
+  const activityMap = useMemo(() => ({ ...rawActivityMap }), [rawActivityMap]);
 
   return (
     <section className="list-feed-section">
@@ -41,5 +44,3 @@ ListFeed.propTypes = {
   title: PropTypes.string,
   lists: PropTypes.array.isRequired,
 };
-
-export default memo(ListFeed);

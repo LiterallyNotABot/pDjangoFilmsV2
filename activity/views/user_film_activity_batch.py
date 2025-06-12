@@ -17,7 +17,7 @@ class UserFilmActivityBatchView(APIView):
 
         # Validar existencia de películas
         existing_films = Film.objects.filter(film_id__in=film_ids)
-        film_map = {film.id: film for film in existing_films}
+        film_map = {film.film_id: film for film in existing_films}
 
         response_data = []
 
@@ -30,11 +30,10 @@ class UserFilmActivityBatchView(APIView):
                 })
                 continue
 
-            # Soft create o recuperar relación
             film_user, _ = reactivate_or_create(
                 FilmAndUser,
                 lookup={"user": request.user, "film": film},
-                defaults={"user": request.user, "film": film}
+                defaults={}
             )
 
             response_data.append({

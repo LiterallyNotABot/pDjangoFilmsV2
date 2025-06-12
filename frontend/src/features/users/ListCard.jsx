@@ -2,7 +2,6 @@ import PropTypes from "prop-types";
 import FilmCard from "../films/FilmCard";
 import HeartIcon from "../../components/ui/icons/HeartIcon";
 import "./css/ListCard.css";
-import { memo } from "react";
 import useUserStore from "@/store/user/userStore";
 
 function ListCard({ list, activityMap = {}, onToggleLiked, onToggleWatched }) {
@@ -22,7 +21,7 @@ function ListCard({ list, activityMap = {}, onToggleLiked, onToggleWatched }) {
                 size="sm"
                 showUserActions={true}
                 user={user}
-                activity={activityMap[film.id]}
+                activity={activityMap[film.id] || {}}
                 onToggleLiked={() => onToggleLiked(film.id)}
                 onToggleWatched={() => onToggleWatched(film.id)}
               />
@@ -62,4 +61,4 @@ ListCard.propTypes = {
   onToggleWatched: PropTypes.func,
 };
 
-export default memo(ListCard);
+export default ListCard;
