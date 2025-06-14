@@ -1,32 +1,50 @@
 import { useEffect, useState } from "react";
 import useUserStore from "../store/user/userStore";
+import useFilmActivityStore from "@/store/film/useFilmActivityStore";
+
 import HeroSection from "../components/layout/HeroSection";
 import LatestPosters from "../components/home/LatestPosters";
 import ReviewFeed from "../features/reviews/ReviewFeed";
 import ListFeed from "../features/users/ListFeed";
-import axios from "axios";
+
 import { getLatestFilms } from "../services/films/films";
 import { getFriendsActivityFilms } from "../services/activity/activity";
 import {
   getPopularReviews,
   getFriendsReviews,
 } from "../services/reviews/reviews";
-import { getPopularLists, getFriendsLists } from "../services/users/lists";
-import { handleApiError } from "../services/exceptionHelper";
+import {
+  getPopularLists,
+  getFriendsLists,
+} from "../services/users/lists";
+import { getUserFilmActivityBatch } from "../services/users/users";
 
 export default function Home() {
-  const { user } = useUserStore();
+  const { user, loadUserFromStorage } = useUserStore();
+  const { bulkSetActivity } = useFilmActivityStore();
+
   const [films, setFilms] = useState([]);
   const [reviews, setReviews] = useState([]);
   const [lists, setLists] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [hydrated, setHydrated] = useState(false);
+  const [activityReady, setActivityReady] = useState(false);
 
   useEffect(() => {
+    loadUserFromStorage();
+    setHydrated(true);
+  }, []);
+
+  useEffect(() => {
+    if (!hydrated) return;
+
     const controller = new AbortController();
     const signal = controller.signal;
 
     const fetchData = async () => {
       setLoading(true);
+      setActivityReady(false);
+
       const isLoggedIn = !!user;
 
       try {
@@ -37,29 +55,44 @@ export default function Home() {
           isLoggedIn
             ? getFriendsReviews(6, signal)
             : getPopularReviews(6, signal),
-          isLoggedIn ? getFriendsLists(6, signal) : getPopularLists(6, signal),
+          isLoggedIn
+            ? getFriendsLists(6, signal)
+            : getPopularLists(6, signal),
         ]);
 
         setFilms(filmsData || []);
         setReviews(reviewsData || []);
         setLists(listsData || []);
-      } catch (error) {
-        if (error) {
-          console.error("Error fetching home data:", error.message || error);
+
+        const filmIds = new Set();
+        filmsData?.forEach((f) => f?.id && filmIds.add(f.id));
+        reviewsData?.forEach((r) => r.film?.id && filmIds.add(r.film.id));
+        listsData?.forEach((l) =>
+          l.films?.forEach((f) => f?.id && filmIds.add(f.id))
+        );
+
+        if (isLoggedIn && filmIds.size > 0) {
+          const activity = await getUserFilmActivityBatch([...filmIds], signal);
+          bulkSetActivity(activity);
         }
+
+        setActivityReady(true);
+      } catch (error) {
+        console.error("Error fetching home data:", error.message || error);
       } finally {
         setLoading(false);
       }
     };
 
     fetchData();
-
-    return () => controller.abort(); // Cancela si el componente se desmonta
-  }, [user?.id]);
+    return () => controller.abort();
+  }, [hydrated, user]);
 
   if (loading) {
     return (
-      <div className="text-center text-gray-400 py-12">Loading homepage...</div>
+      <div className="text-center text-gray-400 py-12">
+        Loading homepage...
+      </div>
     );
   }
 
@@ -82,6 +115,7 @@ export default function Home() {
           <ReviewFeed
             title={user ? "Friends Reviews" : "Popular Reviews"}
             reviews={reviews}
+            activityReady={activityReady}
           />
         </div>
 
@@ -89,6 +123,7 @@ export default function Home() {
           <ListFeed
             title={user ? "Friends Lists" : "Popular Lists"}
             lists={lists}
+            activityReady={activityReady}
           />
         </div>
       </div>

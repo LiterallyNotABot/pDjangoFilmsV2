@@ -27,5 +27,5 @@ class PopularReviewsView(APIView):
             .order_by("-like_count", "-log__entry_date")[:limit]
         )
 
-        serializer = ReviewWithFilmSerializer(reviews, many=True)
+        serializer = ReviewWithFilmSerializer(reviews, many=True, context={"request": request})
         return Response(serializer.data)

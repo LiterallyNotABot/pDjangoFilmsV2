@@ -15,7 +15,6 @@ class UserFilmActivityBatchView(APIView):
         if not isinstance(film_ids, list):
             return Response({"detail": "film_ids must be a list"}, status=400)
 
-        # Validar existencia de películas
         existing_films = Film.objects.filter(film_id__in=film_ids)
         film_map = {film.film_id: film for film in existing_films}
 

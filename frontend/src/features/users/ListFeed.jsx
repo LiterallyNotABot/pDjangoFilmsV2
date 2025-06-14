@@ -1,38 +1,55 @@
 import PropTypes from "prop-types";
 import ListCard from "./ListCard";
 import "./css/ListFeed.css";
-import { useMemo } from "react";
-import useBatchFilmActivity from "@/hooks/useBatchFilmActivity";
+import { useMemo, useState } from "react";
+import { toggleListLike } from "@/services/users/lists";
+import useUserStore from "@/store/user/userStore";
 import useUserFilmToggle from "@/hooks/useUserFilmToggle";
+import useFilmActivityStore from "@/store/film/useFilmActivityStore";
 
 export default function ListFeed({ title = "Popular Lists", lists }) {
-  const filmIds = useMemo(() => {
-    const ids = [];
-    lists.forEach((list) => {
-      list.films?.forEach((f) => typeof f.id === "number" && ids.push(f.id));
-    });
-    return [...new Set(ids)];
-  }, [lists]);
+  const { user } = useUserStore();
+  const { activityByFilmId, setActivity } = useFilmActivityStore();
 
-  const { activityMap: rawActivityMap, setActivityForFilm } = useBatchFilmActivity(filmIds);
-  const handleToggle = useUserFilmToggle(rawActivityMap, setActivityForFilm);
+  const [localLists, setLocalLists] = useState(lists);
 
-  // Para evitar problemas de re-render, forzamos nueva referencia
-  const activityMap = useMemo(() => ({ ...rawActivityMap }), [rawActivityMap]);
+  const handleToggle = useUserFilmToggle(activityByFilmId, setActivity);
+
+  const handleToggleListLiked = async (listId) => {
+    if (!user) return;
+
+    try {
+      const res = await toggleListLike(listId);
+      setLocalLists((prev) =>
+        prev.map((list) =>
+          list.id === listId
+            ? {
+                ...list,
+                likedByUser: res.liked,
+                likes: list.likes + (res.liked ? 1 : -1),
+              }
+            : list
+        )
+      );
+    } catch (err) {
+      console.error("Failed to toggle like on list", err);
+    }
+  };
 
   return (
     <section className="list-feed-section">
       <h2 className="list-feed-title">{title}</h2>
       <div className="list-feed-list">
-        {lists.map((list, i) => (
+        {localLists.map((list, i) => (
           <div key={list.id || i}>
             <ListCard
               list={list}
-              activityMap={activityMap}
+              activityMap={activityByFilmId}
               onToggleLiked={(id) => handleToggle(id, "liked")}
               onToggleWatched={(id) => handleToggle(id, "watched")}
+              onToggleListLiked={handleToggleListLiked}
             />
-            {i < lists.length - 1 && <hr className="list-divider" />}
+            {i < localLists.length - 1 && <hr className="list-divider" />}
           </div>
         ))}
       </div>
