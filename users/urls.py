@@ -1,7 +1,7 @@
 from django.urls import path, include
 from .views.auth_view import LoginView, RegisterView, CurrentUserView
 from .views.film_and_user_views import FilmUserActivityViewSet
-from .views.friends_lists_views import FriendsListsView
+from .views.friends_lists_views import FriendsListsView, ToggleListLikeView
 from .views.popular_lists_views import PopularListsView
 from .views.watchlist_views import ToggleWatchlistEntryView
 
@@ -21,5 +21,6 @@ urlpatterns = [
     path('lists/', include([
     path('popular/', PopularListsView.as_view(), name='popular-lists'),
     path('friends/', FriendsListsView.as_view(), name='friends-lists'),
+    path("<int:list_id>/like-toggle/", ToggleListLikeView.as_view(), name="toggle-list-like"),
     ])),
 ]

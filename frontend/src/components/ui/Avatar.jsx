@@ -3,11 +3,12 @@ import defaultAvatar from "@/assets/profpic_placeholder.png";
 import clsx from "clsx";
 
 const sizeMap = {
-  xs: "w-6 h-6",
-  sm: "w-8 h-8",
-  md: "w-10 h-10",
-  lg: "w-12 h-12",
-  xl: "w-16 h-16",
+  xxs: "w-4 h-4",   // 16px
+  xs: "w-6 h-6",    // 24px
+  sm: "w-8 h-8",    // 32px
+  md: "w-10 h-10",  // 40px
+  lg: "w-12 h-12",  // 48px
+  xl: "w-16 h-16",  // 64px
 };
 
 export default function Avatar({ src, alt, size = "md", className = "" }) {
@@ -31,6 +32,6 @@ export default function Avatar({ src, alt, size = "md", className = "" }) {
 Avatar.propTypes = {
   src: PropTypes.string,
   alt: PropTypes.string,
-  size: PropTypes.oneOf(["xs", "sm", "md", "lg", "xl"]),
+  size: PropTypes.oneOf(["xxs", "xs", "sm", "md", "lg", "xl"]),
   className: PropTypes.string,
 };

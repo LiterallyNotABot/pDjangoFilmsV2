@@ -1,23 +1,22 @@
 import { Outlet } from "react-router-dom";
+import { useState, useEffect, useCallback, lazy, Suspense } from "react";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
-import Modal from "../ui/Modal";
-import LoginForm from "../forms/LoginForm";
-import RegisterForm from "../forms/RegisterForm";
 import ScrollToTop from "./ScrollToTop";
-import { useState, useEffect, useCallback } from "react";
+import Modal from "../ui/Modal";
 import "./css/Layout.css";
-import ChatLauncher from "../../features/comms/chat/ChatLauncher";
 
+const ChatLauncher = lazy(() => import("@/features/comms/chat/ChatLauncher"));
+const LoginForm = lazy(() => import("../forms/LoginForm"));
+const RegisterForm = lazy(() => import("../forms/RegisterForm"));
 
 export default function Layout() {
   const [modalType, setModalType] = useState(null); // "login" | "register" | null
 
   useEffect(() => {
-    const body = document.body;
-    body.style.overflow = modalType ? "hidden" : "auto";
+    document.body.style.overflow = modalType ? "hidden" : "auto";
     return () => {
-      body.style.overflow = "auto"; // Cleanup
+      document.body.style.overflow = "auto";
     };
   }, [modalType]);
 
@@ -36,15 +35,21 @@ export default function Layout() {
 
       <Footer />
 
-      <Modal isOpen={modalType === "login"} onClose={closeModal}>
-        <LoginForm onSuccess={closeModal} />
-      </Modal>
+      <Suspense fallback={null}>
+        {modalType === "login" && (
+          <Modal isOpen onClose={closeModal}>
+            <LoginForm onSuccess={closeModal} />
+          </Modal>
+        )}
 
-      <Modal isOpen={modalType === "register"} onClose={closeModal}>
-        <RegisterForm onSuccess={closeModal} />
-      </Modal>
+        {modalType === "register" && (
+          <Modal isOpen onClose={closeModal}>
+            <RegisterForm onSuccess={closeModal} />
+          </Modal>
+        )}
 
-      <ChatLauncher />
+        <ChatLauncher />
+      </Suspense>
     </>
   );
 }

@@ -1,4 +1,3 @@
-// Devuelve la URL redimensionada para posters de TMDB
 export const getSizedPosterUrl = (url, size = "md") => {
   const sizeMap = {
     sm: "w92",
@@ -12,22 +11,18 @@ export const getSizedPosterUrl = (url, size = "md") => {
   const tmdbBase = "https://image.tmdb.org/t/p/";
   const desiredSize = sizeMap[size] || sizeMap.md;
 
-  // Caso: URL completa de TMDB (ya incluye base)
   if (url.startsWith(tmdbBase)) {
     const filename = url.split("/").pop();
     return `${tmdbBase}${desiredSize}/${filename}`;
   }
 
-  // Caso: ruta relativa de TMDB (ej. "/kqjL17yufvn9OVLyXYpvtyrFfak.jpg")
   if (url.startsWith("/")) {
     return `${tmdbBase}${desiredSize}${url}`;
   }
 
-  // Si no es TMDB, se devuelve tal cual
   return url;
 };
 
-// Devuelve backdrop optimizado (reemplaza /original/ por w1280)
 export const getOptimizedBackdropUrl = (url) => {
   if (!url || typeof url !== "string") {
     return "/assets/backdrop_placeholder.png";
@@ -35,12 +30,10 @@ export const getOptimizedBackdropUrl = (url) => {
 
   const tmdbBase = "https://image.tmdb.org/t/p/";
 
-  // Si es completa de TMDB y usa /original/
   if (url.startsWith(tmdbBase) && url.includes("/original/")) {
     return url.replace("/original/", "/w1280/");
   }
 
-  // Si es solo un path relativo
   if (url.startsWith("/")) {
     return `${tmdbBase}w1280${url}`;
   }
@@ -48,7 +41,6 @@ export const getOptimizedBackdropUrl = (url) => {
   return url;
 };
 
-// Placeholder directo para tipos comunes
 export const getPlaceholderImage = (type = "poster") => {
   switch (type) {
     case "avatar":
@@ -61,7 +53,6 @@ export const getPlaceholderImage = (type = "poster") => {
   }
 };
 
-// Clase de Tailwind según aspect ratio
 export const getImageAspectClass = (ratio = "2:3") => {
   const map = {
     "1:1": "aspect-square",
@@ -72,7 +63,6 @@ export const getImageAspectClass = (ratio = "2:3") => {
   return map[ratio] || "aspect-[2/3]";
 };
 
-// Validador simple de URL de imagen
 export const isValidImageUrl = (url) => {
   return typeof url === "string" && url.trim().startsWith("http");
 };

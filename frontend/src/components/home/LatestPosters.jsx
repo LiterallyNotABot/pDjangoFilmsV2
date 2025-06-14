@@ -1,11 +1,16 @@
 import PropTypes from "prop-types";
-import { memo, useCallback } from "react";
+import { memo, useCallback, useMemo } from "react";
 import HorizontalGrid from "../ui/HorizontalGrid";
 import FilmCard from "../../features/films/FilmCard";
 import useUserStore from "../../store/user/userStore";
+import useFilmActivityStore from "@/store/film/useFilmActivityStore";
+import useUserFilmToggle from "@/hooks/useUserFilmToggle";
 
 function LatestPosters({ films = [], isFriendsActivity = false }) {
   const { user } = useUserStore();
+  const { activityByFilmId, setActivity } = useFilmActivityStore();
+
+  const handleToggle = useUserFilmToggle(activityByFilmId, setActivity);
 
   const renderItem = useCallback(
     (film) => (
@@ -19,9 +24,12 @@ function LatestPosters({ films = [], isFriendsActivity = false }) {
         user={film.user || null}
         showUserActions={!!user}
         showUserTag={!!film.user}
+        activity={activityByFilmId[film.id]}
+        onToggleLiked={() => handleToggle(film.id, "liked")}
+        onToggleWatched={() => handleToggle(film.id, "watched")}
       />
     ),
-    [user]
+    [user, activityByFilmId, handleToggle]
   );
 
   return (

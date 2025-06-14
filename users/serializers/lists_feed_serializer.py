@@ -10,16 +10,29 @@ class ListFeedSerializer(serializers.ModelSerializer):
     name = serializers.CharField(source="list_name")
     user = serializers.CharField(source="user.username")
     likes = serializers.SerializerMethodField()
+    likedByUser = serializers.SerializerMethodField()  # ✅ NUEVO
     comments = serializers.SerializerMethodField()
     updated = serializers.DateTimeField(source="date_of_creation", format="%Y-%m-%d")
     films = serializers.SerializerMethodField()
 
     class Meta:
         model = List
-        fields = ["id", "name", "user", "likes", "comments", "updated", "films"]
+        fields = ["id", "name", "user", "likes", "likedByUser", "comments", "updated", "films"]
 
     def get_likes(self, obj):
         return ListAndLikeByUser.objects.filter(list=obj, active=True, deleted=False).count()
+
+    def get_likedByUser(self, obj):
+        request = self.context.get("request")
+        if not request or not request.user.is_authenticated:
+            return False
+
+        return ListAndLikeByUser.objects.filter(
+            list=obj,
+            user=request.user,
+            active=True,
+            deleted=False
+        ).exists()
 
     def get_comments(self, obj):
         return 0  # Placeholder

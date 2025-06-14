@@ -1,12 +1,15 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
 import PropTypes from "prop-types";
 import FilmCard from "./FilmCard";
+import useBatchFilmActivity from "@/hooks/useBatchFilmActivity";
+import { patchUserFilmActivity } from "@/services/users/users";
 import { getFilmsByPerson } from "../../services/films/persons";
 import { fetchFilteredFilms } from "../../services/films/films";
 import { Button } from "@/components/ui/Button";
 import FilterSortBar from "./grid_adds/FilterSortBar";
 import DropdownSelector from "./grid_adds/DropdownSelector";
 import { useSearchParams } from "react-router-dom";
+import useUserStore from "@/store/user/userStore"; // ✅ importamos el user
 
 const gridClassMap = {
   sm: "grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-12",
@@ -32,6 +35,11 @@ export default function FilmGrid({
   defaultSort = "popularity",
 }) {
   const [searchParams, setSearchParams] = useSearchParams();
+  const [films, setFilms] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [loading, setLoading] = useState(true);
+  const { user } = useUserStore(); // ✅ obtenemos user del store
 
   const searchFilters = useMemo(() => {
     const query = Object.fromEntries(searchParams.entries());
@@ -41,57 +49,43 @@ export default function FilmGrid({
       language: query.language || null,
       country: query.country || null,
       company: query.company || null,
-      decade: query.decade || null, // ✅ AÑADIR ESTO
+      decade: query.decade || null,
       sort: query.sort || defaultSort,
     };
   }, [searchParams, defaultSort]);
 
-  const [films, setFilms] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const [loading, setLoading] = useState(true);
-
   const pageSize = useMemo(() => pageSizes[cardSize], [cardSize]);
-
-  useEffect(() => {
-    if (!searchParams.get("sort") && defaultSort) {
-      const newParams = new URLSearchParams(searchParams.toString());
-      newParams.set("sort", defaultSort);
-      setSearchParams(newParams);
-    }
-  }, [defaultSort, searchParams, setSearchParams]);
+  const filmIds = useMemo(() => films.map((f) => f.id), [films]);
+  const { activityMap, setActivityForFilm } = useBatchFilmActivity(filmIds);
 
   const fetchFilms = useCallback(
     async (signal = null) => {
       setLoading(true);
       try {
-        let res;
-
-        if (personId) {
-          res = await getFilmsByPerson(
-            personId,
-            searchFilters.role,
-            currentPage,
-            searchFilters.genre,
-            searchFilters.language,
-            searchFilters.sort,
-            pageSize,
-            signal
-          );
-        } else {
-          const filters = {
-            genre: searchFilters.genre,
-            language: searchFilters.language,
-            country: searchFilters.country,
-            company: searchFilters.company,
-            decade: searchFilters.decade,
-            sort: searchFilters.sort,
-            page: currentPage,
-            page_size: pageSize,
-          };
-
-          res = await fetchFilteredFilms(filters, signal);
-        }
+        const res = personId
+          ? await getFilmsByPerson(
+              personId,
+              searchFilters.role,
+              currentPage,
+              searchFilters.genre,
+              searchFilters.language,
+              searchFilters.sort,
+              pageSize,
+              signal
+            )
+          : await fetchFilteredFilms(
+              {
+                genre: searchFilters.genre,
+                language: searchFilters.language,
+                country: searchFilters.country,
+                company: searchFilters.company,
+                decade: searchFilters.decade,
+                sort: searchFilters.sort,
+                page: currentPage,
+                page_size: pageSize,
+              },
+              signal
+            );
 
         if (!res || typeof res !== "object" || !Array.isArray(res.results)) {
           throw new Error("Invalid film data received.");
@@ -115,9 +109,17 @@ export default function FilmGrid({
     return () => controller.abort();
   }, [fetchFilms]);
 
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }, [currentPage]);
+  const handleToggle = async (filmId, field) => {
+    const current = activityMap[filmId]?.[field];
+    const newValue = !current;
+
+    try {
+      await patchUserFilmActivity(filmId, { [field]: newValue });
+      setActivityForFilm(filmId, { [field]: newValue });
+    } catch (err) {
+      console.error("Failed to update activity:", err);
+    }
+  };
 
   const handleRoleChange = (role) => {
     const newParams = new URLSearchParams(searchParams.toString());
@@ -177,6 +179,10 @@ export default function FilmGrid({
                 posterUrl={film.posterUrl}
                 backdropUrl={film.backdropUrl}
                 size={cardSize}
+                activity={activityMap[film.id]}
+                user={user} // ✅ aquí está el fix
+                onToggleLiked={(id) => handleToggle(id, "liked")}
+                onToggleWatched={(id) => handleToggle(id, "watched")}
               />
             ))}
           </div>

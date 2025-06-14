@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  stripe-mock:
+    image: stripe/stripe-mock:latest
+    container_name: stripe-mock
+    ports:
+      - "10999:10999"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:10999/"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped

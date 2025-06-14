@@ -1,7 +1,9 @@
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.generics import get_object_or_404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from reviews.models import Review
+from reviews.models import Review, ReviewAndLikeByUser
 from users.models import Follower
 from reviews.serializers.reviews_feed_serializer import ReviewWithFilmSerializer
 
@@ -34,6 +36,23 @@ class FriendsReviewsView(APIView):
             .order_by("-entry_date")[:limit]
         )
 
-        serializer = ReviewWithFilmSerializer(reviews, many=True)
+        serializer = ReviewWithFilmSerializer(reviews, many=True, context={"request": request})
         return Response(serializer.data)
 
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def toggle_review_like(request, review_id):
+    review = get_object_or_404(Review, pk=review_id)
+
+    like_obj, created = ReviewAndLikeByUser.objects.get_or_create(
+        log=review.log,
+        user=request.user,
+        defaults={"active": True, "deleted": False}
+    )
+
+    if not created:
+        like_obj.active = not like_obj.active
+        like_obj.deleted = not like_obj.active
+        like_obj.save()
+
+    return Response({"liked": like_obj.active})

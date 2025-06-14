@@ -1,20 +1,13 @@
-import api from "../axios";
-import { handleApiError } from "../exceptionHelper";
+import { fetchData, postData } from "../requestHandler";
 
 export const getPopularReviews = async (limit = 10, signal = null) => {
-  try {
-    const response = await api.get(`/reviews/popular/?limit=${limit}`, { signal });
-    return response.data;
-  } catch (err) {
-    throw handleApiError(err);
-  }
+  return fetchData("/reviews/popular/", { params: { limit }, signal });
 };
 
 export const getFriendsReviews = async (limit = 10, signal = null) => {
-  try {
-    const response = await api.get(`/reviews/friends/?limit=${limit}`, { signal });
-    return response.data;
-  } catch (err) {
-    throw handleApiError(err);
-  }
+  return fetchData("/reviews/friends/", { params: { limit }, signal });
+};
+
+export const toggleReviewLike = async (reviewId, signal = null) => {
+  return postData(`/reviews/${reviewId}/like-toggle/`, {}, { signal });
 };

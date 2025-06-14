@@ -1,22 +1,38 @@
 import { useEffect } from "react";
-import { useFilmActivityStore } from "@/store/film/useFilmActivityStore";
-import { getBatchUserFilmActivity } from "@/services/user";
+import useUserStore from "@/store/user/userStore";
+import useFilmActivityStore from "@/store/film/useFilmActivityStore";
+import { getUserFilmActivityBatch } from "@/services/users/users";
 
-export function useBatchFilmActivity(filmIds) {
-  const setActivity = useFilmActivityStore((s) => s.setActivityByFilmId);
+export default function useBatchFilmActivity(filmIds = []) {
+  const { user } = useUserStore();
+  const { setActivity, activityByFilmId } = useFilmActivityStore();
 
   useEffect(() => {
-    if (!filmIds?.length) return;
+    if (!user || !filmIds.length) return;
 
-    const controller = new AbortController();
-    getBatchUserFilmActivity(filmIds, { signal: controller.signal })
-      .then((data) => {
-        setActivity(data); // asumimos formato { [filmId]: { ... } }
-      })
-      .catch((err) => {
-        if (err.name !== "AbortError") console.error(err);
-      });
+    const fetchBatch = async () => {
+      try {
+        const data = await getUserFilmActivityBatch(filmIds);
+        data.forEach((entry) => {
+          setActivity(entry.film_id, {
+            liked: entry.liked,
+            watched: entry.watched,
+          });
+        });
+      } catch (err) {
+        console.warn("Batch user film activity fetch failed:", err);
+      }
+    };
 
-    return () => controller.abort();
-  }, [filmIds]);
+    fetchBatch();
+  }, [user, setActivity, JSON.stringify([...filmIds].sort())]);
+
+  const setActivityForFilm = (filmId, updates) => {
+    setActivity(filmId, updates);
+  };
+
+  return {
+    activityMap: activityByFilmId,
+    setActivityForFilm,
+  };
 }
