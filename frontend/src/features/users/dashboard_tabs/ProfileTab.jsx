@@ -2,18 +2,23 @@ import { useEffect, useState, useCallback } from "react";
 import { getUserDashboard } from "@/services/users/users";
 import StaticFilmGrid from "@/features/films/StaticFilmGrid";
 import ReviewFeed from "@/features/reviews/ReviewFeed";
-import FilmRatingStats from "@/features/films/FilmRatingStats";
 import FilmCard from "@/features/films/FilmCard";
 import ListCard from "@/features/users/ListCard";
 import useUserStore from "@/store/user/userStore";
 import placeholderImg from "@/assets/select_fav_placeholder.png";
 import useUserFilmToggle from "@/hooks/useUserFilmToggle";
 import useFilmActivityStore from "@/store/film/useFilmActivityStore";
+import UserRatingStats from "@/features/users/UserRatingStats";
+import { transformRatingStats } from "@/utils/transformers";
 
 export default function ProfileTab({ username }) {
   const { user } = useUserStore();
-  const { activityByFilmId, setActivity, bulkSetActivity } = useFilmActivityStore();
-  const toggleUserFilmActivity = useUserFilmToggle(activityByFilmId, setActivity);
+  const { activityByFilmId, setActivity, bulkSetActivity } =
+    useFilmActivityStore();
+  const toggleUserFilmActivity = useUserFilmToggle(
+    activityByFilmId,
+    setActivity
+  );
 
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -25,21 +30,17 @@ export default function ProfileTab({ username }) {
         const res = await getUserDashboard(username);
         setData(res);
 
-        // Extraemos la actividad de la respuesta y la transformamos para la store
         if (res?.activity) {
-          // Convertimos array de actividad a formato esperado para la store
-          const bulkActivity = res.activity.map((film) => {
-            return {
-              film_id: film.id,
-              liked: film.activity?.liked || false,
-              watched: film.activity?.watched || false,
-              rating: film.activity?.rating || 0,
-              watchlisted: film.activity?.watchlisted || false,
-            };
-          });
+          const bulkActivity = res.activity.map((film) => ({
+            film_id: film.id,
+            liked: film.activity?.liked || false,
+            watched: film.activity?.watched || false,
+            rating: film.activity?.rating || 0,
+            watchlisted: film.activity?.watchlisted || false,
+          }));
           bulkSetActivity(bulkActivity);
         }
-      } catch (err) {
+      } catch {
         setError("Failed to load profile data.");
       } finally {
         setLoading(false);
@@ -54,6 +55,9 @@ export default function ProfileTab({ username }) {
 
   const recentActivityFilms = data?.activity?.slice(0, 4) || [];
   const watchlistFilms = data?.watchlist?.slice(0, 6) || [];
+
+  const activityReady = !!data && Object.keys(activityByFilmId).length > 0;
+  const userRatingStats = transformRatingStats(data?.stats);
 
   const renderFilmCard = useCallback(
     (film) => (
@@ -74,8 +78,12 @@ export default function ProfileTab({ username }) {
     [user, activityByFilmId, toggleUserFilmActivity]
   );
 
-  if (loading) return <div className="text-center py-10 text-gray-400">Loading profile...</div>;
-  if (error) return <div className="text-center py-10 text-red-500">{error}</div>;
+  if (loading)
+    return (
+      <div className="text-center py-10 text-gray-400">Loading profile...</div>
+    );
+  if (error)
+    return <div className="text-center py-10 text-red-500">{error}</div>;
   if (!data) return null;
 
   return (
@@ -97,26 +105,43 @@ export default function ProfileTab({ username }) {
           }
         />
 
+        <hr className="border-gray-300" />
+
         {recentActivityFilms.length > 0 && (
-          <StaticFilmGrid
-            title="Recent Activity"
-            items={recentActivityFilms}
-            renderItem={renderFilmCard}
-          />
+          <>
+            <StaticFilmGrid
+              title="Recent Activity"
+              items={recentActivityFilms}
+              renderItem={renderFilmCard}
+            />
+            <hr className="border-gray-300" />
+          </>
         )}
 
-        <div>
-          <h3 className="text-xl font-semibold mb-4">Recent Reviews</h3>
-          <ReviewFeed reviews={data.reviews.recent} />
-        </div>
+        {data.reviews?.recent?.length > 0 && (
+          <>
+            <ReviewFeed
+              title="Recent Reviews"
+              reviews={data.reviews.recent}
+              activityReady={activityReady}
+            />
+            <hr className="border-gray-300" />
+          </>
+        )}
 
-        <div>
-          <h3 className="text-xl font-semibold mb-4">Popular Reviews</h3>
-          <ReviewFeed reviews={data.reviews.popular} />
-        </div>
+        {data.reviews?.popular?.length > 0 && (
+          <>
+            <ReviewFeed
+              title="Popular Reviews"
+              reviews={data.reviews.popular}
+              activityReady={activityReady}
+            />
+          </>
+        )}
       </div>
 
-      <div className="space-y-10 md:sticky md:top-24 self-start">
+      <div className="space-y-10 md:sticky md:top-24 self-start flex flex-col items-center w-full">
+        <h2 className="text-xl font-semibold mb-4 text-center">Watchlist</h2>
         <ListCard
           list={{
             id: "watchlist-preview",
@@ -129,7 +154,11 @@ export default function ProfileTab({ username }) {
           activityMap={activityByFilmId}
           onToggleLiked={(id) => toggleUserFilmActivity(id, "liked")}
           onToggleWatched={(id) => toggleUserFilmActivity(id, "watched")}
+          showLikeButton={false}
         />
+        <div className="w-full mt-6 px-4">
+          <UserRatingStats stats={userRatingStats} />
+        </div>
       </div>
     </div>
   );

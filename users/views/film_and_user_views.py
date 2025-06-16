@@ -1,10 +1,18 @@
+from django.contrib.auth import get_user_model
+from django.core import paginator
+from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, mixins
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
-from users.models import FilmAndUser
+from rest_framework.permissions import IsAuthenticated, AllowAny
+
+from films.models import Film
+from films.serializers.mini_film_serializer import MiniFilmSerializer
+from users.models import FilmAndUser, Watchlist
 from users.serializers.film_and_user_serializer import FilmAndUserSerializer
 from core.mixins import SoftCreateMixin, SoftDeleteMixin, SoftObjectRetrievalMixin
-
+User = get_user_model()
 
 class FilmUserActivityViewSet(
     SoftCreateMixin,
@@ -72,3 +80,41 @@ class FilmUserActivityViewSet(
             instance.active = False
             instance.deleted = True
             instance.save()
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def get_user_films(request, username):
+    user = get_object_or_404(User, username=username)
+
+    links = FilmAndUser.objects.filter(
+        user=user,
+        active=True,
+        deleted=False
+    ).select_related("film").order_by("-film__popularity")
+    films = [link.film for link in links]
+
+    paginator = PageNumberPagination()
+    paginator.page_size = int(request.query_params.get("page_size", 72))
+    page = paginator.paginate_queryset(films, request)
+
+    serializer = MiniFilmSerializer(page, many=True, context={"request": request})
+    return paginator.get_paginated_response(serializer.data)
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def get_user_watchlist(request, username):
+    user = get_object_or_404(User, username=username)
+
+    entries = Watchlist.objects.filter(
+        user=user,
+        active=True,
+        deleted=False
+    ).select_related("film").order_by("-date_added")
+    films = [entry.film for entry in entries]
+
+    paginator = PageNumberPagination()
+    paginator.page_size = int(request.query_params.get("page_size", 20))
+    page = paginator.paginate_queryset(films, request)
+
+    serializer = MiniFilmSerializer(page, many=True, context={"request": request})
+    return paginator.get_paginated_response(serializer.data)

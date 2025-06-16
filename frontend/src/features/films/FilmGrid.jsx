@@ -5,11 +5,12 @@ import useBatchFilmActivity from "@/hooks/useBatchFilmActivity";
 import { patchUserFilmActivity } from "@/services/users/users";
 import { getFilmsByPerson } from "../../services/films/persons";
 import { fetchFilteredFilms } from "../../services/films/films";
+import { getUserFilms, getUserWatchlist } from "@/services/users/users";
 import { Button } from "@/components/ui/Button";
 import FilterSortBar from "./grid_adds/FilterSortBar";
 import DropdownSelector from "./grid_adds/DropdownSelector";
 import { useSearchParams } from "react-router-dom";
-import useUserStore from "@/store/user/userStore"; // ✅ importamos el user
+import useUserStore from "@/store/user/userStore";
 
 const gridClassMap = {
   sm: "grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-12",
@@ -27,6 +28,8 @@ const pageSizes = {
 
 export default function FilmGrid({
   personId,
+  username,
+  watchlist = false,
   cardSize = "md",
   filters = [],
   sortOptions = [],
@@ -39,7 +42,7 @@ export default function FilmGrid({
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
-  const { user } = useUserStore(); // ✅ obtenemos user del store
+  const { user } = useUserStore();
 
   const searchFilters = useMemo(() => {
     const query = Object.fromEntries(searchParams.entries());
@@ -62,30 +65,38 @@ export default function FilmGrid({
     async (signal = null) => {
       setLoading(true);
       try {
-        const res = personId
-          ? await getFilmsByPerson(
-              personId,
-              searchFilters.role,
-              currentPage,
-              searchFilters.genre,
-              searchFilters.language,
-              searchFilters.sort,
-              pageSize,
-              signal
-            )
-          : await fetchFilteredFilms(
-              {
-                genre: searchFilters.genre,
-                language: searchFilters.language,
-                country: searchFilters.country,
-                company: searchFilters.company,
-                decade: searchFilters.decade,
-                sort: searchFilters.sort,
-                page: currentPage,
-                page_size: pageSize,
-              },
-              signal
-            );
+        let res;
+
+        if (personId) {
+          res = await getFilmsByPerson(
+            personId,
+            searchFilters.role,
+            currentPage,
+            searchFilters.genre,
+            searchFilters.language,
+            searchFilters.sort,
+            pageSize,
+            signal
+          );
+        } else if (username && watchlist) {
+          res = await getUserWatchlist(username, currentPage, pageSize, signal);
+        } else if (username) {
+          res = await getUserFilms(username, currentPage, pageSize, signal);
+        } else {
+          res = await fetchFilteredFilms(
+            {
+              genre: searchFilters.genre,
+              language: searchFilters.language,
+              country: searchFilters.country,
+              company: searchFilters.company,
+              decade: searchFilters.decade,
+              sort: searchFilters.sort,
+              page: currentPage,
+              page_size: pageSize,
+            },
+            signal
+          );
+        }
 
         if (!res || typeof res !== "object" || !Array.isArray(res.results)) {
           throw new Error("Invalid film data received.");
@@ -100,7 +111,7 @@ export default function FilmGrid({
         setLoading(false);
       }
     },
-    [personId, searchFilters, currentPage, pageSize]
+    [personId, username, watchlist, searchFilters, currentPage, pageSize]
   );
 
   useEffect(() => {
@@ -180,7 +191,7 @@ export default function FilmGrid({
                 backdropUrl={film.backdropUrl}
                 size={cardSize}
                 activity={activityMap[film.id]}
-                user={user} // ✅ aquí está el fix
+                user={user}
                 onToggleLiked={(id) => handleToggle(id, "liked")}
                 onToggleWatched={(id) => handleToggle(id, "watched")}
               />
@@ -248,6 +259,8 @@ export default function FilmGrid({
 
 FilmGrid.propTypes = {
   personId: PropTypes.string,
+  username: PropTypes.string,
+  watchlist: PropTypes.bool,
   cardSize: PropTypes.oneOf(["sm", "md", "lg", "xl"]),
   filters: PropTypes.array,
   sortOptions: PropTypes.array,

@@ -2,7 +2,7 @@ from django.urls import path, include
 from .views.auth_view import LoginView, RegisterView, CurrentUserView
 from .views.dashboard_views import UserRatingStatsView, UserReviewsView, UserRecentActivityView, UserWatchlistView, \
     UserFavoriteFilmsView, UserProfileView, UserDashboardDataView
-from .views.film_and_user_views import FilmUserActivityViewSet
+from .views.film_and_user_views import FilmUserActivityViewSet, get_user_films, get_user_watchlist
 from .views.friends_lists_views import FriendsListsView, ToggleListLikeView
 from .views.popular_lists_views import PopularListsView
 from .views.watchlist_views import ToggleWatchlistEntryView
@@ -28,6 +28,8 @@ urlpatterns = [
     path("<str:username>/reviews/", UserReviewsView.as_view(), name="user-reviews"),
     path("<str:username>/stats/", UserRatingStatsView.as_view(), name="user-stats"),
     path("<str:username>/dashboard/", UserDashboardDataView.as_view(), name="user-dashboard"),
+    path('<str:username>/films/', get_user_films, name='user-films'),
+    path("<str:username>/watchlist/films/", get_user_watchlist, name="user-watchlist-films"),
 
     path('lists/', include([
     path('popular/', PopularListsView.as_view(), name='popular-lists'),

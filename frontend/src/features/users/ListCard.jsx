@@ -11,6 +11,7 @@ function ListCard({
   onToggleLiked,
   onToggleWatched,
   onToggleListLiked,
+  showLikeButton = true,
 }) {
   const { user } = useUserStore();
 
@@ -50,24 +51,26 @@ function ListCard({
         <div className="list-meta flex justify-between items-center">
           <UserBadge user={userData} size="sm" />
 
-          <button
-            className="group flex items-center gap-1 text-xs transition"
-            disabled={!user}
-            onClick={() => onToggleListLiked?.(list.id)}
-          >
-            <HeartIcon
-              size="sm"
-              active={list.likedByUser}
-              className={`transition ${
-                list.likedByUser
-                  ? "text-yellow-400"
-                  : user
-                  ? "text-zinc-400 group-hover:text-yellow-400"
-                  : "text-zinc-400"
-              }`}
-            />
-            {list.likes}
-          </button>
+          {showLikeButton && (
+            <button
+              className="group flex items-center gap-1 text-xs transition"
+              disabled={!user}
+              onClick={() => onToggleListLiked?.(list.id)}
+            >
+              <HeartIcon
+                size="sm"
+                active={list.likedByUser}
+                className={`transition ${
+                  list.likedByUser
+                    ? "text-yellow-400"
+                    : user
+                    ? "text-zinc-400 group-hover:text-yellow-400"
+                    : "text-zinc-400"
+                }`}
+              />
+              {list.likes}
+            </button>
+          )}
         </div>
       </div>
     </div>
@@ -100,6 +103,7 @@ ListCard.propTypes = {
   onToggleLiked: PropTypes.func,
   onToggleWatched: PropTypes.func,
   onToggleListLiked: PropTypes.func,
+  showLikeButton: PropTypes.bool,
 };
 
 export default ListCard;

@@ -10,7 +10,7 @@ import FilmGrid from "../features/films/FilmGrid";
 import PersonCard from "../features/films/persons/PersonCard";
 
 export default function PersonDetails() {
-  const { id } = useParams();
+  const { personId: id } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
   const [person, setPerson] = useState(null);
   const [roles, setRoles] = useState([]);

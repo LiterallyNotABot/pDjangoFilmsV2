@@ -1,11 +1,8 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-
-from core.helpers import reactivate_or_create
 from films.models import Film
 from users.models import FilmAndUser
-
 
 class UserFilmActivityBatchView(APIView):
     permission_classes = [IsAuthenticated]
@@ -29,16 +26,12 @@ class UserFilmActivityBatchView(APIView):
                 })
                 continue
 
-            film_user, _ = reactivate_or_create(
-                FilmAndUser,
-                lookup={"user": request.user, "film": film},
-                defaults={}
-            )
+            film_user = FilmAndUser.all_objects.filter(user=request.user, film=film).first()
 
             response_data.append({
                 "film_id": film_id,
-                "liked": film_user.liked,
-                "watched": film_user.watched,
+                "liked": film_user.liked if film_user else False,
+                "watched": film_user.watched if film_user else False,
                 "reviewed": getattr(film_user, "reviewed", False),
                 "watchlisted": getattr(film_user, "watchlisted", False),
             })

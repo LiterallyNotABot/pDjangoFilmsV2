@@ -1,12 +1,11 @@
 from decimal import Decimal
-
+from django.db.models import OuterRef, Count, Subquery, IntegerField, Avg
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import AllowAny
 from django.contrib.auth import get_user_model
-
-from reviews.models import Review, Log
+from reviews.models import Review, Log, ReviewAndLikeByUser
 from users.models import FavoriteFilm, Watchlist, FilmAndUser
 from users.serializers.film_and_user_serializer import FilmAndUserSerializer
 from users.serializers.user_serializer import PublicUserSerializer
@@ -59,7 +58,6 @@ class UserRecentActivityView(APIView):
         return Response(MiniFilmSerializer(films, many=True, context={"request": request}).data)
 
 
-
 class UserReviewsView(APIView):
     permission_classes = [AllowAny]
 
@@ -73,24 +71,27 @@ class UserRatingStatsView(APIView):
     permission_classes = [AllowAny]
 
     def get(self, request, username):
-        user = get_object_or_404(User, username=username)
-        reviews = Review.objects.filter(log__user=user)
-        ratings = reviews.values_list("log__rating__rating_value", flat=True)
+        user = User.objects.filter(username=username).first()
+        if not user:
+            return Response({"detail": "User not found"}, status=404)
 
-        valid_ratings = [r for r in ratings if r is not None]
-        count = len(valid_ratings)
-        total = sum(valid_ratings, Decimal("0.0")) if count else Decimal("0.0")
-        average = total / count if count else 0
+        user_ratings = FilmAndUser.objects.filter(user=user, rating__isnull=False)
+        rating_counts = user_ratings.values('rating__rating_value').annotate(count=Count('rating__rating_value'))
+        average = user_ratings.aggregate(avg=Avg('rating__rating_value'))['avg'] or 0
 
-        distribution = {}
-        for val in valid_ratings:
-            val_str = str(val)
-            distribution[val_str] = distribution.get(val_str, 0) + 1
+        total = user_ratings.count()
+
+        segments = []
+        for rc in rating_counts:
+            segments.append({
+                "value": float(rc['rating__rating_value']),
+                "count": rc['count']
+            })
 
         return Response({
             "average": round(average, 2),
-            "count": count,
-            "distribution": distribution
+            "total": total,
+            "segments": segments
         })
 
 
@@ -132,25 +133,28 @@ class UserDashboardDataView(APIView):
             context={"request": request}
         ).data
 
-        reviews_qs = Review.objects.filter(log__user=user).select_related("log__film").order_by("-entry_date")[:10]
-        reviews_recent = ReviewWithFilmSerializer(reviews_qs[:5], many=True, context={"request": request}).data
-        reviews_popular = ReviewWithFilmSerializer(reviews_qs[5:], many=True, context={"request": request}).data
+        reviews_qs = Review.objects.filter(log__user=user).select_related("log__film").annotate(
+            num_likes=Count("log__reviewandlikebyuser")
+        )
 
-        ratings = reviews_qs.values_list("log__rating__rating_value", flat=True)
-        valid_ratings = [r for r in ratings if r is not None]
+        reviews_recent = reviews_qs.order_by("-entry_date")[:5]
+        reviews_popular = reviews_qs.order_by("-num_likes", "-entry_date")[:5]
 
-        count = len(valid_ratings)
-        total = sum(valid_ratings, Decimal("0.0")) if count else Decimal("0.0")
-        average = total / count if count else 0
+        reviews_recent_data = ReviewWithFilmSerializer(reviews_recent, many=True, context={"request": request}).data
+        reviews_popular_data = ReviewWithFilmSerializer(reviews_popular, many=True, context={"request": request}).data
+
+        user_ratings = FilmAndUser.objects.filter(user=user, rating__isnull=False)
+        rating_counts = user_ratings.values('rating__rating_value').annotate(count=Count('rating__rating_value'))
+        average = user_ratings.aggregate(avg=Avg('rating__rating_value'))['avg'] or 0
+        total = user_ratings.count()
 
         distribution = {}
-        for val in valid_ratings:
-            val_str = str(val)
-            distribution[val_str] = distribution.get(val_str, 0) + 1
+        for rc in rating_counts:
+            distribution[str(rc['rating__rating_value'])] = rc['count']
 
         stats = {
             "average": round(average, 2),
-            "count": count,
+            "count": total,
             "distribution": distribution
         }
 
@@ -160,8 +164,8 @@ class UserDashboardDataView(APIView):
             "activity": recent_activity,
             "watchlist": watchlist,
             "reviews": {
-                "recent": reviews_recent,
-                "popular": reviews_popular
+                "recent": reviews_recent_data,
+                "popular": reviews_popular_data
             },
             "stats": stats
         })

@@ -1,9 +1,11 @@
+import { Routes, Route, NavLink, Navigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
 import useUserStore from "@/store/user/userStore";
 import { getUserProfile } from "@/services/users/users";
 import UserHeader from "@/features/users/UserHeader";
 import ProfileTab from "@/features/users/dashboard_tabs/ProfileTab";
+import FilmsTab from "@/features/users/dashboard_tabs/FilmsTab";
+import WatchlistTab from "@/features/users/dashboard_tabs/WatchlistTab"; // ✅ nuevo tab
 
 export default function UserDashboard() {
   const { username } = useParams();
@@ -51,19 +53,55 @@ export default function UserDashboard() {
         <UserHeader profile={profile} />
 
         <div className="flex gap-6 border-b border-gray-600 text-gray-400 text-sm overflow-x-auto scrollbar-hide">
-          <div className="pb-2 border-b-2 border-white text-white font-semibold cursor-pointer">
+          <NavLink
+            to={`/user/${username}/profile`}
+            className={({ isActive }) =>
+              `pb-2 border-b-2 ${
+                isActive
+                  ? "border-white text-white font-semibold"
+                  : "border-transparent"
+              }`
+            }
+          >
             Profile
-          </div>
-          <div className="pb-2 cursor-not-allowed">Films</div>
-          <div className="pb-2 cursor-not-allowed">Diary</div>
-          <div className="pb-2 cursor-not-allowed">Reviews</div>
-          <div className="pb-2 cursor-not-allowed">Watchlist</div>
-          <div className="pb-2 cursor-not-allowed">Lists</div>
+          </NavLink>
+          <NavLink
+            to={`/user/${username}/films`}
+            className={({ isActive }) =>
+              `pb-2 border-b-2 ${
+                isActive
+                  ? "border-white text-white font-semibold"
+                  : "border-transparent"
+              }`
+            }
+          >
+            Films
+          </NavLink>
+          <NavLink
+            to={`/user/${username}/watchlist`}
+            className={({ isActive }) =>
+              `pb-2 border-b-2 ${
+                isActive
+                  ? "border-white text-white font-semibold"
+                  : "border-transparent"
+              }`
+            }
+          >
+            Watchlist
+          </NavLink>
+          <button className="pb-2 cursor-not-allowed">Diary</button>
+          <button className="pb-2 cursor-not-allowed">Reviews</button>
+          <button className="pb-2 cursor-not-allowed">Lists</button>
         </div>
       </div>
 
       <div className="max-w-5xl mx-auto px-4 pb-12">
-        <ProfileTab username={username} />
+        <Routes>
+          <Route index element={<Navigate to="profile" replace />} />
+          <Route path="profile" element={<ProfileTab username={username} />} />
+          <Route path="films" element={<FilmsTab username={username} />} />
+          <Route path="watchlist" element={<WatchlistTab username={username} />} />
+        </Routes>
       </div>
     </>
   );
