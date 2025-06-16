@@ -3,12 +3,13 @@ import defaultAvatar from "@/assets/profpic_placeholder.png";
 import clsx from "clsx";
 
 const sizeMap = {
-  xxs: "w-4 h-4",   // 16px
-  xs: "w-6 h-6",    // 24px
-  sm: "w-8 h-8",    // 32px
-  md: "w-10 h-10",  // 40px
-  lg: "w-12 h-12",  // 48px
-  xl: "w-16 h-16",  // 64px
+  xxs: "w-4 h-4",   
+  xs: "w-6 h-6",    
+  sm: "w-8 h-8",    
+  md: "w-10 h-10",  
+  lg: "w-12 h-12",  
+  xl: "w-16 h-16", 
+  xxl: "w-24 h-24",
 };
 
 export default function Avatar({ src, alt, size = "md", className = "" }) {

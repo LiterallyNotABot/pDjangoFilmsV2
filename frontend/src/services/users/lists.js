@@ -9,3 +9,9 @@ export const getFriendsLists = (limit = 6, signal) =>
 
 export const toggleListLike = (listId) =>
   postData(`/users/lists/${listId}/like-toggle/`);
+
+export const getUserWatchlist = (username) =>
+  fetchData(`/users/${username}/watchlist/`);
+
+export const fetchUserLists = (username) =>
+  fetchData(`/users/${username}/lists/`);

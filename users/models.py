@@ -106,7 +106,7 @@ class UserProfile(SoftDeleteModel):
         return self.user.username
 
 
-class FavoriteFilm(SoftDeleteModel):
+class FavoriteFilm(models.Model):
     profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name="favorite_entries")
     film = models.ForeignKey(Film, on_delete=models.CASCADE)
     rank = models.PositiveSmallIntegerField()

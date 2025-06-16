@@ -61,3 +61,22 @@ export async function getUserFilmActivityBatch(filmIds) {
     film_ids: filmIds,
   });
 }
+
+
+export const getUserProfile = (username) =>
+  fetchData(`/users/${username}/profile/`);
+
+export const getUserFavorites = (username) =>
+  fetchData(`/users/${username}/favorites/`);
+
+export const getUserActivity = (username) =>
+  fetchData(`/users/${username}/activity/`);
+
+export const getUserReviews = (username) =>
+  fetchData(`/users/${username}/reviews/`);
+
+export const getUserStats = (username) =>
+  fetchData(`/users/${username}/stats/`);
+
+export const getUserDashboard = (username) =>
+  fetchData(`/users/${username}/dashboard/`);

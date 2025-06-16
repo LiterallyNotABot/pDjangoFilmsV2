@@ -1,5 +1,7 @@
 from django.urls import path, include
 from .views.auth_view import LoginView, RegisterView, CurrentUserView
+from .views.dashboard_views import UserRatingStatsView, UserReviewsView, UserRecentActivityView, UserWatchlistView, \
+    UserFavoriteFilmsView, UserProfileView, UserDashboardDataView
 from .views.film_and_user_views import FilmUserActivityViewSet
 from .views.friends_lists_views import FriendsListsView, ToggleListLikeView
 from .views.popular_lists_views import PopularListsView
@@ -11,12 +13,21 @@ film_user_activity = FilmUserActivityViewSet.as_view({
     "post": "create",
     "delete": "destroy",
 })
+
 urlpatterns = [
     path('login/', LoginView.as_view(), name='login'),
     path('register/', RegisterView.as_view(), name='register'),
     path('me/', CurrentUserView.as_view(), name='me'),
     path("film-activity/<int:film_id>/", film_user_activity, name="film-user-activity"),
     path("film-activity/<int:film_id>/watchlist/", ToggleWatchlistEntryView.as_view(), name="toggle-watchlist"),
+
+    path("<str:username>/profile/", UserProfileView.as_view(), name="user-profile"),
+    path("<str:username>/favorites/", UserFavoriteFilmsView.as_view(), name="user-favorites"),
+    path("<str:username>/watchlist/", UserWatchlistView.as_view(), name="user-watchlist"),
+    path("<str:username>/activity/", UserRecentActivityView.as_view(), name="user-activity"),
+    path("<str:username>/reviews/", UserReviewsView.as_view(), name="user-reviews"),
+    path("<str:username>/stats/", UserRatingStatsView.as_view(), name="user-stats"),
+    path("<str:username>/dashboard/", UserDashboardDataView.as_view(), name="user-dashboard"),
 
     path('lists/', include([
     path('popular/', PopularListsView.as_view(), name='popular-lists'),

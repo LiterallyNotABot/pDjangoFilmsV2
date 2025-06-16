@@ -25,7 +25,6 @@ export default function FilmDetails() {
 
   const { user } = useUserStore();
 
-  // Fetch film data
   useEffect(() => {
     const fetchFilm = async () => {
       try {
@@ -40,7 +39,6 @@ export default function FilmDetails() {
     fetchFilm();
   }, [id]);
 
-  // Fake friend activity (placeholder logic)
   useEffect(() => {
     if (!film) return;
 
@@ -88,7 +86,6 @@ export default function FilmDetails() {
       <Backdrop imageUrl={backdrop} size="medium" />
 
       <div className="max-w-6xl mx-auto px-4 py-12 space-y-8 md:space-y-0 md:grid md:grid-cols-[1fr_3fr_1fr] md:gap-10">
-        {/* Poster */}
         <div className="md:sticky md:top-24 md:self-start order-1 md:order-none">
           <FilmCard
             id={film.film_id}
@@ -99,14 +96,13 @@ export default function FilmDetails() {
             size="xl"
             showUserActions
             showUserTag={false}
-            user={user} // ✅ Para que se muestre la barra de actividad
+            user={user} 
             activity={{ liked, watched }}
             onToggleLiked={() => updateField("liked", !liked)}
             onToggleWatched={() => updateField("watched", !watched)}
           />
         </div>
 
-        {/* Main content */}
         <div className="space-y-6 order-3 md:order-none">
           <FilmHeader film={film} />
           <FilmTabs film={film} />
@@ -118,7 +114,6 @@ export default function FilmDetails() {
           )}
         </div>
 
-        {/* Sidebar */}
         <div className="md:sticky md:top-24 md:self-start order-2 md:order-none space-y-6">
           <FilmUserActions
             filmId={film.film_id}
@@ -142,7 +137,6 @@ export default function FilmDetails() {
         </div>
       </div>
 
-      {/* Login modal */}
       <Modal isOpen={showLoginModal} onClose={() => setShowLoginModal(false)}>
         <LoginForm onSuccess={() => setShowLoginModal(false)} />
       </Modal>
