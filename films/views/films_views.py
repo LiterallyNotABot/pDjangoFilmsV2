@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from films.models import Film, FilmAndPerson, Genre
 from films.serializers.serializers import FilmSerializer, GenreSerializer
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework import status
 from films.serializers.mini_film_serializer import MiniFilmSerializer
 from films.views.base_film_filters import get_base_film_queryset, apply_film_filters
@@ -120,3 +120,11 @@ class GenreListView(ListAPIView):
     queryset = Genre.objects.filter(active=True, deleted=False)
     serializer_class = GenreSerializer
     permission_classes = [AllowAny]
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def search_films(request):
+    query = request.GET.get('q', '')
+    films = Film.objects.filter(title__icontains=query)[:10]
+    serializer = MiniFilmSerializer(films, many=True)
+    return Response(serializer.data)

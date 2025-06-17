@@ -39,7 +39,6 @@ export default function FilmUserActions({ filmId, onTriggerLogin, filmData }) {
   return (
     <>
       <div className="bg-zinc-900 rounded-lg overflow-hidden text-sm text-white shadow">
-        {/* Acciones principales */}
         <div className="flex justify-around border-b border-zinc-700 p-4">
           <IconAction
             label="Watch"
@@ -65,7 +64,6 @@ export default function FilmUserActions({ filmId, onTriggerLogin, filmData }) {
           />
         </div>
 
-        {/* Rating */}
         <div className="text-center border-b border-zinc-700 p-5">
           <p className="mb-2 text-gray-400 text-base">Rate</p>
           <StarRating
@@ -76,7 +74,6 @@ export default function FilmUserActions({ filmId, onTriggerLogin, filmData }) {
           />
         </div>
 
-        {/* Extras */}
         <div className="divide-y divide-zinc-700">
           <ActionItem
             icon={<PencilIcon size="lg" />}
@@ -91,7 +88,6 @@ export default function FilmUserActions({ filmId, onTriggerLogin, filmData }) {
         </div>
       </div>
 
-      {/* Modal de log */}
       <LogModal
         isOpen={showModal}
         onClose={() => setShowModal(false)}

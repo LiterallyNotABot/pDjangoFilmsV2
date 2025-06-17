@@ -11,7 +11,7 @@ const LoginForm = lazy(() => import("../forms/LoginForm"));
 const RegisterForm = lazy(() => import("../forms/RegisterForm"));
 
 export default function Layout() {
-  const [modalType, setModalType] = useState(null); // "login" | "register" | null
+  const [modalType, setModalType] = useState(null); 
 
   useEffect(() => {
     document.body.style.overflow = modalType ? "hidden" : "auto";

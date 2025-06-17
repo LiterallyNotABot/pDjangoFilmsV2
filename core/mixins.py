@@ -49,4 +49,4 @@ class SoftObjectRetrievalMixin:
             instance, _ = reactivate_or_create(model, lookup=lookup, defaults=defaults or {})
             return instance
 
-        return None  # Caller decides what to do with None
+        return None

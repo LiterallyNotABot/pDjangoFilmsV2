@@ -61,3 +61,40 @@ export async function getUserFilmActivityBatch(filmIds) {
     film_ids: filmIds,
   });
 }
+
+
+export const getUserProfile = (username) =>
+  fetchData(`/users/${username}/profile/`);
+
+export const getUserFavorites = (username) =>
+  fetchData(`/users/${username}/favorites/`);
+
+export const getUserActivity = (username) =>
+  fetchData(`/users/${username}/activity/`);
+
+export const getUserReviews = async (username) => {
+  const response = await fetchData(`/users/${username}/reviews/`);
+  return Array.isArray(response) ? response : response?.results || [];
+};
+
+export const getUserStats = (username) =>
+  fetchData(`/users/${username}/stats/`);
+
+export const getUserDashboard = (username) =>
+  fetchData(`/users/${username}/dashboard/`);
+
+export const getUserFilms = (username, page = 1, page_size = 72, signal = null) => {
+  return fetchData(`/users/${username}/films/`, {
+    params: { page, page_size }, signal, });
+};
+
+export const getUserWatchlist = (username, page = 1, page_size = 20, signal = null) => {
+  return fetchData(`/users/${username}/watchlist/films/`, {
+    params: { page, page_size },
+    signal,
+  });
+};
+
+export const getUserDiary = async (username) => {
+  return fetchData(`/users/${username}/diary/`);
+};

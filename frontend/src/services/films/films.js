@@ -9,3 +9,10 @@ export const getLatestFilms = (limit = 10, signal) =>
 export const fetchFilteredFilms = (filters = {}, signal = null) => {
   return fetchData("/films/filtered/", { params: filters, signal });
 };
+
+export const searchFilms = (query, options = {}) => {
+  return fetchData("/films/search/", {
+    params: { q: query },
+    ...options,
+  });
+};

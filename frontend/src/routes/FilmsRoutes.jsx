@@ -9,15 +9,7 @@ export default function FilmsRoutes() {
   return (
     <Routes>
       <Route
-        path="/films/:id"
-        element={
-          <Suspense fallback={<div className="text-gray-400 p-4">Loading film details...</div>}>
-            <FilmDetails />
-          </Suspense>
-        }
-      />
-      <Route
-        path="/films"
+        path=""
         element={
           <Suspense fallback={<div className="text-gray-400 p-4">Loading films...</div>}>
             <FilmGridPage />
@@ -25,7 +17,15 @@ export default function FilmsRoutes() {
         }
       />
       <Route
-        path="/person/:id"
+        path=":id"
+        element={
+          <Suspense fallback={<div className="text-gray-400 p-4">Loading film details...</div>}>
+            <FilmDetails />
+          </Suspense>
+        }
+      />
+      <Route
+        path="../person/:id"
         element={
           <Suspense fallback={<div className="text-gray-400 p-4">Loading person...</div>}>
             <PersonDetails />
