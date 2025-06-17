@@ -10,13 +10,16 @@ export default function FilmsTab({ username }) {
 
   const filters = [];
 
-  const sortOptions = useMemo(() => [
-    { label: "Popularity", value: "popularity" },
-    { label: "Newest First", value: "releaseDate_desc" },
-    { label: "Oldest First", value: "releaseDate_asc" },
-    { label: "Highest Rated", value: "userRating_desc" },
-    { label: "Lowest Rated", value: "userRating_asc" },
-  ], []);
+  const sortOptions = useMemo(
+    () => [
+      { label: "Popularity", value: "popularity" },
+      { label: "Newest First", value: "releaseDate_desc" },
+      { label: "Oldest First", value: "releaseDate_asc" },
+      { label: "Highest Rated", value: "userRating_desc" },
+      { label: "Lowest Rated", value: "userRating_asc" },
+    ],
+    []
+  );
 
   const onFilmsChange = useCallback((films) => {
     const ids = films.map((film) => film.id);
@@ -40,9 +43,15 @@ export default function FilmsTab({ username }) {
   );
 
   return (
-    <div className="max-w-full">
+    <div className="w-full max-w-screen-2xl mx-auto px-4 py-8 bg-zinc-950 rounded-xl border border-zinc-800">
+      <div className="mb-8 text-center">
+        <h2 className="text-3xl font-bold text-white tracking-wide">
+          Your Films
+        </h2>
+      </div>
+
       <FilmGrid
-        username={username} 
+        username={username}
         filters={filters}
         cardSize="sm"
         showRoleDropdown={false}

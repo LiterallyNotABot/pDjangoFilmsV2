@@ -55,7 +55,6 @@ export default function ProfileTab({ username }) {
 
   const recentActivityFilms = data?.activity?.slice(0, 4) || [];
   const watchlistFilms = data?.watchlist?.slice(0, 6) || [];
-
   const activityReady = !!data && Object.keys(activityByFilmId).length > 0;
   const userRatingStats = transformRatingStats(data?.stats);
 
@@ -80,68 +79,76 @@ export default function ProfileTab({ username }) {
 
   if (loading)
     return (
-      <div className="text-center py-10 text-gray-400">Loading profile...</div>
+      <div className="text-center py-10 text-zinc-500 tracking-wide text-sm">
+        Loading profile...
+      </div>
     );
+
   if (error)
-    return <div className="text-center py-10 text-red-500">{error}</div>;
+    return (
+      <div className="text-center py-10 text-red-500 tracking-wide text-sm">
+        {error}
+      </div>
+    );
+
   if (!data) return null;
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_300px] gap-10">
       <div className="space-y-10">
-        <StaticFilmGrid
-          title="Favorite Films"
-          items={favoriteFilms}
-          renderItem={(film) =>
-            film ? (
-              <FilmCard film={film} />
-            ) : (
-              <img
-                src={placeholderImg}
-                alt="Select a film"
-                className="w-full aspect-[2/3] rounded border border-zinc-700 object-cover"
-              />
-            )
-          }
-        />
-
-        <hr className="border-gray-300" />
+        <div className="bg-zinc-950 p-4 rounded-xl border border-zinc-800">
+          <StaticFilmGrid
+            title="Favorite Films"
+            items={favoriteFilms}
+            renderItem={(film) =>
+              film ? (
+                <FilmCard film={film} />
+              ) : (
+                <img
+                  src={placeholderImg}
+                  alt="Select a film"
+                  className="w-full aspect-[2/3] rounded border border-zinc-700 object-cover"
+                />
+              )
+            }
+          />
+        </div>
 
         {recentActivityFilms.length > 0 && (
-          <>
+          <div className="bg-zinc-950 p-4 rounded-xl border border-zinc-800">
             <StaticFilmGrid
               title="Recent Activity"
               items={recentActivityFilms}
               renderItem={renderFilmCard}
             />
-            <hr className="border-gray-300" />
-          </>
+          </div>
         )}
 
         {data.reviews?.recent?.length > 0 && (
-          <>
+          <div className="bg-zinc-950 p-4 rounded-xl border border-zinc-800">
             <ReviewFeed
               title="Recent Reviews"
               reviews={data.reviews.recent}
               activityReady={activityReady}
             />
-            <hr className="border-gray-300" />
-          </>
+          </div>
         )}
 
         {data.reviews?.popular?.length > 0 && (
-          <>
+          <div className="bg-zinc-950 p-4 rounded-xl border border-zinc-800">
             <ReviewFeed
               title="Popular Reviews"
               reviews={data.reviews.popular}
               activityReady={activityReady}
             />
-          </>
+          </div>
         )}
       </div>
 
       <div className="space-y-10 md:sticky md:top-24 self-start flex flex-col items-center w-full">
-        <h2 className="text-xl font-semibold mb-4 text-center">Watchlist</h2>
+        <h2 className="text-xl font-semibold text-white tracking-wide text-center">
+          Watchlist
+        </h2>
         <ListCard
           list={{
             id: "watchlist-preview",

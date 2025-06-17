@@ -7,7 +7,6 @@ import ShopPage from "@/pages/ShopPage";
 import UserRoutes from "./UserRoutes";
 import PersonRoutes from "./PersonRoutes";
 
-
 export default function AppRoutes() {
   return (
     <Routes>

@@ -72,8 +72,10 @@ export const getUserFavorites = (username) =>
 export const getUserActivity = (username) =>
   fetchData(`/users/${username}/activity/`);
 
-export const getUserReviews = (username) =>
-  fetchData(`/users/${username}/reviews/`);
+export const getUserReviews = async (username) => {
+  const response = await fetchData(`/users/${username}/reviews/`);
+  return Array.isArray(response) ? response : response?.results || [];
+};
 
 export const getUserStats = (username) =>
   fetchData(`/users/${username}/stats/`);
@@ -91,4 +93,8 @@ export const getUserWatchlist = (username, page = 1, page_size = 20, signal = nu
     params: { page, page_size },
     signal,
   });
+};
+
+export const getUserDiary = async (username) => {
+  return fetchData(`/users/${username}/diary/`);
 };

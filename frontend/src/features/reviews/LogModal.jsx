@@ -1,18 +1,28 @@
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { X } from "lucide-react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import StarRating from "@/components/ui/StarRating";
 import HeartIcon from "@/components/ui/icons/HeartIcon";
-import { postLog } from "@/services/reviews/logs";
-import {patchUserFilmActivity, deleteWatchlistEntry,} from "@/services/users/users";
+import { postLog, patchLog } from "@/services/reviews/logs";
+import {
+  patchUserFilmActivity,
+  deleteWatchlistEntry,
+} from "@/services/users/users";
 import useFilmActivityStore from "@/store/film/useFilmActivityStore";
 import { toast } from "react-hot-toast";
 import { isNotFoundError, handleApiError } from "@/services/exceptionHelper";
 import "./css/LogModal.css";
 
-export default function LogModal({ isOpen, onClose, film, onSave = () => {} }) {
+export default function LogModal({
+  isOpen,
+  onClose,
+  film,
+  log,
+  review: existingReview,
+  onSave = () => {},
+}) {
   const today = new Date();
   const [watchedDate, setWatchedDate] = useState(today);
   const [review, setReview] = useState("");
@@ -21,6 +31,17 @@ export default function LogModal({ isOpen, onClose, film, onSave = () => {} }) {
   const [loading, setLoading] = useState(false);
 
   const setActivity = useFilmActivityStore((state) => state.setActivity);
+
+  useEffect(() => {
+    if (log) {
+      setWatchedDate(new Date(log.date));
+      setRating(log.rating || 0);
+      setLiked(log.liked || false);
+    }
+    if (existingReview) {
+      setReview(existingReview.body || "");
+    }
+  }, [log, existingReview]);
 
   const handleSubmit = async () => {
     const payload = {
@@ -34,15 +55,22 @@ export default function LogModal({ isOpen, onClose, film, onSave = () => {} }) {
     try {
       setLoading(true);
 
-      await postLog(payload);
+      if (log?.log_id) {
+        await patchLog(log.log_id, payload);
+        toast.success("Log updated successfully");
+      } else {
+        await postLog(payload);
+        toast.success("Log saved successfully");
+
+        await deleteWatchlistEntry(film.id).catch((err) => {
+          if (!isNotFoundError(err)) throw err;
+        });
+      }
+
       await patchUserFilmActivity(film.id, {
         watched: true,
         liked,
         rating: rating || null,
-      });
-
-      await deleteWatchlistEntry(film.id).catch((err) => {
-        if (!isNotFoundError(err)) throw err;
       });
 
       setActivity(film.id, {
@@ -52,7 +80,6 @@ export default function LogModal({ isOpen, onClose, film, onSave = () => {} }) {
         watchlisted: false,
       });
 
-      toast.success("Log guardado exitosamente");
       onSave();
       onClose();
     } catch (err) {
@@ -93,7 +120,7 @@ export default function LogModal({ isOpen, onClose, film, onSave = () => {} }) {
               <Dialog.Panel className="modal-panel">
                 <div className="modal-header">
                   <h2 className="text-2xl font-bold text-red-600">
-                    Log this film
+                    {log ? "Edit your log" : "Log this film"}
                   </h2>
                   <div className="modal-date-controls">
                     <label className="text-sm text-zinc-400 font-medium">
@@ -167,7 +194,11 @@ export default function LogModal({ isOpen, onClose, film, onSave = () => {} }) {
                       loading ? "modal-save-loading" : "modal-save-ready"
                     }`}
                   >
-                    {loading ? "Saving..." : "Save Log"}
+                    {loading
+                      ? "Saving..."
+                      : log
+                      ? "Update Log"
+                      : "Save Log"}
                   </button>
                 </div>
               </Dialog.Panel>

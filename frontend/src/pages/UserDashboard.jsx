@@ -1,11 +1,14 @@
-import { Routes, Route, NavLink, Navigate, useParams } from "react-router-dom";
+import { Routes, Route, NavLink, useParams, Navigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import useUserStore from "@/store/user/userStore";
 import { getUserProfile } from "@/services/users/users";
 import UserHeader from "@/features/users/UserHeader";
 import ProfileTab from "@/features/users/dashboard_tabs/ProfileTab";
 import FilmsTab from "@/features/users/dashboard_tabs/FilmsTab";
-import WatchlistTab from "@/features/users/dashboard_tabs/WatchlistTab"; // ✅ nuevo tab
+import WatchlistTab from "@/features/users/dashboard_tabs/WatchlistTab";
+import ReviewsTab from "@/features/users/dashboard_tabs/ReviewsTab";
+import DiaryTab from "@/features/users/dashboard_tabs/DiaryTab";
+import ListsTab from "@/features/users/dashboard_tabs/list_tab/ListsTab";
 
 export default function UserDashboard() {
   const { username } = useParams();
@@ -31,76 +34,70 @@ export default function UserDashboard() {
     if (username) fetchProfile();
   }, [username]);
 
-  if (loading) {
+  if (loading)
     return (
-      <div className="text-center py-10 text-gray-400">Loading profile...</div>
+      <div className="text-center py-10 text-zinc-400">Loading profile...</div>
     );
-  }
 
-  if (error) {
+  if (error)
     return <div className="text-center py-10 text-red-500">{error}</div>;
-  }
 
-  if (!profile) {
+  if (!profile)
     return (
-      <div className="text-center py-10 text-gray-400">User not found.</div>
+      <div className="text-center py-10 text-zinc-400">User not found.</div>
     );
-  }
 
   return (
     <>
       <div className="max-w-5xl mx-auto px-4 py-12 space-y-10">
         <UserHeader profile={profile} />
 
-        <div className="flex gap-6 border-b border-gray-600 text-gray-400 text-sm overflow-x-auto scrollbar-hide">
-          <NavLink
-            to={`/user/${username}/profile`}
-            className={({ isActive }) =>
-              `pb-2 border-b-2 ${
-                isActive
-                  ? "border-white text-white font-semibold"
-                  : "border-transparent"
-              }`
-            }
-          >
-            Profile
-          </NavLink>
-          <NavLink
-            to={`/user/${username}/films`}
-            className={({ isActive }) =>
-              `pb-2 border-b-2 ${
-                isActive
-                  ? "border-white text-white font-semibold"
-                  : "border-transparent"
-              }`
-            }
-          >
-            Films
-          </NavLink>
-          <NavLink
-            to={`/user/${username}/watchlist`}
-            className={({ isActive }) =>
-              `pb-2 border-b-2 ${
-                isActive
-                  ? "border-white text-white font-semibold"
-                  : "border-transparent"
-              }`
-            }
-          >
-            Watchlist
-          </NavLink>
-          <button className="pb-2 cursor-not-allowed">Diary</button>
-          <button className="pb-2 cursor-not-allowed">Reviews</button>
-          <button className="pb-2 cursor-not-allowed">Lists</button>
+        <div className="border-b border-zinc-800 pb-1">
+          <div className="flex justify-center gap-8 text-sm overflow-x-auto scrollbar-hide">
+            {[
+              { label: "Profile", path: "profile" },
+              { label: "Films", path: "films" },
+              { label: "Watchlist", path: "watchlist" },
+              { label: "Reviews", path: "reviews" },
+              { label: "Diary", path: "diary" },
+              { label: "Lists", path: "lists" },
+            ].map(({ label, path }) => (
+              <NavLink
+                key={path}
+                to={`/user/${username}/${path}`}
+                className={({ isActive }) =>
+                  `pb-2 transition-all duration-150 ease-in-out border-b-2 ${
+                    isActive
+                      ? "border-red-500 text-white font-semibold"
+                      : "border-transparent text-zinc-400 hover:text-green-400"
+                  }`
+                }
+              >
+                {label}
+              </NavLink>
+            ))}
+          </div>
         </div>
       </div>
 
       <div className="max-w-5xl mx-auto px-4 pb-12">
         <Routes>
-          <Route index element={<Navigate to="profile" replace />} />
+          <Route
+            index
+            element={<Navigate to={`/user/${username}/profile`} replace />}
+          />
           <Route path="profile" element={<ProfileTab username={username} />} />
           <Route path="films" element={<FilmsTab username={username} />} />
-          <Route path="watchlist" element={<WatchlistTab username={username} />} />
+          <Route
+            path="watchlist"
+            element={<WatchlistTab username={username} />}
+          />
+          <Route path="reviews" element={<ReviewsTab username={username} />} />
+          <Route path="diary" element={<DiaryTab username={username} />} />
+          <Route
+            path="lists/*"
+            element={<ListsTab username={username} />}
+          />{" "}
         </Routes>
       </div>
     </>

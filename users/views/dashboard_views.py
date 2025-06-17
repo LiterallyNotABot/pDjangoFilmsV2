@@ -1,5 +1,6 @@
 from decimal import Decimal
 from django.db.models import OuterRef, Count, Subquery, IntegerField, Avg
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.generics import get_object_or_404
@@ -7,6 +8,7 @@ from rest_framework.permissions import AllowAny
 from django.contrib.auth import get_user_model
 from reviews.models import Review, Log, ReviewAndLikeByUser
 from users.models import FavoriteFilm, Watchlist, FilmAndUser
+from users.serializers.diary_log_serializer import DiaryLogSerializer
 from users.serializers.film_and_user_serializer import FilmAndUserSerializer
 from users.serializers.user_serializer import PublicUserSerializer
 from films.serializers.mini_film_serializer import MiniFilmSerializer
@@ -169,3 +171,17 @@ class UserDashboardDataView(APIView):
             },
             "stats": stats
         })
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def get_user_diary(request, username):
+    user = get_object_or_404(User, username=username)
+
+    logs = Log.objects.filter(
+        user=user,
+        active=True,
+        deleted=False
+    ).select_related("film", "rating").order_by("-entry_date")
+
+    serializer = DiaryLogSerializer(logs, many=True, context={"request": request})
+    return Response(serializer.data)
