@@ -3,10 +3,8 @@ from django.conf import settings
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import status
-from store.models.cart_and_checkout import CheckoutSession
-from store.models.cart_and_checkout import CartItem
-from store.models.payment import Purchase, PurchaseItem
-from store.models.cart_and_checkout import CheckoutLog
+from store.models.cart_and_checkout import CheckoutSession, CartItem, CheckoutLog
+from store.models.payment import Purchase, PurchaseItem, Payment
 
 @csrf_exempt
 def stripe_webhook(request):
@@ -60,7 +58,6 @@ def stripe_webhook(request):
                 price_cents=item.product.price_cents,
             )
 
-        from store.models.payment import Payment
         Payment.objects.create(
             purchase=purchase,
             stripe_session_id=session_id,

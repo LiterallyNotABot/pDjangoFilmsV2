@@ -14,8 +14,6 @@ class SoftDeleteMixin:
         self.perform_destroy(instance)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-
-
 class SoftCreateMixin:
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
