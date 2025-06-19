@@ -1,9 +1,8 @@
-import os
 import json
 import random
 from datetime import datetime
 from pathlib import Path
-from fixtures_config import *
+from utils.mock_helper.config import *
 
 BASE_DIR = Path(__file__).resolve().parent
 FIXTURE_DIR = BASE_DIR.parent / "fixtures"

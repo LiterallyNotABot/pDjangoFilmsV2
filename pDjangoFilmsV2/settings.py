@@ -70,7 +70,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware', # ANTES DEL COMMONMIDDLEWARE
+    'corsheaders.middleware.CorsMiddleware', # WARNING: CORS BEFORE COMMONMIDDLEWARE
     'core.middlewares.react_access.OnlyReactAccessMiddleware',
   # 'core.middlewares.timing_middleware.TimingMiddleware', # TESTING
     'django.middleware.common.CommonMiddleware',
@@ -238,7 +238,7 @@ ELASTICSEARCH_DSL = {
     # TESTING
 LOGGING = {
     'version': 1,
-    'disable_existing_loggers': False,  # Asegúrate de que otros loggers sigan funcionando
+    'disable_existing_loggers': False,
     'formatters': {
         'verbose': {
             'format': '{levelname} {asctime} {name} {message}',
@@ -248,16 +248,14 @@ LOGGING = {
     'handlers': {
         'console': {
             'class': 'logging.StreamHandler',
-            'formatter': 'verbose',  # Usa formato legible
+            'formatter': 'verbose',
         },
     },
     'loggers': {
-        # Logger general para todo
         'django': {
             'handlers': ['console'],
             'level': 'INFO',
         },
-        # Logger específico para tu middleware
         'utils.middlewares.timing_middleware': {
             'handlers': ['console'],
             'level': 'INFO',
@@ -266,7 +264,7 @@ LOGGING = {
     },
     'root': {
         'handlers': ['console'],
-        'level': 'WARNING',  # O ajusta si quieres ver más cosas globalmente
+        'level': 'WARNING',
     },
 }
 '''
