@@ -1,47 +1,29 @@
 import requests
 
-API_KEY = 'ffb643bf7b157410e8ee164302dd9bd5'
-BASE_URL = 'https://api.themoviedb.org/3'
+import pDjangoFilmsV2.settings
+from django.conf import settings
 
+BASE_URL = 'https://api.themoviedb.org/3'
+API_KEY = settings.TMDB_API_KEY
+def tmdb_get(endpoint, params=None):
+    if params is None:
+        params = {}
+    params['api_key'] = API_KEY
+    params['language'] = 'en-US'
+
+    url = f"{BASE_URL}{endpoint}"
+    response = requests.get(url, params=params)
+    response.raise_for_status()
+    return response.json()
 
 def search_movies(query, page=1):
-    url = f"{BASE_URL}/search/movie"
-    params = {
-        'api_key': API_KEY,
-        'query': query,
-        'language': 'en-US',
-        'page': page
-    }
-    response = requests.get(url, params=params)
-    response.raise_for_status()
-    return response.json()
+    return tmdb_get('/search/movie', {'query': query, 'page': page})
 
 def get_movie_details(movie_id):
-    url = f"{BASE_URL}/movie/{movie_id}"
-    params = {
-        'api_key': API_KEY,
-        'language': 'en-US'
-    }
-    response = requests.get(url, params=params)
-    response.raise_for_status()
-    return response.json()
+    return tmdb_get(f'/movie/{movie_id}')
 
 def get_movie_credits(movie_id):
-    url = f"{BASE_URL}/movie/{movie_id}/credits"
-    params = {
-        'api_key': API_KEY,
-        'language': 'en-US'
-    }
-    response = requests.get(url, params=params)
-    response.raise_for_status()
-    return response.json()
+    return tmdb_get(f'/movie/{movie_id}/credits')
 
 def get_person_details(person_id):
-    url = f"{BASE_URL}/person/{person_id}"
-    params = {
-        'api_key': API_KEY,
-        'language': 'en-US'
-    }
-    response = requests.get(url, params=params)
-    response.raise_for_status()
-    return response.json()
+    return tmdb_get(f'/person/{person_id}')

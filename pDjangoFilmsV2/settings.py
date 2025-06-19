@@ -14,22 +14,26 @@ from datetime import timedelta
 from pathlib import Path
 
 from corsheaders.defaults import default_headers
+from dotenv import load_dotenv
+import dj_database_url
+
+# Load environment variables
+ENVIRONMENT = os.getenv("ENV", "dev")
+load_dotenv(f".env.{ENVIRONMENT}")
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-3o9s_tc4$(k-nl0nv^p+b2x)kna02x@h5&em&lm)w)e(4vu+p%'
+SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv("DEBUG", "False") == "True"
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = [] if DEBUG else ["django-films.onrender.com"]
 
 # Application definition
 
@@ -69,10 +73,13 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware', # WARNING: CORS BEFORE COMMONMIDDLEWARE
+    # WARNING: CORS BEFORE COMMONMIDDLEWARE
+    'corsheaders.middleware.CorsMiddleware',
     'core.middlewares.react_access.OnlyReactAccessMiddleware',
-  # 'core.middlewares.timing_middleware.TimingMiddleware', # TESTING
+    # TESTING
+    # 'core.middlewares.timing_middleware.TimingMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -106,19 +113,8 @@ ASGI_APPLICATION = 'pDjangoFilmsV2.asgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'DjangoFilmsDB',
-        'USER': 'postgres',
-        'PASSWORD': '1234',
-        # LOCAL:
-        'HOST': 'localhost',
-        # DOCKER:
-        # 'HOST': 'db',
-        'PORT': '5432',
-    }
+    'default': dj_database_url.parse(os.getenv("DATABASE_URL"))
 }
-
 
 
 # Password validation
@@ -152,6 +148,15 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / 'staticfiles']
 STATIC_ROOT = BASE_DIR / 'static'
 
+# This production code might break development mode, so we check whether we're in DEBUG mode
+if not DEBUG:
+    # Tell Django to copy static assets into a path called `staticfiles` (this is specific to Render)
+    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+    # Enable the WhiteNoise storage backend, which compresses static files to reduce disk use
+    # and renames the files with unique names for each version to support long-term caching
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
@@ -178,8 +183,7 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-             "hosts": [('127.0.0.1', 6379)], # original
-               # "hosts": [('redis', 6379)], # container
+             "hosts": [os.getenv("REDIS_URL", "redis://localhost:6379")],
         },
     },
 }
@@ -188,16 +192,11 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
 
- # CORS AUTH
-CORS_ALLOWED_ORIGINS = [
-    "https://example.com",
-    "https://sub.example.com",
-    "http://localhost:8080",
-    "http://127.0.0.1:9000",
-    "http://localhost:5173",
-    "http://localhost:5174",
-]
+# REACT ORIGIN BASE
+REACT_BASE_URL = os.getenv("REACT_BASE_URL", "http://localhost:5173")
 
+# CORS AUTH
+CORS_ALLOWED_ORIGINS = [REACT_BASE_URL]
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_HEADERS = list(default_headers) + [
     "X-Internal-Access",
@@ -214,22 +213,20 @@ SIMPLE_JWT = {
     'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
 }
 
- # STATIC FILES STORAGE API
+# STATIC FILES STORAGE API
 CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME'),
-    'API_KEY': os.environ.get('CLOUDINARY_API_KEY'),
-    'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET'),
+    'CLOUD_NAME': os.getenv('CLOUDINARY_CLOUD_NAME'),
+    'API_KEY': os.getenv('CLOUDINARY_API_KEY'),
+    'API_SECRET': os.getenv('CLOUDINARY_API_SECRET'),
 }
 
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 ELASTICSEARCH_DSL = {
     'default': {
-        'hosts': 'http://localhost:9200',
+        'hosts': os.getenv("ELASTICSEARCH_URL", "http://localhost:9200"),
     },
 }
-
-
 
 # TESTING RESPONSE AUTH - ONLY IF DEBUG - USER CREDENTIALS MUST BE HASHED
 # PASSWORD_HASHERS = [ 'django.contrib.auth.hashers.MD5PasswordHasher', ]
@@ -270,7 +267,12 @@ LOGGING = {
 '''
 
 # KEYS
-STRIPE_SECRET_KEY = "sk_test_51QuZCQPdMh0chZHFYp8nRrBRKEYncGoaNefqfKSqKprIdP6pKYa26SqW5g8zqivZwQKrBZdK4NsYL09VzOxrp7ND00u6cY2GL1"
-STRIPE_PUBLIC_KEY = "pk_test_51QuZCQPdMh0chZHFFpXhHCl8rOd0YxGljroiPsVZAvIFPTUdfvBrfPqfKm6vhM8PT8gf9lZEMnhCBXwiP5QJJLjd00oNtsMMxS"
-STRIPE_WEBHOOK_SECRET = "whsec_10229ca2e350c85ee83bb1c9440526a6c3d248d36090909ed72a79d5ecc81513"
+STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY")
+STRIPE_PUBLIC_KEY = os.getenv("STRIPE_PUBLIC_KEY")
+STRIPE_WEBHOOK_SECRET = os.getenv("STRIPE_WEBHOOK_SECRET")
 
+# INTERNAL HEADER
+INTERNAL_HEADER_VALUE = os.getenv("INTERNAL_HEADER_VALUE")
+
+# TMDB API
+TMDB_API_KEY = os.getenv("TMDB_API_KEY")
