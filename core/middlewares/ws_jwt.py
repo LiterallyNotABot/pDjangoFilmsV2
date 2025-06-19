@@ -1,5 +1,3 @@
-# core/middlewares/ws_jwt.py
-
 from django.conf import settings
 from urllib.parse import parse_qs
 from django.contrib.auth import get_user_model

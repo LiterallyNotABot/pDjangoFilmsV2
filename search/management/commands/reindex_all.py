@@ -7,7 +7,7 @@ class Command(BaseCommand):
     help = "Rebuild all Elasticsearch indexes without manual prompts"
 
     def handle(self, *args, **options):
-        self.stdout.write("🔄 Rebuilding Elasticsearch indexes...\n")
+        self.stdout.write("Rebuilding Elasticsearch indexes...\n")
 
         targets = [
             "films.Film",
@@ -17,9 +17,9 @@ class Command(BaseCommand):
         ]
 
         for model in targets:
-            self.stdout.write(f"📦 Reindexing {model}...")
+            self.stdout.write(f"Reindexing {model}...")
 
             sys.stdin = StringIO('y\n')
             call_command("search_index", "--models", model, "--rebuild")
 
-        self.stdout.write(self.style.SUCCESS("✅ All indexes rebuilt successfully."))
+        self.stdout.write(self.style.SUCCESS("All indexes rebuilt successfully."))

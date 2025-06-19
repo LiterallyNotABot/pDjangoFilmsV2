@@ -5,7 +5,7 @@ from faker import Faker
 from django.utils.timezone import now
 from django.contrib.auth.hashers import make_password
 from pathlib import Path
-from fixtures_config import MOCK_USER_START_ID, MOCK_USER_COUNT
+from utils.mock_helper.config import MOCK_USER_START_ID, MOCK_USER_COUNT
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'pDjangoFilmsV2.settings')
 django.setup()
